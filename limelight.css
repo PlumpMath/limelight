@@ -31,6 +31,9 @@ html, body {
 
 #quiz-container {
 	min-height: 100vh;
+}
+
+#quiz-container.step-1 {
 	background: #ffaf4b;
 	background: -moz-linear-gradient(top, #ffaf4b 0%, #ef09c1 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffaf4b), color-stop(100%,#ef09c1));
@@ -39,6 +42,18 @@ html, body {
 	background: -ms-linear-gradient(top, #ffaf4b 0%,#ef09c1 100%);
 	background: linear-gradient(to bottom, #ffaf4b 0%,#ef09c1 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffaf4b', endColorstr='#ef09c1',GradientType=0 );
+}
+
+#quiz-container.step-2 {
+	background-color: green;
+}
+
+#quiz-container.step-3 {
+	background-color: orange;
+}
+
+#quiz-container.step-DONE {
+	background-color: blue;
 }
 
 .point {
