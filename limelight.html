@@ -1,0 +1,78 @@
+<head>
+  <title>limelight</title>
+</head>
+
+<body>
+</body>
+
+<template name="baseTemplate">
+<div class="flex-container">
+	<div class="header">
+		{{> header}}
+	</div>
+	<div class="dotcontainer">
+		{{> yield}}
+	</div>
+	<div class="footer">
+		{{> footer}}
+	</div>
+</div>
+</template>
+
+<template name="pindrop">
+<div id="drop-canvas">
+	{{#each allpoints}}
+		{{>point}}
+	{{/each}}
+</div>
+</template>
+
+<template name="quiz">
+<div id="quiz-container">
+	QUIZ:<br/>
+	We are on step {{quizStep}}<br/>
+	<div id="step-1" class="step initial-step">
+		<button type="button" class="step-choice" name="1">Karl Marx</button>
+		<button type="button" class="step-choice" name="1">David Harvey</button>
+	</div>
+	<div id="step-2" class="step">
+		<button type="button" class="step-choice" name="2">Corbusier</button>
+		<button type="button" class="step-choice" name="2">Mies</button>
+	</div>
+	<div id="step-3" class="step">
+		<button type="button" class="step-choice" name="3">Piketty</button>
+		<button type="button" class="step-choice" name="3">Graeber</button>
+	</div>
+	<div id="step-4" class="step final-step">
+		{{ quizProcessed }}
+	</div>
+	<br/>
+	<button type="button" class="restart">Restart</button>
+	<br/>
+	<br/>
+	YOU CHOSE SO FAR: {{ quizAnswers }} {{quizTaker}}
+	<br/>
+	<br/>
+	<button type="button" class="delete">Delete All</button>
+
+</div>
+</template>
+
+<template name="point">
+	<div class="point" style="left:{{pageX}}px; top:{{pageY}}px">
+		{{ quizTaker }}
+		{{pageX}}:{{pageY}}
+		{{qA}}
+	</div>
+</template>
+
+
+<template name="header">
+	meteor header
+</template>
+
+<template name="footer">
+	meteor footer
+</template>
+
+
