@@ -7,14 +7,8 @@
 
 <template name="baseTemplate">
 <div class="flex-container">
-	<div class="header">
-		{{> header}}
-	</div>
 	<div class="dotcontainer">
 		{{> yield}}
-	</div>
-	<div class="footer">
-		{{> footer}}
 	</div>
 </div>
 </template>
@@ -31,21 +25,31 @@
 <div id="quiz-container" class="step-{{quizStep}}">
 	QUIZ:<br/>
 	We are on step {{quizStep}}<br/>
-	<div id="step-1" class="step initial-step">
-		<button type="button" class="step-choice" name="1">Karl Marx</button>
-		<button type="button" class="step-choice" name="1">David Harvey</button>
-	</div>
-	<div id="step-2" class="step">
-		<button type="button" class="step-choice" name="2">Corbusier</button>
-		<button type="button" class="step-choice" name="2">Mies</button>
-	</div>
-	<div id="step-3" class="step">
-		<button type="button" class="step-choice" name="3">Piketty</button>
-		<button type="button" class="step-choice" name="3">Graeber</button>
-	</div>
-	<div id="step-4" class="step final-step">
+	{{quizApiResult}}
+	<div id="step-1" class="step initial-step"><div class="step-inner">
+		<div class="question">Who should you read first when you're reading Capital?</div>
+		<div class="buttons">
+			<button type="button" class="step-choice" name="1">Karl Marx</button>
+			<button type="button" class="step-choice" name="1">David Harvey</button>
+		</div>
+	</div></div>
+	<div id="step-2" class="step"><div class="step-inner">
+		<div class="question">Who would win in a fistfight?</div>
+		<div class="buttons">
+			<button type="button" class="step-choice" name="2">Corbusier</button>
+			<button type="button" class="step-choice" name="2">Mies</button>
+		</div>
+	</div></div>
+	<div id="step-3" class="step"><div class="step-inner">
+		<div class="question">Better activist academic?</div>
+		<div class="buttons">
+			<button type="button" class="step-choice" name="3">Piketty</button>
+			<button type="button" class="step-choice" name="3">Graeber</button>
+		</div>
+	</div></div>
+	<div id="step-4" class="step final-step"><div class="step-inner">
 		{{ quizProcessed }}
-	</div>
+	</div></div>
 	<br/>
 	<button type="button" class="restart">Restart</button>
 	<br/>

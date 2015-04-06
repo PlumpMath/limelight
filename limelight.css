@@ -77,3 +77,27 @@ html, body {
 	display: block;
 }
 
+.step-inner {
+	display: flex;
+	flex-direction: column;
+}
+
+.question {
+	text-align: center;
+}
+
+.buttons {
+	display: flex;
+	justify-content: center;
+}
+
+#quiz-container .step button {
+	border: 2px solid purple;
+	background-color: transparent;
+	width: 200px;
+	height: 200px;
+	color: purple;
+	display: inline-block;
+	margin: 20px;
+}
+
