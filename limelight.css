@@ -70,11 +70,9 @@ html, body {
 }
 
 .step {
-	display: none;
 }
 
 .step.initial-step {
-	display: block;
 }
 
 .step-inner {

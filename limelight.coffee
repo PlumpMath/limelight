@@ -37,43 +37,53 @@ if Meteor.isClient
 			console.log "who#a"
 
 	quizInit = ->
+		Session.set("currentApiData", undefined)
 		Session.set("quizStep", 1)
-		Session.set("quizAnswers", [])
-		Session.set("apiUrl", "http://localhost:4000/ba-simple-proxy.php?url=http%3A%2F%2F54.148.142.11%3A8080%2Fplay%2F&full_headers=1&full_status=1&callback=?") #http://54.148.142.11:8080/play/")
+		Session.set("quizHistory", [])
+		Session.set("apiUrl", globals.apiBaseUrl)
 		$(".step").hide()
 		$(".initial-step").show()
+
+	updateFromApi = (url) ->
+		Meteor.call "checkApi", url, (error, results) ->
+			console.log(results)
+			Session.set("currentApiData", results.data)
+			if('next_question' of results.data and results.data.next_question.length <= 0)
+				Session.set("quizStep", globals.quizStepDone)
+		return
 
 	Template.quiz.helpers
 		quizStep: () ->
 			if !(Session.get("quizStep"))
 				quizInit()
 			return Session.get("quizStep")	
-		quizApiResult: () ->
-			# this is jsonp request
-			$.getJSON Session.get("apiUrl"), (json) ->
-				console.log(json.contents)
-				return
-
-
-		quizAnswers: () ->
-			return Session.get("quizAnswers")	
+		quizQuestionData: () ->
+			if !(Session.get("currentApiData"))
+				updateFromApi(Session.get("apiUrl"))
+			else
+				return Session.get("currentApiData").next_question[0]
+		quizGuesses: () ->
+			if (Session.get("currentApiData"))
+				return Session.get("currentApiData").guesses
+		quizHistory: () ->
+			return Session.get("quizHistory")	
 		quizProcessed: () ->
 
-			if Session.get("quizStep") == "DONE"
-				qA = Session.get("quizAnswers")	
+			if Session.get("quizStep") == globals.quizStepDone
+				qH = Session.get("quizHistory")	
 
 				#HACKY TEST - REAL API GOES HERE
-				if qA[0] == "Karl Marx"
+				if qH[0] == "Karl Marx"
 					x = _.random(0, 300, true)
 				else 
 					x = _.random(300, 600, true)
 
-				if qA[1] == "Corbusier"
+				if qH[1] == "Corbusier"
 					y = _.random(0, 300, true)
 				else 
 					y = _.random(300, 600, true)
 
-				if qA[2] == "Piketty"
+				if qH[2] == "Piketty"
 					r = _.random(0, 5, true)
 				else 
 					r = _.random(10, 20, true)
@@ -83,7 +93,7 @@ if Meteor.isClient
 					pageX: x
 					pageY: y
 					radius: r
-					qA: qA
+					qH: qH
 					quizTaker: this.quizTaker
 
 				return x + ":" + y + ":" + r
@@ -100,26 +110,30 @@ if Meteor.isClient
 			return
 
 		"click button.step-choice": (event) ->
-			bname = event.target.name
 
-			qA = Session.get("quizAnswers")
-			qA.push event.target.innerHTML
-			Session.set("quizAnswers", qA)
-			console.log qA 
+			button_value = event.target.value
 
-			$(event.target).parents(".step").hide()
+			qH = Session.get("quizHistory")
+			qH.push Session.get("currentApiData").next_question[0].qid + "." + button_value
 
-			if Session.get("quizStep") < 3
-				Session.set("quizStep", Session.get("quizStep") + 1)
-				$("#step-" + Session.get("quizStep")).fadeIn(1000)
-			else
-				Session.set("quizStep", "DONE")
-				$(".final-step").fadeIn(1000)
+			Session.set("apiUrl", globals.apiBaseUrl + qH.join(">"))
+			Session.set("quizHistory", qH)
+
+			Session.set("quizStep", Session.get("quizStep") + 1)
+
+			updateFromApi(Session.get("apiUrl"))
+
+
+
 
 if Meteor.isServer
 	Meteor.methods
 		removeAllPoints: ->
 			Points.remove({})
+
+		checkApi: (url) ->
+			this.unblock();
+			return Meteor.http.call("GET", url)
 
 			
 

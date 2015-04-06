@@ -25,36 +25,30 @@
 <div id="quiz-container" class="step-{{quizStep}}">
 	QUIZ:<br/>
 	We are on step {{quizStep}}<br/>
-	{{quizApiResult}}
-	<div id="step-1" class="step initial-step"><div class="step-inner">
-		<div class="question">Who should you read first when you're reading Capital?</div>
+	{{#with quizQuestionData}}
+	<div id="step" class="step"><div class="step-inner">
+		<div class="question">{{qtext}}</div>
 		<div class="buttons">
-			<button type="button" class="step-choice" name="1">Karl Marx</button>
-			<button type="button" class="step-choice" name="1">David Harvey</button>
+			<button type="button" class="step-choice" value="{{a1id}}">{{a1text}}</button>
+			<button type="button" class="step-choice" value="{{a2id}}">{{a2text}}</button>
 		</div>
 	</div></div>
-	<div id="step-2" class="step"><div class="step-inner">
-		<div class="question">Who would win in a fistfight?</div>
-		<div class="buttons">
-			<button type="button" class="step-choice" name="2">Corbusier</button>
-			<button type="button" class="step-choice" name="2">Mies</button>
-		</div>
-	</div></div>
-	<div id="step-3" class="step"><div class="step-inner">
-		<div class="question">Better activist academic?</div>
-		<div class="buttons">
-			<button type="button" class="step-choice" name="3">Piketty</button>
-			<button type="button" class="step-choice" name="3">Graeber</button>
-		</div>
-	</div></div>
+	{{/with}}
 	<div id="step-4" class="step final-step"><div class="step-inner">
 		{{ quizProcessed }}
 	</div></div>
+		{{#each quizGuesses }}
+			score: {{score}} 	|
+			submission_id: {{submission_id}}	|
+			text: {{text}}	|
+			url: {{url}}	|
+			<br/>
+		{{/each}}
 	<br/>
 	<button type="button" class="restart">Restart</button>
 	<br/>
 	<br/>
-	YOU CHOSE SO FAR: {{ quizAnswers }} {{quizTaker}}
+	YOU CHOSE SO FAR: {{ quizHistory }} {{quizTaker}}
 	<br/>
 	<br/>
 	<button type="button" class="delete">Delete All</button>
@@ -66,7 +60,7 @@
 	<div class="point" style="left:{{pageX}}px; top:{{pageY}}px">
 		{{ quizTaker }}
 		{{pageX}}:{{pageY}}
-		{{qA}}
+		{{qH}}
 	</div>
 </template>
 
