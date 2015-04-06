@@ -85,31 +85,17 @@ if Meteor.isClient
 			if Session.get("quizStep") == globals.quizStepDone
 				qH = Session.get("quizHistory")	
 
-				#HACKY TEST - REAL API GOES HERE
-				if qH[0] == "Karl Marx"
-					x = _.random(0, 300, true)
-				else 
-					x = _.random(300, 600, true)
+				coord = Session.get("currentApiData").coord
+				x = (coord[0] + 0.5) * 500
+				y = (coord[1] + 0.5) * 500
 
-				if qH[1] == "Corbusier"
-					y = _.random(0, 300, true)
-				else 
-					y = _.random(300, 600, true)
-
-				if qH[2] == "Piketty"
-					r = _.random(0, 5, true)
-				else 
-					r = _.random(10, 20, true)
-
-				
 				Points.insert
 					pageX: x
 					pageY: y
-					radius: r
 					qH: qH
 					quizTaker: this.quizTaker
 
-				return x + ":" + y + ":" + r
+				return x + ":" + y 
 
 	Template.quiz.events
 
