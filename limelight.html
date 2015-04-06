@@ -61,11 +61,9 @@
 <template name="projection">
 <div id="projection-container">
 	QUIZ:<br/>
-	We are taker {{quizTaker}}<br/>
-	We are on step {{projectionStep}}<br/>
 	{{#with projectionSession}}
-		{{ taker }} 
-		{{ quizStep }}
+		We are taker {{taker}}<br/>
+		We are on step {{quizStep}}<br/>
 		{{ #each currentApiData.guesses }}
 			score: {{score}} 	|
 			submission_id: {{submission_id}}	|
@@ -75,13 +73,9 @@
 		{{/each}}
 	{{/with}}
 	<br/>
-	<button type="button" class="restart">Restart</button>
-	<br/>
-	<br/>
 	YOU CHOSE SO FAR: {{ projectionHistory }} {{projectionTaker}}
 	<br/>
 	<br/>
-	<button type="button" class="delete">Delete All</button>
 
 </div>
 </template>
