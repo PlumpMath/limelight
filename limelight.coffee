@@ -120,7 +120,7 @@ if Meteor.isClient
 			qH = Session.get("quizHistory")
 			qH.push Session.get("currentApiData").next_question[0].qid + "." + button_value
 
-			Session.set("apiUrl", globals.apiBaseUrl + qH.join(">"))
+			Session.set("apiUrl", globals.apiBaseUrl + qH.join(">") + "/")
 			Session.set("quizHistory", qH)
 
 			Session.set("quizStep", Session.get("quizStep") + 1)
