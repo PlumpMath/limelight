@@ -7,9 +7,11 @@
 
 <template name="baseTemplate">
 <div class="flex-container">
+	{{> header }}
 	<div class="dotcontainer">
 		{{> yield}}
 	</div>
+	{{> footer }}
 </div>
 </template>
 

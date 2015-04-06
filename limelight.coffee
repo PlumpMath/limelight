@@ -1,10 +1,17 @@
 Points = new Mongo.Collection("points")
 QuizSessions = new Mongo.Collection("quizsessions")
-@qs = QuizSessions
 
 if Meteor.isClient 
-	l = (string) ->
-		return string.toLocaleString();
+
+	getHashVariable = (variable) ->
+		query = location.hash
+		if(query.length > 0)
+			vars = query.split('#')
+			for i in [1 .. vars.length - 1]
+				pair = vars[i].split('=')
+				if (decodeURIComponent(pair[0]) == variable)
+					return decodeURIComponent(pair[1])
+		console.log('Hash variable %s not found', variable);
 
 	Template.pindrop.events
 		"click div": (event) ->
@@ -39,6 +46,7 @@ if Meteor.isClient
 			console.log "who#a"
 
 	quizInit = (that) ->
+		getHashVariable("yo")
 		Session.set("currentApiData", undefined)
 		Session.set("quizStep", 1)
 		Session.set("quizHistory", [])
@@ -76,7 +84,6 @@ if Meteor.isClient
 		quizGuesses: () ->
 			if(Session.get("currentApiData"))
 				return Session.get("currentApiData").guesses
-			console.log(Session.get("quizStep"))
 			return
 		quizHistory: () ->
 			return Session.get("quizHistory")	
