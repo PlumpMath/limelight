@@ -24,6 +24,7 @@
 <template name="quiz">
 <div id="quiz-container" class="step-{{quizStep}}">
 	QUIZ:<br/>
+	We are taker {{quizTaker}}<br/>
 	We are on step {{quizStep}}<br/>
 	{{#with quizQuestionData}}
 	<div id="step" class="step"><div class="step-inner">
@@ -55,6 +56,38 @@
 
 </div>
 </template>
+
+
+<template name="projection">
+<div id="projection-container">
+	QUIZ:<br/>
+	We are taker {{quizTaker}}<br/>
+	We are on step {{projectionStep}}<br/>
+	{{#with projectionSession}}
+		{{ taker }} 
+		{{ quizStep }}
+		{{ #each currentApiData.guesses }}
+			score: {{score}} 	|
+			submission_id: {{submission_id}}	|
+			text: {{text}}	|
+			url: {{url}}	|
+			<br/>
+		{{/each}}
+	{{/with}}
+	<br/>
+	<button type="button" class="restart">Restart</button>
+	<br/>
+	<br/>
+	YOU CHOSE SO FAR: {{ projectionHistory }} {{projectionTaker}}
+	<br/>
+	<br/>
+	<button type="button" class="delete">Delete All</button>
+
+</div>
+</template>
+
+
+
 
 <template name="point">
 	<div class="point" style="left:{{pageX}}px; top:{{pageY}}px">

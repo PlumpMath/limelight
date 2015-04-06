@@ -1,4 +1,6 @@
 Points = new Mongo.Collection("points")
+QuizSessions = new Mongo.Collection("quizsessions")
+@qs = QuizSessions
 
 if Meteor.isClient 
 	l = (string) ->
@@ -36,26 +38,35 @@ if Meteor.isClient
 				.fadeOut(1000)
 			console.log "who#a"
 
-	quizInit = ->
+	quizInit = (that) ->
 		Session.set("currentApiData", undefined)
 		Session.set("quizStep", 1)
 		Session.set("quizHistory", [])
 		Session.set("apiUrl", globals.apiBaseUrl)
+		Session.set("quizTaker", that.quizTaker)
+
 		$(".step").hide()
 		$(".initial-step").show()
 
 	updateFromApi = (url) ->
 		Meteor.call "checkApi", url, (error, results) ->
-			console.log(results)
+
+			# save current results
 			Session.set("currentApiData", results.data)
+			console.log(results)
+
+			# check if we're done
 			if('next_question' of results.data and results.data.next_question.length <= 0)
 				Session.set("quizStep", globals.quizStepDone)
+
+			# update quiz session for projection template
+			Meteor.call "updateQuizSession", Session.get("quizTaker"), Session.get("quizStep"), Session.get("currentApiData")
 		return
 
 	Template.quiz.helpers
 		quizStep: () ->
 			if !(Session.get("quizStep"))
-				quizInit()
+				quizInit(this)
 			return Session.get("quizStep")	
 		quizQuestionData: () ->
 			if !(Session.get("currentApiData"))
@@ -63,8 +74,10 @@ if Meteor.isClient
 			else
 				return Session.get("currentApiData").next_question[0]
 		quizGuesses: () ->
-			if (Session.get("currentApiData"))
+			if(Session.get("currentApiData"))
 				return Session.get("currentApiData").guesses
+			console.log(Session.get("quizStep"))
+			return
 		quizHistory: () ->
 			return Session.get("quizHistory")	
 		quizProcessed: () ->
@@ -99,15 +112,6 @@ if Meteor.isClient
 				return x + ":" + y + ":" + r
 
 	Template.quiz.events
-		"click button.delete": ->
-			r = confirm("Delete all points? This cannot be undone.")
-			if r == true
-				Meteor.call "removeAllPoints"
-				quizInit()
-
-		"click button.restart": (event) ->
-			quizInit()
-			return
 
 		"click button.step-choice": (event) ->
 
@@ -123,13 +127,40 @@ if Meteor.isClient
 
 			updateFromApi(Session.get("apiUrl"))
 
+		"click button.delete": ->
+			r = confirm("Delete all points? This cannot be undone.")
+			if r == true
+				Meteor.call "removeAllPoints"
+				quizInit(this)
 
+		"click button.restart": (event) ->
+			quizInit(this)
+			return
+
+
+	Template.projection.helpers
+		projectionSession: () ->
+			return QuizSessions.findOne({ taker: this.quizTaker})
+		
+		projectionStep: () ->
+			console.log(this)
+			return "yo"
 
 
 if Meteor.isServer
 	Meteor.methods
+		updateQuizSession: (thistaker, thisquizstep, thisapidata) ->
+			console.log(thistaker)
+			console.log(thisquizstep)
+			QuizSessions.update(
+				{ taker: thistaker },
+				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata } },
+				{ upsert: true}) 
+			return thistaker + ":" + thisquizstep
+
 		removeAllPoints: ->
 			Points.remove({})
+			QuizSessions.remove({})
 
 		checkApi: (url) ->
 			this.unblock();
@@ -138,17 +169,26 @@ if Meteor.isServer
 			
 
 Router.map ->
-	this.route 'hello', {path: '/hellohello'}  
+
 	this.route 'pindrop',
 		path: '/pindrop', 
 		layoutTemplate: 'baseTemplate'
 		yieldTemplate:
 			'pindrop': { to: 'pindrop'}
+
 	this.route 'quiz',
 		path: '/quiz/:quizTaker'
 		layoutTemplate: 'baseTemplate'
 		yieldTemplate:
 			'quiz': {to: 'quiz'}
+		data: ->
+			return { quizTaker : this.params.quizTaker }
+
+	this.route 'projection',
+		path: '/projection/:quizTaker'
+		layoutTemplate: 'baseTemplate'
+		yieldTemplate:
+			'projection': {to: 'projection'}
 		data: ->
 			return { quizTaker : this.params.quizTaker }
 
