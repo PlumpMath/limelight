@@ -2,7 +2,7 @@ Points = new Mongo.Collection("points")
 QuizSessions = new Mongo.Collection("quizsessions")
 @qs = QuizSessions
 
-if Meteor.isClient 
+if Meteor.isClient
 	l = (string) ->
 		return string.toLocaleString();
 
@@ -17,7 +17,7 @@ if Meteor.isClient
 			return Points.find({})
 
 	Template.pindrop.rendered = ->
-		if(!this._rendered) 
+		if(!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
 			console.log('Template onLoad')
@@ -67,7 +67,7 @@ if Meteor.isClient
 		quizStep: () ->
 			if !(Session.get("quizStep"))
 				quizInit(this)
-			return Session.get("quizStep")	
+			return Session.get("quizStep")
 		quizQuestionData: () ->
 			if !(Session.get("currentApiData"))
 				updateFromApi(Session.get("apiUrl"))
@@ -79,14 +79,14 @@ if Meteor.isClient
 			console.log(Session.get("quizStep"))
 			return
 		quizHistory: () ->
-			return Session.get("quizHistory")	
+			return Session.get("quizHistory")
 		quizProcessed: () ->
 
 			if Session.get("quizStep") == globals.quizStepDone
-				qH = Session.get("quizHistory")	
+				qH = Session.get("quizHistory")
 
 				coord = Session.get("currentApiData").coord
-				# rough x coords domain: -0.8 to 1.1, 
+				# rough x coords domain: -0.8 to 1.1,
 				# y: -0.8 to 0.9
 				x = (coord[0] + 0.5) * 500
 				y = (coord[1] + 0.5) * 500
@@ -97,7 +97,9 @@ if Meteor.isClient
 					qH: qH
 					quizTaker: this.quizTaker
 
-				return x + ":" + y 
+				return x + ":" + y
+		totalSteps: () ->
+			return 16
 
 	Template.quiz.events
 
@@ -115,6 +117,9 @@ if Meteor.isClient
 
 			updateFromApi(Session.get("apiUrl"))
 
+			# unfocus the button
+			event.target.blur()
+
 		"click button.delete": ->
 			r = confirm("Delete all points? This cannot be undone.")
 			if r == true
@@ -129,7 +134,7 @@ if Meteor.isClient
 	Template.projection.helpers
 		projectionSession: () ->
 			return QuizSessions.findOne({ taker: this.quizTaker})
-		
+
 		projectionStep: () ->
 			console.log(this)
 			return "yo"
@@ -143,7 +148,7 @@ if Meteor.isServer
 			QuizSessions.update(
 				{ taker: thistaker },
 				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata } },
-				{ upsert: true}) 
+				{ upsert: true})
 			return thistaker + ":" + thisquizstep
 
 		removeAllPoints: ->
@@ -154,12 +159,12 @@ if Meteor.isServer
 			this.unblock();
 			return Meteor.http.call("GET", url)
 
-			
+
 
 Router.map ->
 
 	this.route 'pindrop',
-		path: '/pindrop', 
+		path: '/pindrop',
 		layoutTemplate: 'baseTemplate'
 		yieldTemplate:
 			'pindrop': { to: 'pindrop'}
@@ -179,6 +184,3 @@ Router.map ->
 			'projection': {to: 'projection'}
 		data: ->
 			return { quizTaker : this.params.quizTaker }
-
-
-
