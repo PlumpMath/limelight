@@ -86,6 +86,8 @@ if Meteor.isClient
 				qH = Session.get("quizHistory")	
 
 				coord = Session.get("currentApiData").coord
+				# rough x coords domain: -0.8 to 1.1, 
+				# y: -0.8 to 0.9
 				x = (coord[0] + 0.5) * 500
 				y = (coord[1] + 0.5) * 500
 
