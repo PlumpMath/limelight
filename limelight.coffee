@@ -126,7 +126,7 @@ if Meteor.isClient
 				Meteor.call "removeAllPoints"
 				quizInit(this)
 
-		"click button.restart": (event) ->
+		"click .restart": (event) ->
 			quizInit(this)
 			return
 

@@ -6,6 +6,7 @@
 </body>
 
 <template name="baseTemplate">
+<div class="bg"></div>
 <div class="h100 flex-container">
 	<div class="h100 dotcontainer">
 		{{> yield}}
@@ -26,27 +27,30 @@
 	<!-- QUIZ:<br/>
 	We are taker {{quizTaker}}<br/> -->
 
-	<div class="corner corner-top corner-left">{{quizStep}}/{{totalSteps}}</div>
-    <button type="button" class="restart corner corner-left corner-bottom">Restart Game</button>
-    <h3 class="alignright corner corner-right corner-bottom">Guggenheim<br>Helsinki Now</h3>
+	<div class="corner corner-top corner-left step-counter">{{quizStep}}/{{totalSteps}}</div>
+    <div class="restart corner corner-left corner-bottom">
+        <img src="/img/restart.svg">
+    </div>
+    <div class="logo corner corner-right corner-bottom">
+        <img src="/img/GHN_logo.svg">
+    </div>
 
 	{{#with quizQuestionData}}
-	<div id="step" class="step">
-        <div class="step-inner">
-    		<h3 class="question caps bold">{{qtext}}</h3>
-    		<div class="buttons">
-    			<button type="button" class="step-choice" value="{{a1id}}">{{a1text}}</button>
-    			<button type="button" class="step-choice" value="{{a2id}}">{{a2text}}</button>
-    		</div>
-    	</div>
+	<div id="step" class="step h100">
+
+		<h3 class="question caps bold abs w100">{{qtext}}</h3>
+
+		<div class="buttons flex-container w100 vcenter">
+			<button type="button" class="step-choice" value="{{a1id}}">{{a1text}}</button>
+			<button type="button" class="step-choice" value="{{a2id}}">{{a2text}}</button>
+		</div>
+
     </div>
 	{{/with}}
 
-	<div id="step-4" class="step final-step"><div class="step-inner">
+	<!-- <div id="step-4" class="step final-step"><div class="step-inner">
 		{{ quizProcessed }}
-	</div>
-
-    </div>
+	</div> -->
 
     <!-- debugging only -->
     <div class="corner corner-bottom" style="height: 100px; overflow-y: scroll; left: 25%; width: 50%;">

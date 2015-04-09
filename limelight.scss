@@ -9,14 +9,28 @@ article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary
 }
 
 // Fonts
+@font-face {
+	font-family: 'Skyhook';
+	src: url('/fonts/2DDD80_0_0.eot'); /* IE9 Compat Modes */
+	src: url('/fonts/2DDD80_0_0.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+		url('/fonts/2DDD80_0_0.woff2') format('woff2'), /* Super Modern Browsers */
+		url('/fonts/2DDD80_0_0.woff') format('woff'), /* Pretty Modern Browsers */
+		url('/fonts/2DDD80_0_0.ttf')  format('truetype'); /* Safari, Android, iOS */
+		// url('/fonts/2DDD80_0_0.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
 @mixin monospace {
-	font-family: Monospace;
+	font-family: 'Skyhook', Monospace;
 }
 
 // Utilities
 .h100 { height: 100%; }
+.w100 { width: 100%; }
+.abs { position: absolute; }
 .caps { text-transform: uppercase; }
 .bold { font-weight: bold; }
+@mixin tight { margin: 0; padding: 0; }
+.tight { @include tight; }
 
 html, body {
 	@include monospace;
@@ -25,7 +39,7 @@ html, body {
 
 body {
 	// overflow: hidden;
-	padding: 5%;
+	padding: 3.125vw; // 1/32
 }
 
 // Form styles
@@ -79,11 +93,45 @@ input, button, textarea {
 }
 
 .flex-container {
+	align-items: stretch;
 	display: flex;
+	justify-content: center;
 }
 
 .dotcontainer {
 	flex: 1;
+}
+
+.bg {
+	background-image: url(/img/bg/1AB_pink.svg); // defaults to pink
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	transform: scale(1.05); // since some of the images have whitespace
+	width: 100%;
+}
+
+.restart,
+.logo {
+	height: 12.5vw;
+
+	// stretch to fill but do not exceed container height
+	img {
+		height: 100%;
+		max-height: 100%;
+	}
+}
+
+.restart {
+	cursor: pointer;
+	transition: 0.2s;
+	&:active, &:hover {
+		transform: scale(0.9);
+	}
 }
 
 #drop-canvas {
@@ -139,30 +187,31 @@ input, button, textarea {
 }
 
 .question {
-	@include fontVW(5, 50, 25);
+	//@include fontVW(4.5, 45, 25);
+	font-size: 40px;
+	margin: 0 0 3.125vw;
+	min-height: 8.33vw;
+	text-align: center;
 }
 
 .step {
 	margin: 0 auto;
-	top: 2em;
-	width: 40%;
+	max-width: 1024px;
+	padding: 3.125vw;
 }
-
-.step.initial-step {
+.step-counter {
+	font-size: 3.125vw;
 }
 
 .step-choice {
-	@include fontVW(3, 40, 20);
-	margin-left: auto;
-	margin-right: auto;
+	@include fontVW(4.167, 40, 18);
 	width: 100%;
-}
-
-.step-inner {
-	//display: flex;
-	//flex-direction: column;
-}
-
-.question {
-	text-align: center;
+	&:first-child {
+		margin-left: 0;
+		margin-right: 3.125vw;
+	}
+	&:last-child {
+		margin-left: 3.125vw;
+		margin-right: 0;
+	}
 }
