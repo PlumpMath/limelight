@@ -6,7 +6,6 @@
 </body>
 
 <template name="baseTemplate">
-<div class="bg"></div>
 <div class="h100 flex-container">
 	<div class="h100 dotcontainer">
 		{{> yield}}
@@ -15,14 +14,16 @@
 </template>
 
 <template name="pindrop">
-<div id="drop-canvas">
+<div id="drop-canvas" class="h100 w100">
+    <!-- TODO: meta info -->
 	{{#each allpoints}}
-		{{>point}}
+		{{ renderPoint }}
 	{{/each}}
 </div>
 </template>
 
 <template name="quiz">
+<div class="bg"></div>
 <div id="quiz-container" class="h100 step-{{quizStep}}">
 	<!-- QUIZ:<br/>
 	We are taker {{quizTaker}}<br/> -->
@@ -30,6 +31,7 @@
 	<div class="corner corner-top corner-left step-counter">{{quizStep}}/{{totalSteps}}</div>
     <div class="restart corner corner-left corner-bottom">
         <img src="/img/restart.svg">
+        <button class="delete">Delete</button>
     </div>
     <div class="logo corner corner-right corner-bottom">
         <img src="/img/GHN_logo.svg">
@@ -99,18 +101,6 @@
 	<br/>
 
 </div>
-</template>
-
-
-
-
-<template name="point">
-	<div class="point" style="left:{{pageX}}px; top:{{pageY}}px">
-		<b>&#9679;</b>
-		{{ quizTaker }}
-		{{pageX}}:{{pageY}}
-		{{qH}}
-	</div>
 </template>
 
 

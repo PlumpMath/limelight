@@ -8,13 +8,70 @@ if Meteor.isClient
 
 	Template.pindrop.events
 		"click div": (event) ->
+
+			# give it a random ID btw 1 and 24 inclusive
+			id = Math.round(Math.random() * 23 + 1).toString()
+			# leading 0 if there is not one
+			if id.length == 1
+				id = '0' + id
+
 			Points.insert
-				pageX: event.pageX
-				pageY: event.pageY
+				pageX: event.pageX * ( 100 / window.innerWidth )
+				pageY: event.pageY * ( 100 / window.innerHeight )
+				id: id
 
 	Template.pindrop.helpers
 		allpoints: () ->
 			return Points.find({})
+		renderPoint: () ->
+
+			# for ref
+			xmlns = 'http://www.w3.org/2000/svg'
+
+			# create point container
+			point = document.createElement('div')
+			point.classList.add('point')
+			point.style.left = this.pageX + 'vw'
+			point.style.top = this.pageY + 'vh'
+
+			if this.pageX < 50
+				if this.pageY < 50 && this.pageY < 1.5 * this.pageX
+					quadrant = 1 # blue
+				else if this.pageY >= 50 && 100 - this.pageY < 1.5 * this.pageX
+					quadrant = 5 # orange
+				else
+					quadrant = 6 #purple
+			if this.pageX >= 50
+				if this.pageY < 50 && this.pageY < 1.5 * (100 - this.pageX)
+					quadrant = 2 # yellow
+				else if this.pageY >= 50 && 100 - this.pageY <= 1.5 * (100 - this.pageX)
+					quadrant = 4 # pink
+				else
+					quadrant = 3 # green
+
+
+			quadrantColors = ['#00BDD4', '#FBEB34', '#6EC829', '#FAB0C9', '#FFAF3E', '#925D9E']
+
+			# create SVG element
+			svg = document.createElementNS(xmlns, 'svg')
+			svg.setAttribute('viewBox', '0 0 283.46 283.46')
+			svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+			svg.classList.add('emoji')
+			point.appendChild(svg)
+
+			thisContent = globals.svgContent[this.id]
+
+			for shape in thisContent then do (shape) =>
+				el = document.createElementNS(xmlns, shape.type)
+				for attr, val of shape.attrs
+					el.setAttribute(attr, val)
+				# TODO: color
+				el.setAttribute('fill', quadrantColors[quadrant - 1])
+				svg.appendChild(el)
+			document.body.appendChild(point)
+			return ''
+
+
 
 	Template.pindrop.rendered = ->
 		if(!this._rendered)
@@ -24,19 +81,15 @@ if Meteor.isClient
 
 	Template.point.created = ->
 		if Session.get("pindropRendered") == true
-			console.log this
-			console.log this.data.pageX
-			console.log this.data.pageY
 			$("<img>")
 				.addClass("explosion")
-				.css("left", this.data.pageX + "px")
-				.css("top", this.data.pageY + "px")
+				.css("left", this.data.pageX + "vw")
+				.css("top", this.data.pageY + "vh")
 				.attr("src", "/img/glitter.gif")
 				.hide()
 				.appendTo("#drop-canvas")
 				.fadeIn(1000)
 				.fadeOut(1000)
-			console.log "who#a"
 
 	quizInit = (that) ->
 		Session.set("currentApiData", undefined)
@@ -88,8 +141,12 @@ if Meteor.isClient
 				coord = Session.get("currentApiData").coord
 				# rough x coords domain: -0.8 to 1.1,
 				# y: -0.8 to 0.9
-				x = (coord[0] + 0.5) * 500
-				y = (coord[1] + 0.5) * 500
+				# so: map -1.2 to 1.2 :: 0 to 100 (for vw/vh)
+				remap(n) ->
+					return ( n + 1.2 ) * ( 100 / 2.4 );
+
+				x = remap(coord[0])
+				y = remap(coord[1])
 
 				Points.insert
 					pageX: x
