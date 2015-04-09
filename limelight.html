@@ -14,12 +14,21 @@
 </template>
 
 <template name="pindrop">
-<div id="drop-canvas" class="h100 w100">
-    <!-- TODO: meta info -->
-	{{#each allpoints}}
-		{{ renderPoint }}
-	{{/each}}
-</div>
+    <div class="h100 flex-container">
+    	<div class="h100 dotcontainer">
+            <div class="restart corner corner-left corner-bottom">
+                <img src="/img/restart.svg">
+            </div>
+            <div class="logo corner corner-right corner-bottom">
+                <img src="/img/GHN_logo.svg">
+            </div>
+            <div class="corner corner-right corner-top">About</div>
+            <!-- TODO: meta info -->
+        	{{#each allpoints}}
+        		{{ renderPoint }}
+        	{{/each}}
+        </div>
+    </div>
 </template>
 
 <template name="quiz">
@@ -50,20 +59,7 @@
     </div>
 	{{/with}}
 
-	<!-- <div id="step-4" class="step final-step"><div class="step-inner">
-		{{ quizProcessed }}
-	</div> -->
-
-    <!-- debugging only -->
-    <div class="corner corner-bottom" style="height: 100px; overflow-y: scroll; left: 25%; width: 50%;">
-	{{#each quizGuesses }}
-		score: {{score}} 	|
-		submission_id: {{submission_id}}	|
-		text: {{text}}	|
-		url: {{url}}	|
-		<br/>
-	{{/each}}
-    </div>
+    <div class="vcenter">{{ quizProcessed }}</div>
 
 	<!-- YOU CHOSE SO FAR: {{ quizHistory }} {{quizTaker}}
 

@@ -3,9 +3,18 @@ QuizSessions = new Mongo.Collection("quizsessions")
 @qs = QuizSessions
 
 if Meteor.isClient
+
+	# Helper functions
+
 	l = (string) ->
 		return string.toLocaleString();
 
+	# given min and max bounds, map a number n
+	# onto 0 --> 100
+	remap = (n, min, max) ->
+		return ( n + 0.5 * (max - min) ) * ( 100 / (max - min) );
+
+	# testing only
 	Template.pindrop.events
 		"click div": (event) ->
 
@@ -33,6 +42,11 @@ if Meteor.isClient
 			point.classList.add('point')
 			point.style.left = this.pageX + 'vw'
 			point.style.top = this.pageY + 'vh'
+
+			quizTaker = document.createElement('p')
+			quizTaker.classList.add('quiz-taker')
+			quizTaker.innerHTML = this.quizTaker
+			point.appendChild(quizTaker)
 
 			if this.pageX < 50
 				if this.pageY < 50 && this.pageY < 1.5 * this.pageX
@@ -79,18 +93,6 @@ if Meteor.isClient
 			Session.set("pindropRendered", true)
 			console.log('Template onLoad')
 
-	Template.point.created = ->
-		if Session.get("pindropRendered") == true
-			$("<img>")
-				.addClass("explosion")
-				.css("left", this.data.pageX + "vw")
-				.css("top", this.data.pageY + "vh")
-				.attr("src", "/img/glitter.gif")
-				.hide()
-				.appendTo("#drop-canvas")
-				.fadeIn(1000)
-				.fadeOut(1000)
-
 	quizInit = (that) ->
 		Session.set("currentApiData", undefined)
 		Session.set("quizStep", 1)
@@ -106,7 +108,7 @@ if Meteor.isClient
 
 			# save current results
 			Session.set("currentApiData", results.data)
-			console.log(results)
+			#console.log(results)
 
 			# check if we're done
 			if('next_question' of results.data and results.data.next_question.length <= 0)
@@ -129,7 +131,7 @@ if Meteor.isClient
 		quizGuesses: () ->
 			if(Session.get("currentApiData"))
 				return Session.get("currentApiData").guesses
-			console.log(Session.get("quizStep"))
+			#console.log(Session.get("quizStep"))
 			return
 		quizHistory: () ->
 			return Session.get("quizHistory")
@@ -141,21 +143,25 @@ if Meteor.isClient
 				coord = Session.get("currentApiData").coord
 				# rough x coords domain: -0.8 to 1.1,
 				# y: -0.8 to 0.9
-				# so: map -1.2 to 1.2 :: 0 to 100 (for vw/vh)
-				remap(n) ->
-					return ( n + 1.2 ) * ( 100 / 2.4 );
+				x = remap(coord[0], -0.8, 1.1)
+				y = remap(coord[1], -0.8, 0.9)
 
-				x = remap(coord[0])
-				y = remap(coord[1])
+				# give it a random ID btw 1 and 24 inclusive
+				id = Math.round(Math.random() * 23 + 1).toString()
+				# leading 0 if there is not one
+				if id.length == 1
+					id = '0' + id
 
 				Points.insert
 					pageX: x
 					pageY: y
+					id: id
 					qH: qH
 					quizTaker: this.quizTaker
 
 				return x + ":" + y
 		totalSteps: () ->
+			# or whatever it actually is... should it be in globals.quizStepDone?
 			return 16
 
 	Template.quiz.events
@@ -193,15 +199,15 @@ if Meteor.isClient
 			return QuizSessions.findOne({ taker: this.quizTaker})
 
 		projectionStep: () ->
-			console.log(this)
+			#console.log(this)
 			return "yo"
 
 
 if Meteor.isServer
 	Meteor.methods
 		updateQuizSession: (thistaker, thisquizstep, thisapidata) ->
-			console.log(thistaker)
-			console.log(thisquizstep)
+			#console.log(thistaker)
+			#console.log(thisquizstep)
 			QuizSessions.update(
 				{ taker: thistaker },
 				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata } },
@@ -222,9 +228,9 @@ Router.map ->
 
 	this.route 'pindrop',
 		path: '/pindrop',
-		layoutTemplate: 'baseTemplate'
-		yieldTemplate:
-			'pindrop': { to: 'pindrop'}
+		layoutTemplate: 'pindrop'
+		#yieldTemplate:
+		#	'pindrop': { to: 'pindrop'}
 
 	this.route 'quiz',
 		path: '/quiz/:quizTaker'

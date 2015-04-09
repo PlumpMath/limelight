@@ -135,7 +135,7 @@ input, button, textarea {
 }
 
 .logo {
-	width: 100%;
+	width: 50%;
 
 	img {
 		float: right;
@@ -170,6 +170,18 @@ input, button, textarea {
 		width: 24px;
 		margin-top: -12px;
 		margin-left: -12px;
+	}
+
+	.quiz-taker {
+		background: #fff;
+		border: 2px solid;
+		display: none;
+		position: absolute;
+		padding: 0.5em;
+	}
+
+	&:hover .quiz-taker {
+		display: block;
 	}
 }
 
