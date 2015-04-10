@@ -167,6 +167,8 @@ if Meteor.isClient
 
 			renderQuizBG()
 
+			$('button.step-choice').prop('disabled', false)
+
 			if !(Session.get("currentApiData"))
 				updateFromApi(Session.get("apiUrl"))
 			else
@@ -201,14 +203,16 @@ if Meteor.isClient
 
 				return x + ":" + y
 		totalSteps: () ->
-			# or whatever it actually is... should it be in globals.quizStepDone?
-			return 16
+			return globals.quizTotalSteps
 
 	Template.quiz.events
 
 		"click button.step-choice": (event) ->
 
 			button_value = event.target.value
+
+			# disable button until re-enabled with new data
+			$('button.step-choice').prop('disabled', true);
 
 			qH = Session.get("quizHistory")
 			qH.push Session.get("currentApiData").next_question[0].qid + "." + button_value
@@ -235,12 +239,18 @@ if Meteor.isClient
 
 
 	Template.projection.helpers
+
+		scoreAsciiBar: (score) ->
+			return Array(Math.round(score * 100)).join("-")
+
+		scoreTest: (score) ->
+			return Math.round(score * 1000) / 10
+
 		projectionSession: () ->
 			return QuizSessions.findOne({ taker: this.quizTaker})
 
-		projectionStep: () ->
-			#console.log(this)
-			return "yo"
+		totalSteps: () ->
+			return globals.quizTotalSteps
 
 	# Futura web font
 	wf = {}

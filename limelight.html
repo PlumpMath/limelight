@@ -73,16 +73,22 @@
 <div id="projection-container">
 	QUIZ:<br/>
 	{{#with projectionSession}}
-		We are taker {{taker}}<br/>
-		We are on step {{quizStep}}<br/>
+		<div class="corner corner-top corner-left step-counter">{{quizStep}}/{{totalSteps}}</div>
+		<!-- We are taker {{taker}}<br/>  -->
 
-		PROJECTION IMAGE GOES HERE <br/>
-		PROJECTION IMAGE GOES HERE <br/>
-		PROJECTION IMAGE GOES HERE <br/>
-		HISTOGRAM GOES HERE <br/>
-		HISTOGRAM GOES HERE <br/>
-		HISTOGRAM GOES HERE <br/>
+		<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
 
+		<div class="projection-histogram"> 
+		{{ #each currentApiData.guesses }}
+			<div class="histogram-item">
+				<div class="bar">{{scoreAsciiBar score}}</div>
+				score: {{scoreTest score}}% 	|
+				<br/>
+			</div>
+		{{/each}}
+		</div>
+		<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
+	
 		{{ #each currentApiData.guesses }}
 			score: {{score}} 	|
 			submission_id: {{submission_id}}	|
@@ -92,7 +98,7 @@
 		{{/each}}
 	{{/with}}
 	<br/>
-	YOU CHOSE SO FAR: {{ projectionHistory }} {{projectionTaker}}
+	<!-- YOU CHOSE SO FAR: {{ projectionHistory }} {{projectionTaker}} -->
 	<br/>
 	<br/>
 
