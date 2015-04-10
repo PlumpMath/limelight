@@ -240,11 +240,15 @@ if Meteor.isClient
 
 	Template.projection.helpers
 
-		scoreAsciiBar: (score) ->
-			return Array(Math.round(score * 100)).join("-")
+		curIndex: (arr) ->
+			console.log(arr)
+			#return Session.get('currentApiData').indexOf(item)
 
 		scoreTest: (score) ->
 			return Math.round(score * 1000) / 10
+
+		scoreColor: (i) ->
+			return globals.colors[i]
 
 		projectionSession: () ->
 			return QuizSessions.findOne({ taker: this.quizTaker})
@@ -307,5 +311,8 @@ Router.map ->
 		layoutTemplate: 'baseTemplate'
 		yieldTemplate:
 			'projection': {to: 'projection'}
+		onBeforeAction: () ->
+			document.body.classList.add('projection')
+			this.next()
 		data: ->
 			return { quizTaker : this.params.quizTaker }

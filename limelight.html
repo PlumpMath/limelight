@@ -73,35 +73,33 @@
 <div id="projection-container">
 	QUIZ:<br/>
 	{{#with projectionSession}}
-		<div class="corner corner-top corner-left step-counter">{{quizStep}}/{{totalSteps}}</div>
+
 		<!-- We are taker {{taker}}<br/>  -->
 
 		<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
 
-		<div class="projection-histogram"> 
+		<div class="projection-histogram">
 		{{ #each currentApiData.guesses }}
 			<div class="histogram-item">
-				<div class="bar">{{scoreAsciiBar score}}</div>
-				score: {{scoreTest score}}% 	|
-				<br/>
+				<div class="bar">
+                    <div class="bar-amount" style="height: {{ scoreTest score }}%;"></div>
+                </div>
 			</div>
+
 		{{/each}}
 		</div>
 		<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
-	
-		{{ #each currentApiData.guesses }}
-			score: {{score}} 	|
-			submission_id: {{submission_id}}	|
-			text: {{text}}	|
-			url: {{url}}	|
-			<br/>
-		{{/each}}
+
 	{{/with}}
 	<br/>
 	<!-- YOU CHOSE SO FAR: {{ projectionHistory }} {{projectionTaker}} -->
 	<br/>
 	<br/>
 
+</div>
+<div class="corner corner-top corner-left step-counter sans">{{quizStep}}/{{totalSteps}}</div>
+<div class="logo corner corner-right corner-bottom">
+    <img src="/img/GHN_logo_white.svg">
 </div>
 </template>
 
