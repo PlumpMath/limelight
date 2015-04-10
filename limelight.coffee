@@ -16,13 +16,10 @@ if Meteor.isClient
 
 	# testing only
 	Template.pindrop.events
-		"click div": (event) ->
+		"click #drop-canvas": (event) ->
 
-			# give it a random ID btw 1 and 24 inclusive
-			id = Math.round(Math.random() * 23 + 1).toString()
-			# leading 0 if there is not one
-			if id.length == 1
-				id = '0' + id
+			# give it a random ID btw 0 and 23 inclusive
+			id = Math.round(Math.random() * 23).toString()
 
 			Points.insert
 				pageX: event.pageX * ( 100 / window.innerWidth )
@@ -43,11 +40,6 @@ if Meteor.isClient
 			point.style.left = this.pageX + 'vw'
 			point.style.top = this.pageY + 'vh'
 
-			quizTaker = document.createElement('p')
-			quizTaker.classList.add('quiz-taker')
-			quizTaker.innerHTML = this.quizTaker
-			point.appendChild(quizTaker)
-
 			if this.pageX < 50
 				if this.pageY < 50 && this.pageY < 1.5 * this.pageX
 					quadrant = 1 # blue
@@ -63,9 +55,6 @@ if Meteor.isClient
 				else
 					quadrant = 3 # green
 
-
-			quadrantColors = ['#00BDD4', '#FBEB34', '#6EC829', '#FAB0C9', '#FFAF3E', '#925D9E']
-
 			# create SVG element
 			svg = document.createElementNS(xmlns, 'svg')
 			svg.setAttribute('viewBox', '0 0 283.46 283.46')
@@ -79,13 +68,17 @@ if Meteor.isClient
 				el = document.createElementNS(xmlns, shape.type)
 				for attr, val of shape.attrs
 					el.setAttribute(attr, val)
-				# TODO: color
-				el.setAttribute('fill', quadrantColors[quadrant - 1])
+				el.setAttribute('fill', globals.colors[quadrant - 1])
 				svg.appendChild(el)
-			document.body.appendChild(point)
+
+			quizTaker = document.createElement('p')
+			quizTaker.classList.add('quiz-taker')
+			quizTaker.innerHTML = this.quizTaker || 'anonymous'
+			point.appendChild(quizTaker)
+
+			document.getElementById('drop-canvas').appendChild(point)
+			# need to return an empty string even though add the above SVG
 			return ''
-
-
 
 	Template.pindrop.rendered = ->
 		if(!this._rendered)
@@ -102,6 +95,53 @@ if Meteor.isClient
 
 		$(".step").hide()
 		$(".initial-step").show()
+
+	randFromArray = (arr) ->
+		return arr[Math.round(Math.random() * arr.length - 1)]
+
+	sameInArray = (arr, item1, item2) ->
+		return arr.indexOf(item1) == arr.indexOf(item2)
+
+
+	renderQuizBG = () ->
+
+		old = document.getElementsByClassName('bg')[0]
+		if old
+			prevColor = old.getAttribute('color')
+			prevPaths = old.getAttribute('paths')
+
+		color = randFromArray(globals.colors)
+		svgPaths = randFromArray(globals.svgBackgrounds)
+
+		# make sure we don't use the old colors or the old paths
+		if sameInArray(globals.colors, color, prevColor)
+			color = globals.colors[globals.colors.indexOf(color) + 1] || globals.colors[0]
+		if sameInArray(globals.svgBackgrounds, svgPaths, prevPaths)
+			svgPaths = globals.svgBackgrounds[globals.svgBackgrounds.indexOf(svgPaths) + 1] || globals.svgPaths[0]
+
+		# for ref
+		xmlns = 'http://www.w3.org/2000/svg'
+
+		# create SVG element
+		svg = document.createElementNS(xmlns, 'svg')
+		svg.setAttribute('viewBox', '0 0 203.553 143.759')
+		svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+		svg.classList.add('bg')
+
+		for shape in svgPaths then do (shape) =>
+			el = document.createElementNS(xmlns, shape.type)
+			for attr, val of shape.attrs
+				el.setAttribute(attr, val)
+			el.setAttribute('fill', color)
+			svg.appendChild(el)
+
+		window.addEventListener('resize', () ->
+			# sizeSVG(svg)
+		)
+
+		if old
+			old.parentNode.removeChild(old)
+		document.body.insertBefore(svg, document.body.firstChild)
 
 	updateFromApi = (url) ->
 		Meteor.call "checkApi", url, (error, results) ->
@@ -124,6 +164,9 @@ if Meteor.isClient
 				quizInit(this)
 			return Session.get("quizStep")
 		quizQuestionData: () ->
+
+			renderQuizBG()
+
 			if !(Session.get("currentApiData"))
 				updateFromApi(Session.get("apiUrl"))
 			else
@@ -146,11 +189,8 @@ if Meteor.isClient
 				x = remap(coord[0], -0.8, 1.1)
 				y = remap(coord[1], -0.8, 0.9)
 
-				# give it a random ID btw 1 and 24 inclusive
-				id = Math.round(Math.random() * 23 + 1).toString()
-				# leading 0 if there is not one
-				if id.length == 1
-					id = '0' + id
+				# give it a random ID btw 0 and 23 inclusive
+				id = Math.round(Math.random() * 23).toString()
 
 				Points.insert
 					pageX: x
@@ -201,6 +241,18 @@ if Meteor.isClient
 		projectionStep: () ->
 			#console.log(this)
 			return "yo"
+
+	# Futura web font
+	wf = {}
+	wf.monotype = { projectId: 'b07fd47e-b2bf-49ff-9312-8d7e6478a960' }
+	window.WebFontConfig = wf
+	do ()->
+		wf = document.createElement('script');
+		wf.src = '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js';
+		wf.type = 'text/javascript';
+		wf.async = 'true';
+		s = document.getElementsByTagName('script')[0];
+		s.parentNode.insertBefore(wf, s);
 
 
 if Meteor.isServer

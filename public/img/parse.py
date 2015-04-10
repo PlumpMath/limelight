@@ -7,13 +7,17 @@ from bs4 import BeautifulSoup, Comment
 import json
 
 iter = 1
+output = '['
 
 def parseSVG(numString):
+
+    global output
+
     file = open('emoji/' + numString + '.svg', 'r')
     data = file.read()
     svg = BeautifulSoup(data, 'xml')
 
-    output = '['
+    output += '['
 
     parent = svg.find('svg')
 
@@ -49,13 +53,16 @@ def parseSVG(numString):
     # trim last two chars
     output = output[0:len(output) - 2]
     # close the array
-    output += ']'
-
-    newFile = open('txt/' + numString + '.txt', 'w')
-    newFile.write(output)
-    newFile.close()
+    output += '], '
 
 while iter <= 24:
     numString = str(iter).zfill(2)
     parseSVG(numString)
     iter += 1
+
+output = output[0:len(output) - 2]
+output += ']'
+
+newFile = open('svgs.txt', 'w')
+newFile.write(output)
+newFile.close()

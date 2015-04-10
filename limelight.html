@@ -15,24 +15,24 @@
 
 <template name="pindrop">
     <div class="h100 flex-container">
-    	<div class="h100 dotcontainer">
-            <div class="restart corner corner-left corner-bottom">
-                <img src="/img/restart.svg">
-            </div>
-            <div class="logo corner corner-right corner-bottom">
-                <img src="/img/GHN_logo.svg">
-            </div>
-            <div class="corner corner-right corner-top">About</div>
+    	<div id="drop-canvas" class="h100 dotcontainer">
             <!-- TODO: meta info -->
         	{{#each allpoints}}
         		{{ renderPoint }}
         	{{/each}}
         </div>
+
+        <div class="restart corner corner-left corner-bottom">
+            <img src="/img/restart.svg">
+        </div>
+        <div class="logo corner corner-right corner-bottom">
+            <img src="/img/GHN_logo.svg">
+        </div>
+        <div class="corner corner-right corner-top sans">About</div>
     </div>
 </template>
 
 <template name="quiz">
-<div class="bg"></div>
 <div id="quiz-container" class="h100 step-{{quizStep}}">
 	<!-- QUIZ:<br/>
 	We are taker {{quizTaker}}<br/> -->
