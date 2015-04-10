@@ -124,6 +124,7 @@ if Meteor.isClient
 				quizInit(this)
 			return Session.get("quizStep")
 		quizQuestionData: () ->
+			$('button.step-choice').prop('disabled', false)
 			if !(Session.get("currentApiData"))
 				updateFromApi(Session.get("apiUrl"))
 			else
@@ -169,6 +170,9 @@ if Meteor.isClient
 		"click button.step-choice": (event) ->
 
 			button_value = event.target.value
+
+			# disable button until re-enabled with new data
+			$('button.step-choice').prop('disabled', true);
 
 			qH = Session.get("quizHistory")
 			qH.push Session.get("currentApiData").next_question[0].qid + "." + button_value
