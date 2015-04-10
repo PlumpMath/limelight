@@ -162,8 +162,7 @@ if Meteor.isClient
 
 				return x + ":" + y
 		totalSteps: () ->
-			# or whatever it actually is... should it be in globals.quizStepDone?
-			return 16
+			return globals.quizTotalSteps
 
 	Template.quiz.events
 
@@ -199,12 +198,18 @@ if Meteor.isClient
 
 
 	Template.projection.helpers
+
+		scoreAsciiBar: (score) ->
+			return Array(Math.round(score * 100)).join("-")
+
+		scoreTest: (score) ->
+			return Math.round(score * 1000) / 10
+
 		projectionSession: () ->
 			return QuizSessions.findOne({ taker: this.quizTaker})
 
-		projectionStep: () ->
-			#console.log(this)
-			return "yo"
+		totalSteps: () ->
+			return globals.quizTotalSteps
 
 
 if Meteor.isServer

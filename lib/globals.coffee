@@ -3,7 +3,12 @@
 globals.apiBaseUrl = "http://54.148.142.11:8080/play/"
 #"http://localhost:4000/ba-simple-proxy.php?url=http%3A%2F%2F54.148.142.11%3A8080%2Fplay%2F&full_headers=1&full_status=1"
 
+# this is the number of total steps
+globals.quizTotalSteps = 16
+
+# this is an arbitrary large number set when the API tells us that we're done
 globals.quizStepDone = 10000
+
 
 # all the types of SVGs we'll allow
 rect = (x, y, w, h) ->
