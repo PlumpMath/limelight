@@ -71,18 +71,21 @@
 
 <template name="projection">
 <div id="projection-container">
-	QUIZ:<br/>
+
 	{{#with projectionSession}}
 
 		<!-- We are taker {{taker}}<br/>  -->
 
 		<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
 
-		<div class="projection-histogram">
+		<div class="projection-histogram cf">
 		{{ #each currentApiData.guesses }}
 			<div class="histogram-item">
 				<div class="bar">
-                    <div class="bar-amount" style="height: {{ scoreTest score }}%;"></div>
+                    <div class="bar-amount-container dib">
+                        <div class="bar-amount" style="height: {{ scoreTest score }}%;"></div>
+                    </div>
+                    <div class="dib">{{ scoreTest score }}%</div>
                 </div>
 			</div>
 

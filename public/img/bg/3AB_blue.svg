@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="204px"
-	 height="143.76px" viewBox="0 0 204 143.76" enable-background="new 0 0 204 143.76" xml:space="preserve">
-<g id="Layer_1">
-</g>
-<g id="Layer_3">
-	<polygon fill="#00BDD4" points="42.232,139.76 42.087,143.76 78.6,143.76 76.064,137.289 	"/>
-	<polygon fill="#00BDD4" points="60.658,130.523 61.851,105.094 86.847,103.291 91.222,128.289 	"/>
-	<polygon fill="#00BDD4" points="0.609,108.686 10.481,134.191 30.79,132.744 29.535,106.541 	"/>
-	<polygon fill="#00BDD4" points="35.661,120.586 33.232,89.363 51.346,88.016 56.727,119.064 	"/>
-	<polygon fill="#00BDD4" points="0.223,71.005 0.223,104.02 17.075,102.76 11.399,70.179 	"/>
-	<polygon fill="#00BDD4" points="11.147,55.351 19.966,76.43 51.812,74.084 36.77,53.476 	"/>
-	<polygon fill="#00BDD4" points="0.223,15.897 0.223,48.367 24.125,46.605 3.692,15.635 	"/>
-	<polygon fill="#00BDD4" points="110.977,143.76 186.305,143.76 203.776,119.422 203.776,69.138 171.931,48.775 	"/>
-	<polygon fill="#00BDD4" points="149.116,37.453 160.134,0 48.048,0 45.958,7.104 	"/>
-</g>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="204px" height="143.76px" viewBox="0 0 204 143.76" enable-background="new 0 0 204 143.76" xml:space="preserve">
+<path id="bottom_left" fill="#00BDD4" d="M42.232,139.76l-0.145,4H78.6l-2.536-6.471L42.232,139.76z M60.658,130.522l1.193-25.429
+	l24.996-1.803l4.375,24.998L60.658,130.522z M0.609,108.687l9.872,25.504l20.309-1.446l-1.255-26.203L0.609,108.687z
+	 M35.661,120.586l-2.429-31.224l18.114-1.346l5.381,31.047L35.661,120.586z M0.223,71.005v33.016l16.852-1.261l-5.676-32.581
+	L0.223,71.005z M11.147,55.351l8.819,21.08l31.846-2.347L36.77,53.476L11.147,55.351z M0.223,15.897v32.47l23.902-1.762
+	L3.692,15.635L0.223,15.897z"/>
+<polygon id="bottom_right" fill="#00BDD4" points="110.977,143.76 186.305,143.76 203.775,119.422 203.775,69.138 171.932,48.775 
+	"/>
+<polygon id="top_center" fill="#00BDD4" points="149.116,37.453 160.134,0 48.048,0 45.958,7.104 "/>
 </svg>

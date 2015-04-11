@@ -105,43 +105,53 @@ if Meteor.isClient
 
 	renderQuizBG = () ->
 
-		old = document.getElementsByClassName('bg')[0]
-		if old
-			prevColor = old.getAttribute('color')
-			prevPaths = old.getAttribute('paths')
+		old = $('.bg')
+		old.remove()
+		
+		#firstOld = old[0]
+		#if old
+		#	prevColor = firstOld.getAttribute('color')
+		#	prevPaths = firstOld.getAttribute('paths')
+
+		#color = randFromArray(globals.colors)
+		#svgPaths = randFromArray(globals.svgBackgrounds)
+
+		# make sure we don't use the old colors or the old paths
+		#if sameInArray(globals.colors, color, prevColor)
+		#	color = globals.colors[globals.colors.indexOf(color) + 1] || globals.colors[0]
+		#if sameInArray(globals.svgBackgrounds, svgPaths, prevPaths)
+		#	svgPaths = globals.svgBackgrounds[globals.svgBackgrounds.indexOf(svgPaths) + 1] || globals.svgPaths[0]
 
 		color = randFromArray(globals.colors)
 		svgPaths = randFromArray(globals.svgBackgrounds)
-
-		# make sure we don't use the old colors or the old paths
-		if sameInArray(globals.colors, color, prevColor)
-			color = globals.colors[globals.colors.indexOf(color) + 1] || globals.colors[0]
-		if sameInArray(globals.svgBackgrounds, svgPaths, prevPaths)
-			svgPaths = globals.svgBackgrounds[globals.svgBackgrounds.indexOf(svgPaths) + 1] || globals.svgPaths[0]
+		#console.log(svgPaths)
 
 		# for ref
 		xmlns = 'http://www.w3.org/2000/svg'
 
-		# create SVG element
-		svg = document.createElementNS(xmlns, 'svg')
-		svg.setAttribute('viewBox', '0 0 203.553 143.759')
-		svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-		svg.classList.add('bg')
-
 		for shape in svgPaths then do (shape) =>
+
+			# create SVG element
+			svg = document.createElementNS(xmlns, 'svg')
+			svg.setAttribute('viewBox', '0 0 203.553 143.759')
+			svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+			svg.classList.add('bg')
+
 			el = document.createElementNS(xmlns, shape.type)
+			# set the path/shape attributes
 			for attr, val of shape.attrs
 				el.setAttribute(attr, val)
+			# if there are classes, add a `corner` class
+			if shape.classes
+				svg.classList.add('corner')
+			# then the appropriate `corner-` prefixed class
+			for cl in shape.classes
+				svg.classList.add('corner-' + cl)
 			el.setAttribute('fill', color)
 			svg.appendChild(el)
 
-		window.addEventListener('resize', () ->
-			# sizeSVG(svg)
-		)
+			document.body.insertBefore(svg, document.body.firstChild)
 
-		if old
-			old.parentNode.removeChild(old)
-		document.body.insertBefore(svg, document.body.firstChild)
 
 	updateFromApi = (url) ->
 		Meteor.call "checkApi", url, (error, results) ->
@@ -240,12 +250,13 @@ if Meteor.isClient
 
 	Template.projection.helpers
 
-		curIndex: (arr) ->
-			console.log(arr)
-			#return Session.get('currentApiData').indexOf(item)
+		quizStep: () ->
+			if !(Session.get("quizStep"))
+				quizInit(this)
+			return Session.get("quizStep")
 
 		scoreTest: (score) ->
-			return Math.round(score * 1000) / 10
+			return Math.round(score * 100)
 
 		scoreColor: (i) ->
 			return globals.colors[i]

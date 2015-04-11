@@ -27,6 +27,7 @@ def parseSVG(svg):
                 for s in inParent:
                     # ignore those will a white (#FFFFFF) fill
                     if s['fill'] != '#FFFFFF':
+
                         name = s.name
                         output += name
                         output += '('
@@ -44,6 +45,14 @@ def parseSVG(svg):
                             output += s['r']
                         elif name == 'path':
                             output += "'" + s['d'] + "'"
+
+                        classes = s['id'].split('_')
+                        if len(classes) > 0:
+                            output += ', ['
+                            for cl in classes:
+                                output += "'" + cl + "', "
+                            output = output[0:len(output) - 2]
+                            output += ']'
 
                         output += '), '
 
