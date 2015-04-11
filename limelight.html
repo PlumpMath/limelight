@@ -33,39 +33,41 @@
 </template>
 
 <template name="quiz">
-<div id="quiz-container" class="h100 step-{{quizStep}}">
-	<!-- QUIZ:<br/>
-	We are taker {{quizTaker}}<br/> -->
+    <div id="quiz-container" class="h100 step-{{quizStep}}">
 
-	<div class="corner corner-top corner-left step-counter">{{quizStep}}/{{totalSteps}}</div>
-    <div class="restart corner corner-left corner-bottom">
-        <img src="/img/restart.svg">
-        <button class="delete">Delete</button>
+    	<div class="corner corner-top corner-left step-counter sans">{{quizStep}}/{{totalSteps}}</div>
+        <div class="restart corner corner-left corner-bottom">
+            <img src="/img/restart.svg">
+            <button class="delete">Delete</button>
+        </div>
+        <div class="logo corner corner-right corner-bottom">
+            <img src="/img/GHN_logo.svg">
+        </div>
+
+
+    	<div id="step" class="step h100">
+            {{#with quizQuestionData}}
+    		<h3 class="question caps bold abs w100">{{qtext}}</h3>
+
+    		<div class="buttons flex-container w100 vcenter">
+    			<button type="button" class="step-choice" value="{{a1id}}">{{a1text}}</button>
+    			<button type="button" class="step-choice" value="{{a2id}}">{{a2text}}</button>
+    		</div>
+        	{{/with}}
+
+            {{#if quizDone}}
+                <h3 class="question caps bold abs w100">Today I'm feeling...<br>
+                    <div id="emoji-container" class="cf">
+                    {{#each svgKeys}}
+                        <img src="/img/emoji/{{this}}.svg" class="emoji" data-id="{{this}}">
+                    {{/each}}
+                    </div>
+                </h3>
+            {{/if}}
+
+        </div>
+
     </div>
-    <div class="logo corner corner-right corner-bottom">
-        <img src="/img/GHN_logo.svg">
-    </div>
-
-	{{#with quizQuestionData}}
-	<div id="step" class="step h100">
-
-		<h3 class="question caps bold abs w100">{{qtext}}</h3>
-
-		<div class="buttons flex-container w100 vcenter">
-			<button type="button" class="step-choice" value="{{a1id}}">{{a1text}}</button>
-			<button type="button" class="step-choice" value="{{a2id}}">{{a2text}}</button>
-		</div>
-
-    </div>
-	{{/with}}
-
-    <div class="vcenter">{{ quizProcessed }}</div>
-
-	<!-- YOU CHOSE SO FAR: {{ quizHistory }} {{quizTaker}}
-
-	<button type="button" class="delete">Delete All</button> -->
-
-</div>
 </template>
 
 

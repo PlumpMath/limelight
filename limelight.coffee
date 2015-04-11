@@ -76,7 +76,7 @@ if Meteor.isClient
 			quizTaker.innerHTML = this.quizTaker || 'anonymous'
 			point.appendChild(quizTaker)
 
-			document.getElementById('drop-canvas').appendChild(point)
+			document.body.appendChild(point)
 			# need to return an empty string even though add the above SVG
 			return ''
 
@@ -97,7 +97,7 @@ if Meteor.isClient
 		$(".initial-step").show()
 
 	randFromArray = (arr) ->
-		return arr[Math.round(Math.random() * arr.length - 1)]
+		return arr[Math.floor(Math.random() * arr.length)]
 
 	sameInArray = (arr, item1, item2) ->
 		return arr.indexOf(item1) == arr.indexOf(item2)
@@ -107,7 +107,7 @@ if Meteor.isClient
 
 		old = $('.bg')
 		old.remove()
-		
+
 		#firstOld = old[0]
 		#if old
 		#	prevColor = firstOld.getAttribute('color')
@@ -158,7 +158,6 @@ if Meteor.isClient
 
 			# save current results
 			Session.set("currentApiData", results.data)
-			#console.log(results)
 
 			# check if we're done
 			if('next_question' of results.data and results.data.next_question.length <= 0)
@@ -186,34 +185,31 @@ if Meteor.isClient
 		quizGuesses: () ->
 			if(Session.get("currentApiData"))
 				return Session.get("currentApiData").guesses
-			#console.log(Session.get("quizStep"))
-			return
+
 		quizHistory: () ->
 			return Session.get("quizHistory")
-		quizProcessed: () ->
+		quizDone: () ->
 
 			if Session.get("quizStep") == globals.quizStepDone
-				qH = Session.get("quizHistory")
-
-				coord = Session.get("currentApiData").coord
-				# rough x coords domain: -0.8 to 1.1,
-				# y: -0.8 to 0.9
-				x = remap(coord[0], -0.8, 1.1)
-				y = remap(coord[1], -0.8, 0.9)
-
-				# give it a random ID btw 0 and 23 inclusive
-				id = Math.round(Math.random() * 23).toString()
-
-				Points.insert
-					pageX: x
-					pageY: y
-					id: id
-					qH: qH
-					quizTaker: this.quizTaker
-
-				return x + ":" + y
+				return true
+			else
+				return false
 		totalSteps: () ->
 			return globals.quizTotalSteps
+
+		# HACKY. Get the keys for all the SVG emoji icons ('01' -> '24')
+		svgKeys: () ->
+			i = 1
+			keys = []
+			k = ''
+			while i <= 24
+				if i.toString().length == 1
+					k = '0' + i.toString()
+				else
+					k = i.toString()
+				keys.push(k)
+				i += 1
+			return keys
 
 	Template.quiz.events
 
@@ -247,6 +243,29 @@ if Meteor.isClient
 			quizInit(this)
 			return
 
+		"click .emoji": (event) ->
+
+			# the data-id is of the form '01' to '24',
+			# so coerce a string and subtract one
+			# (for zero-based array)
+			id = (+this.toString()) - 1
+
+			qH = Session.get("quizHistory")
+
+			coord = Session.get("currentApiData").coord
+			# rough x coords domain: -0.8 to 1.1,
+			# y: -0.8 to 0.9
+			x = remap(coord[0], -0.8, 1.1)
+			y = remap(coord[1], -0.8, 0.9)
+
+			Points.insert
+				pageX: x
+				pageY: y
+				id: id
+				qH: qH
+				quizTaker: this.quizTaker
+
+			# now need to gather name
 
 	Template.projection.helpers
 
@@ -283,8 +302,6 @@ if Meteor.isClient
 if Meteor.isServer
 	Meteor.methods
 		updateQuizSession: (thistaker, thisquizstep, thisapidata) ->
-			#console.log(thistaker)
-			#console.log(thisquizstep)
 			QuizSessions.update(
 				{ taker: thistaker },
 				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata } },

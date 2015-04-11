@@ -151,22 +151,6 @@ input, button, textarea {
 	}
 }
 
-#quiz-container.step-1 {
-
-}
-
-#quiz-container.step-2 {
-	// background-color: green;
-}
-
-#quiz-container.step-3 {
-	// background-color: orange;
-}
-
-#quiz-container.step-DONE {
-	// background-color: blue;
-}
-
 .point {
 	position: fixed;
 	font-size: 0.7em;
@@ -245,6 +229,21 @@ input, button, textarea {
 		margin-left: 3.125vw;
 		margin-right: 0;
 	}
+}
+
+#emoji-container {
+	margin: 0 auto;
+	max-width: 600px;
+	top: 1em;
+}
+
+.emoji {
+	background: #fff;
+	border-radius: 10%;
+	cursor: pointer;
+	float: left;
+	margin: 5px;
+	width: calc(16.666% - 10px);
 }
 
 // Projection
