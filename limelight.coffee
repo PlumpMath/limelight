@@ -280,6 +280,10 @@ if Meteor.isClient
 		scoreColor: (i) ->
 			return globals.colors[i]
 
+		projectionGuessesSort: (guesses) ->
+			return _.sortBy guesses, (d) ->
+				return _.indexOf(globals.submissionIdOrder,d.submission_id )
+
 		projectionSession: () ->
 			return QuizSessions.findOne({ taker: this.quizTaker})
 
