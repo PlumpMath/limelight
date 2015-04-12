@@ -92,6 +92,7 @@ if Meteor.isClient
 		Session.set("quizHistory", [])
 		Session.set("apiUrl", globals.apiBaseUrl)
 		Session.set("quizTaker", that.quizTaker)
+		Session.set("insertedPoint", undefined)
 
 		$(".step").hide()
 		$(".initial-step").show()
@@ -244,29 +245,31 @@ if Meteor.isClient
 			return
 
 		"click .emoji": (event) ->
+			
+			if !(Session.get("insertedPoint"))
+				console.log "clicked"
 
-			console.log "clicked"
+				# the data-id is of the form '01' to '24',
+				# so coerce a string and subtract one
+				# (for zero-based array)
+				emoji_id = (+this.toString()) - 1
 
-			# the data-id is of the form '01' to '24',
-			# so coerce a string and subtract one
-			# (for zero-based array)
-			emoji_id = (+this.toString()) - 1
+				qH = Session.get("quizHistory")
 
-			qH = Session.get("quizHistory")
+				coord = Session.get("currentApiData").coord
+				# rough x coords domain: -0.8 to 1.1,
+				# y: -0.8 to 0.9
+				x = remap(coord[0], -0.8, 1.1)
+				y = remap(coord[1], -0.8, 0.9)
 
-			coord = Session.get("currentApiData").coord
-			# rough x coords domain: -0.8 to 1.1,
-			# y: -0.8 to 0.9
-			x = remap(coord[0], -0.8, 1.1)
-			y = remap(coord[1], -0.8, 0.9)
+				Points.insert
+					pageX: x
+					pageY: y
+					emoji_id: emoji_id
+					qH: qH
+					quizTaker: this.quizTaker
 
-			Points.insert
-				pageX: x
-				pageY: y
-				emoji_id: emoji_id
-				qH: qH
-				quizTaker: this.quizTaker
-
+				Session.set("insertedPoint", "true")
 			# now need to gather name
 
 	Template.projection.helpers
