@@ -271,11 +271,4 @@ input, button, textarea {
 	position: absolute;
 	transition: 0.2s height;
 	width: 100%;
-
-	.histogram-item:first-child & { background: #FBEB34; }
-	.histogram-item:nth-child(2) & { background: #00BDD4; }
-	.histogram-item:nth-child(3) & { background: #6EC829; }
-	.histogram-item:nth-child(4) & { background: #FAB0C9; }
-	.histogram-item:nth-child(5) & { background: #FFAF3E; }
-	.histogram-item:nth-child(6) & { background: #925D9E; }
 }

@@ -245,7 +245,7 @@ if Meteor.isClient
 			return
 
 		"click .emoji": (event) ->
-			
+
 			if !(Session.get("insertedPoint"))
 				console.log "clicked"
 
@@ -282,8 +282,10 @@ if Meteor.isClient
 		scoreTest: (score) ->
 			return Math.round(score * 100)
 
-		scoreColor: (i) ->
-			return globals.colors[i]
+		scoreColorById: (id) ->
+			index = globals.submissionIdOrder.indexOf(id)
+			color = globals.colors[index]
+			return color
 
 		projectionGuessesSort: (guesses) ->
 			# sort the guesses by the submission_id's order in globals.submissionIdOrder
