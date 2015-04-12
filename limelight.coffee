@@ -19,12 +19,12 @@ if Meteor.isClient
 		"click #drop-canvas": (event) ->
 
 			# give it a random ID btw 0 and 23 inclusive
-			id = Math.round(Math.random() * 23).toString()
+			emoji_id = Math.round(Math.random() * 23).toString()
 
 			Points.insert
 				pageX: event.pageX * ( 100 / window.innerWidth )
 				pageY: event.pageY * ( 100 / window.innerHeight )
-				id: id
+				emoji_id: emoji_id
 
 	Template.pindrop.helpers
 		allpoints: () ->
@@ -62,7 +62,7 @@ if Meteor.isClient
 			svg.classList.add('emoji')
 			point.appendChild(svg)
 
-			thisContent = globals.svgContent[this.id]
+			thisContent = globals.svgContent[this.emoji_id]
 
 			for shape in thisContent then do (shape) =>
 				el = document.createElementNS(xmlns, shape.type)
@@ -245,10 +245,12 @@ if Meteor.isClient
 
 		"click .emoji": (event) ->
 
+			console.log "clicked"
+
 			# the data-id is of the form '01' to '24',
 			# so coerce a string and subtract one
 			# (for zero-based array)
-			id = (+this.toString()) - 1
+			emoji_id = (+this.toString()) - 1
 
 			qH = Session.get("quizHistory")
 
@@ -261,7 +263,7 @@ if Meteor.isClient
 			Points.insert
 				pageX: x
 				pageY: y
-				id: id
+				emoji_id: emoji_id
 				qH: qH
 				quizTaker: this.quizTaker
 
@@ -281,6 +283,7 @@ if Meteor.isClient
 			return globals.colors[i]
 
 		projectionGuessesSort: (guesses) ->
+			# sort the guesses by the submission_id's order in globals.submissionIdOrder
 			return _.sortBy guesses, (d) ->
 				return _.indexOf(globals.submissionIdOrder,d.submission_id )
 
