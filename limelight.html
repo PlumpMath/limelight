@@ -100,30 +100,29 @@
 
 
 <template name="projection">
+{{#with projectionSession}}
 <div id="projection-container">
 
-	{{#with projectionSession}}
 
-		<!-- We are taker {{taker}}<br/>  -->
+	<!-- We are taker {{taker}}<br/>  -->
 
-		<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
+	<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
 
-		<div class="projection-histogram cf">
-		{{ #each projectionGuessesSort currentApiData.guesses }}
-			<div class="histogram-item">
-				<div class="bar">
-                    <div class="bar-amount-container dib">
-                        <div class="bar-amount" style="height: {{ scoreTest score }}%; background: {{ scoreColorById submission_id}}"></div>
-                    </div>
-                    <div class="dib">{{ scoreTest score }}%</div>
-                </div>
+	<div class="projection-histogram cf">
+	{{ #each projectionGuessesSort currentApiData.guesses }}
+		<div class="histogram-item">
+			<div class="bar">
+				<div class="bar-amount-container dib">
+					<div class="bar-amount" style="height: {{ scoreTest score }}%; background: {{ scoreColorById submission_id}}"></div>
+				</div>
+				<div class="dib">{{ scoreTest score }}%</div>
 			</div>
-
-		{{/each}}
 		</div>
-		<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
 
-	{{/with}}
+	{{/each}}
+	</div>
+	<img src="http://placehold.it/400x200"> <!-- placeholder image, dimensions not accurate --><br />
+
 	<br/>
 	<!-- YOU CHOSE SO FAR: {{ projectionHistory }} {{projectionTaker}} -->
 	<br/>
@@ -132,8 +131,9 @@
 </div>
 <div class="corner corner-top corner-left step-counter sans">{{quizStep}}/{{totalSteps}}</div>
 <div class="logo corner corner-right corner-bottom">
-    <img src="/img/GHN_logo_white.svg">
+<img src="/img/GHN_logo_white.svg">
 </div>
+{{/with}}
 </template>
 
 

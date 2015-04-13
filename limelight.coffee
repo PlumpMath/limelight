@@ -310,10 +310,6 @@ if Meteor.isClient
 
 	Template.projection.helpers
 
-		quizStep: () ->
-			if !(Session.get("quizStep"))
-				quizInit(this)
-			return Session.get("quizStep")
 
 		scoreTest: (score) ->
 			return Math.round(score * 100)
