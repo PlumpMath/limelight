@@ -277,7 +277,12 @@ if Meteor.isClient
 				quizTaker: quizTaker
 
 			document.body.style.backgroundImage = ''
-			Router.go('pindrop')
+			console.log Session.get('quizDevice')
+			if(Session.get('quizDevice') == "default")
+				Router.go('pindrop')
+			else
+				Router.go('quiz', { quizDevice: Session.get('quizDevice') })
+				quizInit({ quizDevice: Session.get('quizDevice') })
 
 	Template.projection.helpers
 
@@ -346,12 +351,12 @@ Router.map ->
 		#	'pindrop': { to: 'pindrop'}
 
 	this.route 'quiz',
-		path: '/quiz/:quizDevice'
+		path: '/quiz/:quizDevice?' #question mark makes parameter optional
 		layoutTemplate: 'baseTemplate'
 		yieldTemplate:
 			'quiz': {to: 'quiz'}
 		data: ->
-			return { quizDevice : this.params.quizDevice }
+			return { quizDevice : this.params.quizDevice || 'default' }
 
 	this.route 'projection',
 		path: '/projection/:quizDevice'
