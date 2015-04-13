@@ -6,9 +6,6 @@ globals.apiBaseUrl = "http://54.148.142.11:8080/play/"
 # this is the number of total steps
 globals.quizTotalSteps = 16
 
-# this is an arbitrary large number set when the API tells us that we're done
-globals.quizStepDone = 10000
-
 # SVG colors
 globals.submissionIdOrder = ["GH-04380895", "GH-121371443", "GH-76091181", "GH-5059206475", "GH-1128435973", "GH-5631681770"]
 

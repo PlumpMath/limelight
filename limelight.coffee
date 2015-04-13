@@ -11,6 +11,7 @@ if Meteor.isClient
 
 	quizInit = (that) ->
 		Session.set("quizStep", 1)
+		Session.set("apiQuestionsDone", false)
 		Session.set("quizHistory", [])
 		Session.set("apiUrl", globals.apiBaseUrl)
 		Session.set("quizDevice", that.quizDevice)
@@ -176,7 +177,7 @@ if Meteor.isClient
 
 			# check if we're done
 			if('next_question' of results.data and results.data.next_question.length <= 0)
-				Session.set("quizStep", globals.quizStepDone)
+				Session.set("apiQuestionsDone", true)
 
 			# update quiz session for projection template
 			Meteor.call "updateQuizSession", Session.get("quizTaker"), Session.get("quizStep"), Session.get("currentApiData")
@@ -203,8 +204,8 @@ if Meteor.isClient
 
 		quizHistory: () ->
 			return Session.get("quizHistory")
-		quizDone: () ->
-			return Session.get("quizStep") == globals.quizStepDone
+		apiQuestionsDone: () ->
+			return Session.get("apiQuestionsDone")
 		totalSteps: () ->
 			return globals.quizTotalSteps
 
@@ -256,6 +257,7 @@ if Meteor.isClient
 			# (for zero-based array)
 			emoji_id = (+this.toString()) - 1
 			Session.set("emoji_id", emoji_id)
+			Session.set("quizStep", Session.get("quizStep") + 1)
 
 		"click .submit-quizTaker": (event) ->
 			event.preventDefault()
