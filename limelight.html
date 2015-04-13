@@ -48,37 +48,45 @@
             <img src="/img/GHN_logo.svg">
         </div>
 
-    	<div id="step" class="step h100">
-            {{#with quizQuestionData}}
-    		<h3 class="question caps bold abs w100">{{qtext}}</h3>
+		<div id="step" class="step h100">
+			{{#if no_language_selected}}
+				<div class="buttons w100 vcenter">
+					<button type="button" class="language-choice" value="lang-fi">SUOMI</button>
+					<button type="button" class="language-choice" value="lang-sv">SVENSKA</button>
+					<button type="button" class="language-choice" value="lang-en">ENGLISH</button>
+				</div>
+			{{else}}
+				{{#with quizQuestionData}}
+				<h3 class="question caps bold abs w100">{{qtext}}</h3>
 
-    		<div class="buttons w100 vcenter">
-    			<button type="button" class="step-choice" value="{{a1id}}">{{a1text}}</button>
-    			<button type="button" class="step-choice" value="{{a2id}}">{{a2text}}</button>
-    		</div>
-        	{{/with}}
+				<div class="buttons w100 vcenter">
+					<button type="button" class="step-choice" value="{{a1id}}">{{a1text}}</button>
+					<button type="button" class="step-choice" value="{{a2id}}">{{a2text}}</button>
+				</div>
+				{{/with}}
 
-            {{#if apiQuestionsDone}}
-                {{#if no_emoji_id}}
-                <h3 class="question caps bold abs w100">Today I'm feeling...
-                    <div id="emoji-container" class="cf">
-                    {{#each svgKeys}}
-                        <img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
-                    {{/each}}
-                    </div>
-                </h3>
-                {{else}}
-                <h3 class="question caps bold">My name is...
-                    <div id="emoji-container" class="cf">
-                    <form>
-                        <input id="quiz-taker" type="text" placeholder="Type here..." class="aligncenter block w100" required>
-                        <input type="submit" value="Submit" class="submit-quizTaker block w100">
-                    </form>
-                    </div>
-                </h3>
-                {{/if}}
+				{{#if apiQuestionsDone}}
+					{{#if no_emoji_id}}
+					<h3 class="question caps bold abs w100">Today I'm feeling...
+						<div id="emoji-container" class="cf">
+						{{#each svgKeys}}
+							<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
+						{{/each}}
+						</div>
+					</h3>
+					{{else}}
+					<h3 class="question caps bold">My name is...
+						<div id="emoji-container" class="cf">
+						<form>
+							<input id="quiz-taker" type="text" placeholder="Type here..." class="aligncenter block w100" required>
+							<input type="submit" value="Submit" class="submit-quizTaker block w100">
+						</form>
+						</div>
+					</h3>
+					{{/if}}
 
-            {{/if}}
+				{{/if}}
+			{{/if}}
         </div>
 
         <div class="corner corner-top corner-left step-counter sans">{{quizStep}}/{{totalSteps}}</div>

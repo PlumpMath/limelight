@@ -20,6 +20,7 @@ if Meteor.isClient
 		Session.set("quizTaker", undefined)
 		Session.set("insertedPoint", undefined)
 		Session.set("emoji_id", undefined)
+		Session.set("selected_language", undefined)
 
 	# given min and max bounds, map a number n
 	# onto 0 --> 100
@@ -213,13 +214,17 @@ if Meteor.isClient
 			return svgKeys()
 
 		no_emoji_id: () ->
+			return (! Session.get('emoji_id'))
 
-			if Session.get('emoji_id')
-				return false
-			else
-				return true
+		no_language_selected: () ->
+			return (! Session.get('selected_language'))
 
 	Template.quiz.events
+
+		"click button.language-choice": (event) ->
+			button_value = event.target.value
+			Session.set('selected_language', button_value)
+			Session.set("quizStep", Session.get("quizStep") + 1)
 
 		"click button.step-choice": (event) ->
 
