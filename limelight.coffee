@@ -154,6 +154,21 @@ if Meteor.isClient
 			return ''
 
 	Template.pindrop.rendered = ->
+		# fireice.fire/ used as dummy
+		Meteor.call "checkApi", globals.apiBaseUrl + 'fireice.fire/', (err, results) ->
+			guesses = results.data.guesses
+			for guess in guesses
+				console.log(guess.submission_id)
+				console.log(guess.coord[0], guess.coord[1])
+				div = document.createElement('div')
+				div.classList.add('building-icon')
+				div.style.left = remap(guess.coord[0], -0.8, 1.1) + 'vw'
+				div.style.top = remap(guess.coord[1], -0.8, 0.9) + 'vh'
+
+				img = document.createElement('img')
+				img.src = '/img/building_icons/' + guess.submission_id + '.svg'
+				div.appendChild(img)
+				document.body.insertBefore(div, document.body.firstChild)
 		if(!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
@@ -238,6 +253,7 @@ if Meteor.isClient
 			qH.push Session.get("currentApiData").next_question[0].qid + "." + button_value
 
 			Session.set("apiUrl", globals.apiBaseUrl + qH.join(">") + "/")
+			console.log(Session.get('apiUrl'))
 			Session.set("quizHistory", qH)
 
 			Session.set("quizStep", Session.get("quizStep") + 1)

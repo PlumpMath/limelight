@@ -169,6 +169,8 @@ input, button, textarea {
 		margin-left: -14px;
 		position: absolute;
 		top: 0;
+
+		* { transition: 0.1s fill; }
 	}
 
 	.quiz-taker {
@@ -179,17 +181,26 @@ input, button, textarea {
 		padding: 0.5em;
 	}
 
-	&:hover .quiz-taker {
-		display: block;
+	&:hover {
+		.quiz-taker {
+			display: block;
+		}
+
+		svg * {
+			fill: #000 !important;
+		}
 	}
 }
 
-.explosion {
+.building-icon {
 	position: fixed;
-	margin-top: -30px;
-	margin-left: -30px;
-	width: 60px;
-	height: 60px;
+	width: 14vw;
+	z-index: 0;
+	img {
+		left: -7vw;
+		top: -7vw;
+		width: 100%;
+	}
 }
 
 @mixin fontVW($size, $max, $min) {
