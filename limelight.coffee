@@ -9,13 +9,60 @@ if Meteor.isClient
 	l = (string) ->
 		return string.toLocaleString();
 
+	quizInit = (that) ->
+		Session.set("quizStep", 1)
+		Session.set("quizHistory", [])
+		Session.set("apiUrl", globals.apiBaseUrl)
+		Session.set("quizDevice", that.quizDevice)
+		# all of these will be set during the quiz
+		Session.set("currentApiData", undefined)
+		Session.set("quizTaker", undefined)
+		Session.set("insertedPoint", undefined)
+		Session.set("emoji_id", undefined)
+
 	# given min and max bounds, map a number n
 	# onto 0 --> 100
 	remap = (n, min, max) ->
 		return ( n + 0.5 * (max - min) ) * ( 100 / (max - min) );
 
-	# testing only
+	randFromArray = (arr) ->
+		return arr[Math.floor(Math.random() * arr.length)]
+
+	sameInArray = (arr, item1, item2) ->
+		return arr.indexOf(item1) == arr.indexOf(item2)
+
+	# create an SVG to insert into the DOM
+	makeSVG = (attrs) ->
+		svg = document.createElementNS(xmlns, 'svg')
+		# default namespace
+		svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
+		for key, value of attrs
+			svg.setAttribute(key, value)
+		return svg
+
+	# create an SVG element
+	makeSVGelement = (svg, obj) ->
+		# obj expects:
+		# {
+		#	type: 'tag'
+		#	attrs: {
+		#		key: value (etc.)
+		# 	}
+		# }
+		el = document.createElementNS(xmlns, obj.type)
+		for key, value of obj.attrs
+			el.setAttribute(key, value)
+		svg.appendChild(el)
+
+	showModal = (which) ->
+		$('#modal-' + which).fadeIn()
+
+
+	# Helper vars
+	xmlns = 'http://www.w3.org/2000/svg'
+
 	Template.pindrop.events
+		# testing only
 		"click #drop-canvas": (event) ->
 
 			# give it a random ID btw 0 and 23 inclusive
@@ -26,13 +73,23 @@ if Meteor.isClient
 				pageY: event.pageY * ( 100 / window.innerHeight )
 				emoji_id: emoji_id
 
+		"click .restart": (event) ->
+			$('.point').remove()
+			Router.go('quiz', { quizDevice: 'a' })
+
+		# show and hide the modal
+		"click [data-modal]": (event) ->
+			showModal(event.target.getAttribute('data-modal'))
+		"click [id^=modal]": (event) ->
+			target = $(event.target)
+			if target.attr('id') == event.currentTarget.id || target.closest('.close').length > 0
+				$(event.currentTarget).fadeOut()
+
+
 	Template.pindrop.helpers
 		allpoints: () ->
 			return Points.find({})
 		renderPoint: () ->
-
-			# for ref
-			xmlns = 'http://www.w3.org/2000/svg'
 
 			# create point container
 			point = document.createElement('div')
@@ -56,20 +113,18 @@ if Meteor.isClient
 					quadrant = 3 # green
 
 			# create SVG element
-			svg = document.createElementNS(xmlns, 'svg')
-			svg.setAttribute('viewBox', '0 0 283.46 283.46')
-			svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-			svg.classList.add('emoji')
+			svg = makeSVG(
+				'class': 'emoji'
+				'viewBox': '0 0 283.46 283.46'
+			)
 			point.appendChild(svg)
 
 			thisContent = globals.svgContent[this.emoji_id]
 
-			for shape in thisContent then do (shape) =>
-				el = document.createElementNS(xmlns, shape.type)
-				for attr, val of shape.attrs
-					el.setAttribute(attr, val)
-				el.setAttribute('fill', globals.colors[quadrant - 1])
-				svg.appendChild(el)
+			if thisContent
+				for shape in thisContent then do (shape) =>
+					shape.attrs.fill = globals.colors[quadrant - 1]
+					makeSVGelement(svg, shape)
 
 			quizTaker = document.createElement('p')
 			quizTaker.classList.add('quiz-taker')
@@ -84,75 +139,16 @@ if Meteor.isClient
 		if(!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
-			console.log('Template onLoad')
-
-	quizInit = (that) ->
-		Session.set("currentApiData", undefined)
-		Session.set("quizStep", 1)
-		Session.set("quizHistory", [])
-		Session.set("apiUrl", globals.apiBaseUrl)
-		Session.set("quizTaker", that.quizTaker)
-		Session.set("insertedPoint", undefined)
-
-		$(".step").hide()
-		$(".initial-step").show()
-
-	randFromArray = (arr) ->
-		return arr[Math.floor(Math.random() * arr.length)]
-
-	sameInArray = (arr, item1, item2) ->
-		return arr.indexOf(item1) == arr.indexOf(item2)
-
 
 	renderQuizBG = () ->
 
 		old = $('.bg')
 		old.remove()
 
-		#firstOld = old[0]
-		#if old
-		#	prevColor = firstOld.getAttribute('color')
-		#	prevPaths = firstOld.getAttribute('paths')
+		which = randFromArray(['1AB', '2AB', '2BC', '3AB'])
+		color = randFromArray(['blue', 'green', 'orange', 'pink', 'purple', 'yellow'])
 
-		#color = randFromArray(globals.colors)
-		#svgPaths = randFromArray(globals.svgBackgrounds)
-
-		# make sure we don't use the old colors or the old paths
-		#if sameInArray(globals.colors, color, prevColor)
-		#	color = globals.colors[globals.colors.indexOf(color) + 1] || globals.colors[0]
-		#if sameInArray(globals.svgBackgrounds, svgPaths, prevPaths)
-		#	svgPaths = globals.svgBackgrounds[globals.svgBackgrounds.indexOf(svgPaths) + 1] || globals.svgPaths[0]
-
-		color = randFromArray(globals.colors)
-		svgPaths = randFromArray(globals.svgBackgrounds)
-		#console.log(svgPaths)
-
-		# for ref
-		xmlns = 'http://www.w3.org/2000/svg'
-
-		for shape in svgPaths then do (shape) =>
-
-			# create SVG element
-			svg = document.createElementNS(xmlns, 'svg')
-			svg.setAttribute('viewBox', '0 0 203.553 143.759')
-			svg.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink')
-			svg.classList.add('bg')
-
-			el = document.createElementNS(xmlns, shape.type)
-			# set the path/shape attributes
-			for attr, val of shape.attrs
-				el.setAttribute(attr, val)
-			# if there are classes, add a `corner` class
-			if shape.classes
-				svg.classList.add('corner')
-			# then the appropriate `corner-` prefixed class
-			for cl in shape.classes
-				svg.classList.add('corner-' + cl)
-			el.setAttribute('fill', color)
-			svg.appendChild(el)
-
-			document.body.insertBefore(svg, document.body.firstChild)
-
+		document.body.style.backgroundImage = 'url(/img/bg/' + which + '_' + color + '.svg)'
 
 	updateFromApi = (url) ->
 		Meteor.call "checkApi", url, (error, results) ->
@@ -190,11 +186,7 @@ if Meteor.isClient
 		quizHistory: () ->
 			return Session.get("quizHistory")
 		quizDone: () ->
-
-			if Session.get("quizStep") == globals.quizStepDone
-				return true
-			else
-				return false
+			return Session.get("quizStep") == globals.quizStepDone
 		totalSteps: () ->
 			return globals.quizTotalSteps
 
@@ -211,6 +203,12 @@ if Meteor.isClient
 				keys.push(k)
 				i += 1
 			return keys
+		no_emoji_id: () ->
+
+			if Session.get('emoji_id')
+				return false
+			else
+				return true
 
 	Template.quiz.events
 
@@ -238,39 +236,40 @@ if Meteor.isClient
 			r = confirm("Delete all points? This cannot be undone.")
 			if r == true
 				Meteor.call "removeAllPoints"
-				quizInit(this)
+				quizInit()
 
 		"click .restart": (event) ->
-			quizInit(this)
-			return
+			Router.go('quiz', { quizDevice: Session.get('quizDevice') })
+			quizInit({ quizDevice: Session.get('quizDevice') })
 
 		"click .emoji": (event) ->
+			# the data-id is of the form '01' to '24',
+			# so coerce a string and subtract one
+			# (for zero-based array)
+			emoji_id = (+this.toString()) - 1
+			Session.set("emoji_id", emoji_id)
 
-			if !(Session.get("insertedPoint"))
-				console.log "clicked"
+		"click .submit-quizTaker": (event) ->
+			event.preventDefault()
+			quizTaker = document.getElementById('quiz-taker').value
 
-				# the data-id is of the form '01' to '24',
-				# so coerce a string and subtract one
-				# (for zero-based array)
-				emoji_id = (+this.toString()) - 1
+			qH = Session.get("quizHistory")
 
-				qH = Session.get("quizHistory")
+			coord = Session.get("currentApiData").coord
+			# rough x coords domain: -0.8 to 1.1,
+			# y: -0.8 to 0.9
+			x = remap(coord[0], -0.8, 1.1)
+			y = remap(coord[1], -0.8, 0.9)
 
-				coord = Session.get("currentApiData").coord
-				# rough x coords domain: -0.8 to 1.1,
-				# y: -0.8 to 0.9
-				x = remap(coord[0], -0.8, 1.1)
-				y = remap(coord[1], -0.8, 0.9)
+			Points.insert
+				pageX: x
+				pageY: y
+				emoji_id: Session.get('emoji_id')
+				qH: qH
+				quizTaker: quizTaker
 
-				Points.insert
-					pageX: x
-					pageY: y
-					emoji_id: emoji_id
-					qH: qH
-					quizTaker: this.quizTaker
-
-				Session.set("insertedPoint", "true")
-			# now need to gather name
+			document.body.style.backgroundImage = ''
+			Router.go('pindrop')
 
 	Template.projection.helpers
 
@@ -303,12 +302,12 @@ if Meteor.isClient
 	wf.monotype = { projectId: 'b07fd47e-b2bf-49ff-9312-8d7e6478a960' }
 	window.WebFontConfig = wf
 	do ()->
-		wf = document.createElement('script');
-		wf.src = '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js';
-		wf.type = 'text/javascript';
-		wf.async = 'true';
-		s = document.getElementsByTagName('script')[0];
-		s.parentNode.insertBefore(wf, s);
+		wf = document.createElement('script')
+		wf.src = '//ajax.googleapis.com/ajax/libs/webfont/1.5.10/webfont.js'
+		wf.type = 'text/javascript'
+		wf.async = 'true'
+		s = document.getElementsByTagName('script')[0]
+		s.parentNode.insertBefore(wf, s)
 
 
 if Meteor.isServer
@@ -339,15 +338,15 @@ Router.map ->
 		#	'pindrop': { to: 'pindrop'}
 
 	this.route 'quiz',
-		path: '/quiz/:quizTaker'
+		path: '/quiz/:quizDevice'
 		layoutTemplate: 'baseTemplate'
 		yieldTemplate:
 			'quiz': {to: 'quiz'}
 		data: ->
-			return { quizTaker : this.params.quizTaker }
+			return { quizDevice : this.params.quizDevice }
 
 	this.route 'projection',
-		path: '/projection/:quizTaker'
+		path: '/projection/:quizDevice'
 		layoutTemplate: 'baseTemplate'
 		yieldTemplate:
 			'projection': {to: 'projection'}
@@ -355,4 +354,4 @@ Router.map ->
 			document.body.classList.add('projection')
 			this.next()
 		data: ->
-			return { quizTaker : this.params.quizTaker }
+			return { quizDevice : this.params.quizDevice }

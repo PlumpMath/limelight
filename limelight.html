@@ -1,5 +1,6 @@
 <head>
   <title>limelight</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
@@ -28,43 +29,62 @@
         <div class="logo corner corner-right corner-bottom">
             <img src="/img/GHN_logo.svg">
         </div>
-        <div class="corner corner-right corner-top sans">About</div>
+        <div data-modal="about" class="corner corner-right corner-top sans">About</div>
+    </div>
+
+    <div id="modal-about">
+        <div class="modal-container vcenter">
+            <div class="close corner corner-top corner-right"><span>&#10005;</span></div>
+            <h2 class="aligncenter caps">About</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos mollitia recusandae, quod a nostrum. Quis dignissimos hic tempora ea dolore quas sequi corrupti fugiat accusantium, autem, laudantium consequatur ad maiores!</p>
+        </div>
     </div>
 </template>
 
 <template name="quiz">
     <div id="quiz-container" class="h100 step-{{quizStep}}">
 
-    	<div class="corner corner-top corner-left step-counter sans">{{quizStep}}/{{totalSteps}}</div>
-        <div class="restart corner corner-left corner-bottom">
-            <img src="/img/restart.svg">
-            <button class="delete">Delete</button>
-        </div>
         <div class="logo corner corner-right corner-bottom">
             <img src="/img/GHN_logo.svg">
         </div>
-
 
     	<div id="step" class="step h100">
             {{#with quizQuestionData}}
     		<h3 class="question caps bold abs w100">{{qtext}}</h3>
 
-    		<div class="buttons flex-container w100 vcenter">
+    		<div class="buttons w100 vcenter">
     			<button type="button" class="step-choice" value="{{a1id}}">{{a1text}}</button>
     			<button type="button" class="step-choice" value="{{a2id}}">{{a2text}}</button>
     		</div>
         	{{/with}}
 
             {{#if quizDone}}
-                <h3 class="question caps bold abs w100">Today I'm feeling...<br>
+                {{#if no_emoji_id}}
+                <h3 class="question caps bold abs w100">Today I'm feeling...
                     <div id="emoji-container" class="cf">
                     {{#each svgKeys}}
                         <img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
                     {{/each}}
                     </div>
                 </h3>
-            {{/if}}
+                {{else}}
+                <h3 class="question caps bold">My name is...
+                    <div id="emoji-container" class="cf">
+                    <form>
+                        <input id="quiz-taker" type="text" placeholder="Type here..." class="aligncenter block w100" required>
+                        <input type="submit" value="Submit" class="submit-quizTaker block w100">
+                    </form>
+                    </div>
+                </h3>
+                {{/if}}
 
+            {{/if}}
+        </div>
+
+        <div class="corner corner-top corner-left step-counter sans">{{quizStep}}/{{totalSteps}}</div>
+        <div class="restart corner corner-left corner-bottom">
+            <img src="/img/restart.svg">
+            <!-- <button class="delete">Delete</button> -->
         </div>
 
     </div>

@@ -7,6 +7,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary
 	-webkit-box-sizing: border-box;
 	position: relative;
 }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; }
 
 // Fonts
 @font-face {
@@ -33,9 +34,11 @@ article,aside,details,figcaption,figure,footer,header,hgroup,nav,section,summary
 // Utilities
 .h100 { height: 100%; }
 .w100 { width: 100%; }
-.abs { position: absolute; }
+.abs { position: absolute; top: 0; left: 0; }
+.fixed { position: fixed; top: 0; left: 0; }
 .caps { text-transform: uppercase; }
-.bold { font-weight: bold; }
+// .bold { font-weight: bold; }
+.block { display: block; }
 .dib { display: inline-block; }
 @mixin tight { margin: 0; padding: 0; }
 .tight { @include tight; }
@@ -46,6 +49,9 @@ html, body {
 }
 
 body {
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-size: cover;
 	overflow: hidden;
 	padding: 3.125vw; // 1/32
 
@@ -64,7 +70,7 @@ input, button, textarea {
 	display: inline-block;
 	@include monospace;
 	padding: 0.6em 1em;
-	margin: 0 0.25em 1em;
+	margin: 0 0 1em;
 	transition: 0.1s;
 
 	&:active, &:focus {
@@ -81,7 +87,8 @@ input, button, textarea {
 	text-align: left;
 }
 .aligncenter {
-	margin: 0 auto;
+	margin-left: auto;
+	margin-right: auto;
 	text-align: center;
 }
 .alignright {
@@ -118,10 +125,6 @@ input, button, textarea {
 
 .dotcontainer {
 	flex: 1;
-}
-
-.bg {
-	max-width: 70%;
 }
 
 .restart,
@@ -202,11 +205,11 @@ input, button, textarea {
 }
 
 .question {
-	//@include fontVW(4.5, 45, 25);
 	font-size: 40px;
 	margin: 0 0 3.125vw;
-	min-height: 8.33vw;
+	padding: 0 1em;
 	text-align: center;
+	top: 1.5em;
 }
 
 .step {
@@ -220,14 +223,14 @@ input, button, textarea {
 
 .step-choice {
 	@include fontVW(4.167, 40, 18);
-	width: 100%;
+	float: left;
+	width: 46%;
+
 	&:first-child {
-		margin-left: 0;
-		margin-right: 3.125vw;
+		margin-right: 4%;
 	}
 	&:last-child {
-		margin-left: 3.125vw;
-		margin-right: 0;
+		margin-left: 4%;
 	}
 }
 
@@ -271,4 +274,41 @@ input, button, textarea {
 	position: absolute;
 	transition: 0.2s height;
 	width: 100%;
+}
+
+[id^=modal] {
+	display: none;
+	height: 100%;
+	left: 0;
+	padding: 10%;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 9999;
+}
+
+.modal-container {
+	background: #fff;
+	border: 2px solid #000;
+	margin: 0 auto;
+	max-width: 600px;
+	padding: 0.5em;
+
+	h2 {
+		margin: 1em 0;
+	}
+
+	.close {
+		background: #000;
+		color: #fff;
+		cursor: pointer;
+		height: 1.2em;
+		width: 1.2em;
+
+		span {
+			font-size: 1.4em;
+			left: 0.1em;
+			top: -0.03em;
+		}
+	}
 }
