@@ -54,6 +54,22 @@ if Meteor.isClient
 			el.setAttribute(key, value)
 		svg.appendChild(el)
 
+	# HACKY. Get the keys for all the SVG emoji icons ('01' -> '24' (or howMany))
+	# 24 a default for the emoji icons, otherwise pass through # as arg
+	svgKeys = (howMany) ->
+		i = 1
+		keys = []
+		if !howMany
+			howMany = 24
+		while i <= howMany
+			k = ''
+			if i.toString().length == 1
+				k = '0'
+			k += i.toString()
+			keys.push(k)
+			i += 1
+		return keys
+
 	showModal = (which) ->
 		$('#modal-' + which).fadeIn()
 
@@ -145,10 +161,12 @@ if Meteor.isClient
 		old = $('.bg')
 		old.remove()
 
-		which = randFromArray(['1AB', '2AB', '2BC', '3AB'])
-		color = randFromArray(['blue', 'green', 'orange', 'pink', 'purple', 'yellow'])
+		which = randFromArray(svgKeys(20))
+		console.log(which)
+		#which = randFromArray(['1AB', '2AB', '2BC', '3AB'])
+		#color = randFromArray(['blue', 'green', 'orange', 'pink', 'purple', 'yellow'])
 
-		document.body.style.backgroundImage = 'url(/img/bg/' + which + '_' + color + '.svg)'
+		document.body.style.backgroundImage = 'url(/img/bg/background1440x1440-' + which + '.svg)'
 
 	updateFromApi = (url) ->
 		Meteor.call "checkApi", url, (error, results) ->
@@ -190,19 +208,9 @@ if Meteor.isClient
 		totalSteps: () ->
 			return globals.quizTotalSteps
 
-		# HACKY. Get the keys for all the SVG emoji icons ('01' -> '24')
 		svgKeys: () ->
-			i = 1
-			keys = []
-			k = ''
-			while i <= 24
-				if i.toString().length == 1
-					k = '0' + i.toString()
-				else
-					k = i.toString()
-				keys.push(k)
-				i += 1
-			return keys
+			return svgKeys()
+
 		no_emoji_id: () ->
 
 			if Session.get('emoji_id')
