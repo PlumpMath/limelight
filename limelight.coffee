@@ -162,8 +162,8 @@ if Meteor.isClient
 				console.log(guess.coord[0], guess.coord[1])
 				div = document.createElement('div')
 				div.classList.add('building-icon')
-				div.style.left = remap(guess.coord[0], -0.8, 1.1) + 'vw'
-				div.style.top = remap(guess.coord[1], -0.8, 0.9) + 'vh'
+				div.style.left = remap(guess.coord[0], -1.3, 1.6) + 'vw'
+				div.style.top = remap(guess.coord[1], -1.3, 1.4) + 'vh'
 
 				img = document.createElement('img')
 				img.src = '/img/building_icons/' + guess.submission_id + '.svg'
