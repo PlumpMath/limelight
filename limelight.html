@@ -51,9 +51,9 @@
 		<div id="step" class="step h100">
 			{{#if no_language_selected}}
 				<div class="buttons w100 vcenter">
-					<button type="button" class="language-choice" value="lang-fi">SUOMI</button>
-					<button type="button" class="language-choice" value="lang-sv">SVENSKA</button>
-					<button type="button" class="language-choice" value="lang-en">ENGLISH</button>
+					<button type="button" class="language-choice block w100" value="lang-fi">SUOMI</button>
+					<button type="button" class="language-choice block w100" value="lang-sv">SVENSKA</button>
+					<button type="button" class="language-choice block w100" value="lang-en">ENGLISH</button>
 				</div>
 			{{else}}
 				{{#with quizQuestionData}}
@@ -91,7 +91,7 @@
 
         <div class="corner corner-top corner-left step-counter sans">{{quizStep}}/{{totalSteps}}</div>
         <div class="restart corner corner-left corner-bottom">
-            <img src="/img/restart.svg">
+            <img class="alignleft" src="/img/restart.svg">
             <!-- <button class="delete">Delete</button> -->
         </div>
 

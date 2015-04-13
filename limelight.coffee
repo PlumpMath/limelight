@@ -184,14 +184,15 @@ if Meteor.isClient
 			Meteor.call "updateQuizSession", Session.get("quizTaker"), Session.get("quizStep"), Session.get("currentApiData")
 		return
 
+	Template.quiz.rendered = renderQuizBG
+
 	Template.quiz.helpers
 		quizStep: () ->
+			renderQuizBG()
 			if !(Session.get("quizStep"))
 				quizInit(this)
 			return Session.get("quizStep")
 		quizQuestionData: () ->
-
-			renderQuizBG()
 
 			$('button.step-choice').prop('disabled', false)
 
