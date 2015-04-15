@@ -213,8 +213,17 @@ if Meteor.isClient
 
 			if !(Session.get("currentApiData"))
 				updateFromApi(Session.get("apiUrl"))
+				# we don't have to have a return to it because this will change when Session.get("currentApiData") changes
 			else
-				return Session.get("currentApiData").next_question[0]
+				next_q = Session.get("currentApiData").next_question[0]
+				if (_.random(0, 1) == 1)
+					tmpid = next_q.a1id
+					tmptext = next_q.a1text
+					next_q.a1id = next_q.a2id
+					next_q.a1text = next_q.a2text
+					next_q.a2id = tmpid
+					next_q.a2text = tmptext
+				return next_q
 		quizGuesses: () ->
 			if(Session.get("currentApiData"))
 				return Session.get("currentApiData").guesses
