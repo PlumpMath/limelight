@@ -15,6 +15,7 @@
 </template>
 
 <template name="pindrop">
+    {{ renderBuildingIcons }}
     <div class="h100 flex-container">
     	<div id="drop-canvas" class="h100 dotcontainer">
             <!-- TODO: meta info -->
@@ -22,6 +23,7 @@
         		{{ renderPoint }}
         	{{/each}}
         </div>
+        {{ pointColors }}
 
         <div class="restart corner corner-left corner-bottom">
             <img src="/img/restart.svg">
