@@ -18,7 +18,6 @@
     {{ renderBuildingIcons }}
     <div class="h100 flex-container">
     	<div id="drop-canvas" class="h100 dotcontainer">
-            <!-- TODO: meta info -->
         	{{#each allpoints}}
         		{{ renderPoint }}
         	{{/each}}
@@ -31,14 +30,16 @@
         <div class="logo corner corner-right corner-bottom">
             <img src="/img/GHN_logo.svg">
         </div>
-        <div data-modal="about" class="corner corner-right corner-top sans">About</div>
+        <div data-modal="about" class="about corner corner-right corner-top sans">About</div>
     </div>
 
     <div id="modal-about">
         <div class="modal-container vcenter">
             <div class="close corner corner-top corner-right"><span>&#10005;</span></div>
             <h2 class="aligncenter caps">About</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos mollitia recusandae, quod a nostrum. Quis dignissimos hic tempora ea dolore quas sequi corrupti fugiat accusantium, autem, laudantium consequatur ad maiores!</p>
+            <div class="modal-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos mollitia recusandae, quod a nostrum. Quis dignissimos hic tempora ea dolore quas sequi corrupti fugiat accusantium, autem, laudantium consequatur ad maiores!</p>
+            </div>
         </div>
     </div>
 </template>

@@ -201,10 +201,11 @@ if Meteor.isClient
 								dist = theDistance
 								closest = icon
 
-						color = closest.getAttribute('data-color')
-						shapes = [].slice.call(point.firstChild.childNodes)
-						for shape in shapes
-							shape.setAttribute('fill', color)
+						if closest
+							color = closest.getAttribute('data-color')
+							shapes = [].slice.call(point.firstChild.childNodes)
+							for shape in shapes
+								shape.setAttribute('fill', color)
 			doPointColors()
 			return ''
 
