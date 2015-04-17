@@ -37,7 +37,7 @@ h1, h2, h3, h4, h5, h6 { font-weight: normal; }
 .abs { position: absolute; top: 0; left: 0; }
 .fixed { position: fixed; top: 0; left: 0; }
 .caps { text-transform: uppercase; }
-// .bold { font-weight: bold; }
+// .bold { font-weight: bold; } // removed because fonts don't support it
 .block { display: block; }
 .dib { display: inline-block; }
 @mixin tight { margin: 0; padding: 0; }
@@ -129,7 +129,10 @@ input, button, textarea {
 
 .restart,
 .logo {
-	height: 12.5vw;
+	height: 8.75vw;
+	@media screen and (max-width: 875px) {
+		height: 100px; // a reasonable minimum
+	}
 
 	// stretch to fill but do not exceed container height
 	img {
@@ -154,13 +157,21 @@ input, button, textarea {
 	}
 }
 
+.about {
+	cursor: pointer;
+	font-size: 170%;
+}
+
+$clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%, 0% 10%);
+
 .point {
 	position: fixed;
 	font-size: 0.7em;
 
 	svg {
 		background: rgba(255, 255, 255, 0.5);
-		border-radius: 4px;
+		clip-path: $clipPath;
+		-webkit-clip-path: $clipPath;
 		height: 28px;
 		left: 0;
 		padding: 2px;
@@ -262,7 +273,8 @@ input, button, textarea {
 
 .emoji {
 	background: #fff;
-	border-radius: 10%;
+	clip-path: $clipPath;
+		-webkit-clip-path: $clipPath;
 	cursor: pointer;
 	float: left;
 	margin: 5px;
@@ -331,4 +343,14 @@ input, button, textarea {
 			top: -0.03em;
 		}
 	}
+}
+
+$columns: 2;
+.modal-content {
+
+	columns: $columns;
+		-webkit-columns: $columns;
+		-moz-columns: $columns;
+
+	*:first-child { margin-top: 0; }
 }

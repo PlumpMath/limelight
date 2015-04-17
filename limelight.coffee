@@ -75,6 +75,23 @@ if Meteor.isClient
 	showModal = (which) ->
 		$('#modal-' + which).fadeIn()
 
+	scoreColorById = (id) ->
+		index = globals.submissionIdOrder.indexOf(id)
+		color = globals.colors[index]
+		return color
+
+	scoreIdByColor = (color) ->
+		index = globals.colors[color]
+		id = globals.submissionIdOrder[index]
+		return id
+
+	# assume a[0] and b[0] are x, a[1] and b[1] are y
+	distance = (a, b) ->
+		x = b[0] - a[0]
+		y = b[1] - a[1]
+		d = Math.sqrt(x * x + y * y)
+		return d
+
 
 	# Helper vars
 	xmlns = 'http://www.w3.org/2000/svg'
@@ -107,6 +124,24 @@ if Meteor.isClient
 	Template.pindrop.helpers
 		allpoints: () ->
 			return Points.find({})
+		renderBuildingIcons: () ->
+			# fireice.fire/ used as dummy
+			Meteor.call "checkApi", globals.apiBaseUrl + 'fireice.fire/', (err, results) ->
+				guesses = results.data.guesses
+
+				for guess in guesses
+
+					div = document.createElement('div')
+					div.classList.add('building-icon')
+					div.style.left = remap(guess.coord[0], -1.3, 1.6) + 'vw'
+					div.style.top = remap(guess.coord[1], -1.3, 1.4) + 'vh'
+					div.setAttribute('data-color', scoreColorById(guess.submission_id))
+
+					img = document.createElement('img')
+					img.src = '/img/building_icons/' + guess.submission_id + '.svg'
+					div.appendChild(img)
+					document.body.insertBefore(div, document.body.firstChild)
+
 		renderPoint: () ->
 
 			# create point container
@@ -114,21 +149,6 @@ if Meteor.isClient
 			point.classList.add('point')
 			point.style.left = this.pageX + 'vw'
 			point.style.top = this.pageY + 'vh'
-
-			if this.pageX < 50
-				if this.pageY < 50 && this.pageY < 1.5 * this.pageX
-					quadrant = 1 # blue
-				else if this.pageY >= 50 && 100 - this.pageY < 1.5 * this.pageX
-					quadrant = 5 # orange
-				else
-					quadrant = 6 #purple
-			if this.pageX >= 50
-				if this.pageY < 50 && this.pageY < 1.5 * (100 - this.pageX)
-					quadrant = 2 # yellow
-				else if this.pageY >= 50 && 100 - this.pageY <= 1.5 * (100 - this.pageX)
-					quadrant = 4 # pink
-				else
-					quadrant = 3 # green
 
 			# create SVG element
 			svg = makeSVG(
@@ -141,35 +161,59 @@ if Meteor.isClient
 
 			if thisContent
 				for shape in thisContent then do (shape) =>
-					shape.attrs.fill = globals.colors[quadrant - 1]
+					shape.attrs.fill = 'transparent'
 					makeSVGelement(svg, shape)
 
-			quizTaker = document.createElement('p')
-			quizTaker.classList.add('quiz-taker')
-			quizTaker.innerHTML = this.quizTaker || 'anonymous'
-			point.appendChild(quizTaker)
+				quizTaker = document.createElement('p')
+				quizTaker.classList.add('quiz-taker')
+				quizTaker.innerHTML = this.quizTaker || 'anonymous'
+				point.appendChild(quizTaker)
 
-			document.body.appendChild(point)
+				document.body.appendChild(point)
 			# need to return an empty string even though add the above SVG
 			return ''
 
-	Template.pindrop.rendered = ->
-		# fireice.fire/ used as dummy
-		Meteor.call "checkApi", globals.apiBaseUrl + 'fireice.fire/', (err, results) ->
-			guesses = results.data.guesses
-			for guess in guesses
-				console.log(guess.submission_id)
-				console.log(guess.coord[0], guess.coord[1])
-				div = document.createElement('div')
-				div.classList.add('building-icon')
-				div.style.left = remap(guess.coord[0], -1.3, 1.6) + 'vw'
-				div.style.top = remap(guess.coord[1], -1.3, 1.4) + 'vh'
+		pointColors: () ->
+			doPointColors = () ->
+				points = document.getElementsByClassName('point')
+				icons = document.getElementsByClassName('building-icon')
 
-				img = document.createElement('img')
-				img.src = '/img/building_icons/' + guess.submission_id + '.svg'
-				div.appendChild(img)
-				document.body.insertBefore(div, document.body.firstChild)
-		if(!this._rendered)
+				if points.length == 0
+					setTimeout(doPointColors, 500)
+				else
+
+					points = [].slice.call(points)
+					icons = [].slice.call(icons)
+
+					for point in points
+
+						dist = Infinity
+						ptX = parseFloat(point.style.left)
+						ptY = parseFloat(point.style.top)
+
+						for icon in icons
+
+							iconX = parseFloat(icon.style.left)
+							iconY = parseFloat(icon.style.top)
+							theDistance = distance([ptX, ptY], [iconX, iconY])
+
+							if theDistance < dist
+								dist = theDistance
+								closest = icon
+
+						if closest
+							color = closest.getAttribute('data-color')
+							shapes = [].slice.call(point.firstChild.childNodes)
+							for shape in shapes
+								shape.setAttribute('fill', color)
+			doPointColors()
+			return ''
+
+			#pointArr = Array.prototype.slice.call(points.childNodes)
+			#console.log(pointArr)
+
+	Template.pindrop.rendered = ->
+		if (!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
 
@@ -324,9 +368,7 @@ if Meteor.isClient
 			return Math.round(score * 100)
 
 		scoreColorById: (id) ->
-			index = globals.submissionIdOrder.indexOf(id)
-			color = globals.colors[index]
-			return color
+			return scoreColorById(id)
 
 		projectionGuessesSort: (guesses) ->
 			# sort the guesses by the submission_id's order in globals.submissionIdOrder

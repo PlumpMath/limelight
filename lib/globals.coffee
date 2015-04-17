@@ -10,6 +10,7 @@ globals.quizTotalSteps = 16
 globals.submissionIdOrder = ["GH-04380895", "GH-121371443", "GH-76091181", "GH-5059206475", "GH-1128435973", "GH-5631681770"]
 
 # SVG colors
+# blue, yellow, green, pink, orange, purple
 globals.colors = ['#00BDD4', '#FBEB34', '#6EC829', '#FAB0C9', '#FFAF3E', '#925D9E']
 
 
