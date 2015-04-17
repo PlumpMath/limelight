@@ -260,7 +260,7 @@ if Meteor.isClient
 				# we don't have to have a return to it because this will change when Session.get("currentApiData") changes
 			else
 				next_q = Session.get("currentApiData").next_question[0]
-				if (_.random(0, 1) == 1)
+				if ((next_q?) and _.random(0, 1) == 1)
 					tmpid = next_q.a1_id
 					tmptext = next_q.a1_text
 					next_q.a1_id = next_q.a2_id
@@ -283,10 +283,10 @@ if Meteor.isClient
 			return svgKeys()
 
 		no_emoji_id: () ->
-			return (! Session.get('emoji_id'))
+			return !(Session.get('emoji_id')?)
 
 		no_language_selected: () ->
-			return (! Session.get('selected_language'))
+			return !(Session.get('selected_language')?)
 
 	Template.quiz.events
 
@@ -307,7 +307,6 @@ if Meteor.isClient
 			qH.push Session.get("currentApiData").next_question[0].q_id + "." + button_value
 
 			Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + ">" + qH.join(">") + "/")
-			console.log(Session.get('apiUrl'))
 			Session.set("quizHistory", qH)
 
 			Session.set("quizStep", Session.get("quizStep") + 1)
@@ -332,6 +331,7 @@ if Meteor.isClient
 			# so coerce a string and subtract one
 			# (for zero-based array)
 			emoji_id = (+this.toString()) - 1
+			console.log(emoji_id)
 			Session.set("emoji_id", emoji_id)
 			Session.set("quizStep", Session.get("quizStep") + 1)
 
