@@ -110,7 +110,7 @@ if Meteor.isClient
 
 		"click .restart": (event) ->
 			$('.point').remove()
-			Router.go('quiz', { quizDevice: 'a' })
+			Router.go('quiz', { quizDevice: this.quizDevice })
 
 		# show and hide the modal
 		"click [data-modal]": (event) ->
@@ -419,6 +419,8 @@ Router.map ->
 	this.route 'pindropExhibit',
 		path: '/pindrop/:quizDevice?',
 		layoutTemplate: 'pindrop'
+		data: ->
+			return { quizDevice : this.params.quizDevice || '' }
 
 	this.route 'pindrop',
 		path: '/',
