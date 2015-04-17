@@ -261,12 +261,12 @@ if Meteor.isClient
 			else
 				next_q = Session.get("currentApiData").next_question[0]
 				if (_.random(0, 1) == 1)
-					tmpid = next_q.a1id
-					tmptext = next_q.a1text
-					next_q.a1id = next_q.a2id
-					next_q.a1text = next_q.a2text
-					next_q.a2id = tmpid
-					next_q.a2text = tmptext
+					tmpid = next_q.a1_id
+					tmptext = next_q.a1_text
+					next_q.a1_id = next_q.a2_id
+					next_q.a1_text = next_q.a2_text
+					next_q.a2_id = tmpid
+					next_q.a2_text = tmptext
 				return next_q
 		quizGuesses: () ->
 			if(Session.get("currentApiData"))
@@ -294,6 +294,7 @@ if Meteor.isClient
 			button_value = event.target.value
 			Session.set('selected_language', button_value)
 			Session.set("quizStep", Session.get("quizStep") + 1)
+			Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + "/")
 
 		"click button.step-choice": (event) ->
 
@@ -303,9 +304,9 @@ if Meteor.isClient
 			$('button.step-choice').prop('disabled', true);
 
 			qH = Session.get("quizHistory")
-			qH.push Session.get("currentApiData").next_question[0].qid + "." + button_value
+			qH.push Session.get("currentApiData").next_question[0].q_id + "." + button_value
 
-			Session.set("apiUrl", globals.apiBaseUrl + qH.join(">") + "/")
+			Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + ">" + qH.join(">") + "/")
 			console.log(Session.get('apiUrl'))
 			Session.set("quizHistory", qH)
 
