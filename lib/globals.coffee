@@ -4,7 +4,7 @@ globals.apiBaseUrl = "http://54.148.142.11:8081/play/"
 #"http://localhost:4000/ba-simple-proxy.php?url=http%3A%2F%2F54.148.142.11%3A8080%2Fplay%2F&full_headers=1&full_status=1"
 
 # this is the number of total steps
-globals.quizTotalSteps = 16
+globals.quizTotalSteps = 14
 
 # SVG colors
 globals.submissionIdOrder = ["GH-04380895", "GH-121371443", "GH-76091181", "GH-5059206475", "GH-1128435973", "GH-5631681770"]

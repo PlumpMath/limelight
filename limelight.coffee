@@ -223,7 +223,7 @@ if Meteor.isClient
 		old.remove()
 
 		which = randFromArray(svgKeys(20))
-		console.log(which)
+		#console.log(which)
 		#which = randFromArray(['1AB', '2AB', '2BC', '3AB'])
 		#color = randFromArray(['blue', 'green', 'orange', 'pink', 'purple', 'yellow'])
 
@@ -416,11 +416,13 @@ if Meteor.isServer
 
 Router.map ->
 
-	this.route 'pindrop',
-		path: '/pindrop',
+	this.route 'pindropExhibit',
+		path: '/pindrop/:quizDeviceRegex?',
 		layoutTemplate: 'pindrop'
-		#yieldTemplate:
-		#	'pindrop': { to: 'pindrop'}
+
+	this.route 'pindropGlobal',
+		path: '/',
+		layoutTemplate: 'pindrop'
 
 	this.route 'quiz',
 		path: '/quiz/:quizDevice?' #question mark makes parameter optional
