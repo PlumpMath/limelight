@@ -417,10 +417,10 @@ if Meteor.isServer
 Router.map ->
 
 	this.route 'pindropExhibit',
-		path: '/pindrop/:quizDeviceRegex?',
+		path: '/pindrop/:quizDevice?',
 		layoutTemplate: 'pindrop'
 
-	this.route 'pindropGlobal',
+	this.route 'pindrop',
 		path: '/',
 		layoutTemplate: 'pindrop'
 
