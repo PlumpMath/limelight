@@ -127,6 +127,21 @@ input, button, textarea {
 	flex: 1;
 }
 
+.bg-dummy {
+	background: #fff;
+	height: 100%;
+	left: 0;
+	opacity: 0;
+	position: fixed;
+	top: 0;
+	transition: 0.2s;
+	width: 100%;
+
+	&.active {
+		opacity: 1;
+	}
+}
+
 .restart,
 .logo {
 	height: 8.75vw;

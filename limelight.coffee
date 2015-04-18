@@ -178,7 +178,7 @@ if Meteor.isClient
 				points = document.getElementsByClassName('point')
 				icons = document.getElementsByClassName('building-icon')
 
-				if points.length == 0
+				if points.length == 0 || icons.length == 0
 					setTimeout(doPointColors, 500)
 				else
 
@@ -219,17 +219,22 @@ if Meteor.isClient
 
 	renderQuizBG = () ->
 
-		old = $('.bg')
-		old.remove()
-
+		body = $('body')
+		dummy = $('<div class="bg-dummy">')
 		which = randFromArray(svgKeys(20))
-		#console.log(which)
-		#which = randFromArray(['1AB', '2AB', '2BC', '3AB'])
-		#color = randFromArray(['blue', 'green', 'orange', 'pink', 'purple', 'yellow'])
 
-		document.body.style.backgroundImage = 'url(/img/bg/background1440x1440-' + which + '.svg)'
+		addDummy = () ->
+			dummy.addClass('active')
 
-	updateFromApi = (url) ->
+		removeDummy = () ->
+			body.css('background-image', 'url(/img/bg/background1440x1440-' + which + '.svg)')
+			dummy.removeClass('active')
+
+		body.prepend(dummy)
+		setTimeout(addDummy, 10)
+		setTimeout(removeDummy, 200)
+
+	updateFromApi = (url, cb) ->
 		Meteor.call "checkApi", url, (error, results) ->
 
 			# save current results
@@ -241,6 +246,9 @@ if Meteor.isClient
 
 			# update quiz session for projection template
 			Meteor.call "updateQuizSession", Session.get("quizTaker"), Session.get("quizStep"), Session.get("currentApiData")
+
+			if cb
+				cb()
 		return
 
 	Template.quiz.rendered = renderQuizBG
@@ -300,21 +308,25 @@ if Meteor.isClient
 
 			button_value = event.target.value
 
+			# unfocus the button
+			event.target.blur()
+
 			# disable button until re-enabled with new data
 			$('button.step-choice').prop('disabled', true);
 
-			qH = Session.get("quizHistory")
-			qH.push Session.get("currentApiData").next_question[0].q_id + "." + button_value
+			$('.step').fadeOut(150, () ->
+				qH = Session.get("quizHistory")
+				qH.push Session.get("currentApiData").next_question[0].q_id + "." + button_value
 
-			Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + ">" + qH.join(">") + "/")
-			Session.set("quizHistory", qH)
+				Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + ">" + qH.join(">") + "/")
+				Session.set("quizHistory", qH)
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
+				Session.set("quizStep", Session.get("quizStep") + 1)
 
-			updateFromApi(Session.get("apiUrl"))
-
-			# unfocus the button
-			event.target.blur()
+				updateFromApi(Session.get("apiUrl"), () ->
+					$('.step').fadeIn(150)
+				)
+			)
 
 		"click button.delete": ->
 			r = confirm("Delete all points? This cannot be undone.")
