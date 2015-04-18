@@ -216,6 +216,12 @@ if Meteor.isClient
 		if (!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
+		# let 'ESC' close modal
+		console.log('rendered')
+		$(document).on('keydown', (e) ->
+			if e.keyCode == 27
+				$('[id^=modal]').fadeOut()
+		)
 
 	renderQuizBG = () ->
 
