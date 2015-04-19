@@ -97,6 +97,9 @@ if Meteor.isClient
 	# Helper vars
 	xmlns = 'http://www.w3.org/2000/svg'
 
+	Template.registerHelper "equals", (a, b) ->
+		return (a == b)
+
 	Template.pindrop.events
 		# testing only
 		"click #drop-canvas": (event) ->
@@ -386,9 +389,16 @@ if Meteor.isClient
 
 	Template.projection.helpers
 
+		shouldShowImages: (step) ->
+			if(step <= 1)
+				return false
+			if(step >= globals.quizTotalSteps)
+				return false
+			return true
+
 		quizImages: (data, num) ->
 			if(data?)
-				imgurl = data.next_question[0].q_id + "/" 
+				imgurl = globals.projection_img_dir + data.next_question[0].q_id + "/" 
 				if(num == 1)
 					imgurl += data.next_question[0].a1_id
 				else 
