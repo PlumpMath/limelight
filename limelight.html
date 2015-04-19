@@ -121,13 +121,20 @@
 {{#with projectionSession}}
 <div id="projection-container">
 
-fd
 	<!-- We are taker {{taker}}<br/>  -->
 
 	{{#if equals quizStep 1}}  <!-- TO BE STYLED -->
 		VALITSE KIELI JA ALOITA PELI <br />
 		VÄLJ SPRÅK OCH BÖRJA SPELET <br />
 		SELECT LANGUAGE TO START GAME <br />
+	{{/if}}
+
+	{{#if equals quizStep 12}}  <!-- TO BE STYLED -->
+		CHOOSE YOUR AVATAR! <br />
+	{{/if}}
+
+	{{#if equals quizStep 13}}  <!-- TO BE STYLED -->
+		ENTER YOUR NAME! <br />
 	{{/if}}
 
 	{{#if equals quizStep 14}}  <!-- TO BE STYLED -->

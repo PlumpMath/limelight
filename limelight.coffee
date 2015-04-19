@@ -316,6 +316,9 @@ if Meteor.isClient
 			Session.set('selected_language', button_value)
 			Session.set("quizStep", Session.get("quizStep") + 1)
 			Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + "/")
+			updateFromApi(Session.get("apiUrl"), () ->
+				$('.step').fadeIn(150)
+			)
 
 		"click button.step-choice": (event) ->
 
@@ -392,7 +395,7 @@ if Meteor.isClient
 		shouldShowImages: (step) ->
 			if(step <= 1)
 				return false
-			if(step >= globals.quizTotalSteps)
+			if(step >= globals.quizTotalSteps - 2)
 				return false
 			return true
 
@@ -416,8 +419,13 @@ if Meteor.isClient
 
 		projectionGuessesSort: (guesses) ->
 			# sort the guesses by the submission_id's order in globals.submissionIdOrder
-			return _.sortBy guesses, (d) ->
-				return _.indexOf(globals.submissionIdOrder,d.submission_id )
+			if (guesses? && guesses.length > 0)
+				return _.sortBy guesses, (d) ->
+					return _.indexOf(globals.submissionIdOrder,d.submission_id )
+			else 
+				return _.map globals.submissionIdOrder, (d) ->
+					return {'submission_id': d, 'score': 0.0}
+
 
 		projectionSession: () ->
 			return QuizSessions.findOne({ quizdevice: this.quizDevice})
