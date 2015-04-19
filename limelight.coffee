@@ -246,6 +246,9 @@ if Meteor.isClient
 			# save current results
 			Session.set("currentApiData", results.data)
 
+			console.log url
+			console.log results.data
+
 			# check if we're done
 			if('next_question' of results.data and results.data.next_question.length <= 0)
 				Session.set("apiQuestionsDone", true)
