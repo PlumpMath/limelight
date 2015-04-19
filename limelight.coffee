@@ -21,6 +21,7 @@ if Meteor.isClient
 		Session.set("insertedPoint", undefined)
 		Session.set("emoji_id", undefined)
 		Session.set("selected_language", undefined)
+		Meteor.call "updateQuizSession", Session.get("quizTaker"), Session.get("quizStep"), Session.get("currentApiData")
 
 	# given min and max bounds, map a number n
 	# onto 0 --> 100
@@ -385,6 +386,17 @@ if Meteor.isClient
 
 	Template.projection.helpers
 
+		quizImages: (data, num) ->
+			if(data?)
+				imgurl = data.next_question[0].q_id + "/" 
+				if(num == 1)
+					imgurl += data.next_question[0].a1_id
+				else 
+					imgurl += data.next_question[0].a2_id
+				imgurl += "-"
+				imgurl +=  _.random(1, globals.projection_img_count[data.next_question[0].q_id])
+				imgurl += ".png"
+				return imgurl
 
 		scoreTest: (score) ->
 			return Math.round(score * 100)
@@ -398,6 +410,8 @@ if Meteor.isClient
 				return _.indexOf(globals.submissionIdOrder,d.submission_id )
 
 		projectionSession: () ->
+			console.log "yup"
+			console.log QuizSessions.findOne({ taker: this.quizTaker})
 			return QuizSessions.findOne({ taker: this.quizTaker})
 
 		totalSteps: () ->

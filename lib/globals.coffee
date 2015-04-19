@@ -13,6 +13,19 @@ globals.submissionIdOrder = ["GH-04380895", "GH-121371443", "GH-76091181", "GH-5
 # blue, yellow, green, pink, orange, purple
 globals.colors = ['#00BDD4', '#FBEB34', '#6EC829', '#FAB0C9', '#FFAF3E', '#925D9E']
 
+# this keeps track of how many types of projection images there are per topic
+# stored as constant because better than reading img count from directory each time
+globals.projection_img_count = {
+	'conceptual':5,
+	'curvedstraight':3,
+	'femininity':3,
+	'finnish':1,
+	'fireice':3,
+	'historyfuture':4,
+	'stoic':3,
+	'sunrisesunset':2,
+	'sustainable':2,
+	'tradition':2}
 
 # all the types of SVGs we'll allow
 rect = (x, y, w, h, classes) ->
