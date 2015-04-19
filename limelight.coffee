@@ -17,11 +17,10 @@ if Meteor.isClient
 		Session.set("quizDevice", that.quizDevice)
 		# all of these will be set during the quiz
 		Session.set("currentApiData", undefined)
-		Session.set("quizTaker", undefined)
 		Session.set("insertedPoint", undefined)
 		Session.set("emoji_id", undefined)
 		Session.set("selected_language", undefined)
-		Meteor.call "updateQuizSession", Session.get("quizTaker"), Session.get("quizStep"), Session.get("currentApiData")
+		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
 
 	# given min and max bounds, map a number n
 	# onto 0 --> 100
@@ -168,10 +167,10 @@ if Meteor.isClient
 					shape.attrs.fill = 'transparent'
 					makeSVGelement(svg, shape)
 
-				quizTaker = document.createElement('p')
-				quizTaker.classList.add('quiz-taker')
-				quizTaker.innerHTML = this.quizTaker || 'anonymous'
-				point.appendChild(quizTaker)
+				quizDevice = document.createElement('p')
+				quizDevice.classList.add('quiz-device')
+				quizDevice.innerHTML = this.quizDevice || 'anonymous'
+				point.appendChild(quizDevice)
 
 				document.body.appendChild(point)
 			# need to return an empty string even though add the above SVG
@@ -244,7 +243,7 @@ if Meteor.isClient
 		setTimeout(addDummy, 10)
 		setTimeout(removeDummy, 200)
 
-	updateFromApi = (url, cb) ->
+	updateFromApi = (url, callback) ->
 		Meteor.call "checkApi", url, (error, results) ->
 
 			# save current results
@@ -258,10 +257,11 @@ if Meteor.isClient
 				Session.set("apiQuestionsDone", true)
 
 			# update quiz session for projection template
-			Meteor.call "updateQuizSession", Session.get("quizTaker"), Session.get("quizStep"), Session.get("currentApiData")
+			console.log Session.get("quizDevice")
+			Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
 
-			if cb
-				cb()
+			if callback
+				callback()
 		return
 
 	Template.quiz.rendered = renderQuizBG
@@ -360,9 +360,9 @@ if Meteor.isClient
 			Session.set("emoji_id", emoji_id)
 			Session.set("quizStep", Session.get("quizStep") + 1)
 
-		"click .submit-quizTaker": (event) ->
+		"click .submit-quizDevice": (event) ->
 			event.preventDefault()
-			quizTaker = document.getElementById('quiz-taker').value
+			quizDevice = document.getElementById('quiz-device').value
 
 			qH = Session.get("quizHistory")
 
@@ -377,7 +377,7 @@ if Meteor.isClient
 				pageY: y
 				emoji_id: Session.get('emoji_id')
 				qH: qH
-				quizTaker: quizTaker
+				quizDevice: quizDevice
 
 			document.body.style.backgroundImage = ''
 			console.log Session.get('quizDevice')
@@ -420,9 +420,7 @@ if Meteor.isClient
 				return _.indexOf(globals.submissionIdOrder,d.submission_id )
 
 		projectionSession: () ->
-			console.log "yup"
-			console.log QuizSessions.findOne({ taker: this.quizTaker})
-			return QuizSessions.findOne({ taker: this.quizTaker})
+			return QuizSessions.findOne({ quizdevice: this.quizDevice})
 
 		totalSteps: () ->
 			return globals.quizTotalSteps
@@ -442,12 +440,12 @@ if Meteor.isClient
 
 if Meteor.isServer
 	Meteor.methods
-		updateQuizSession: (thistaker, thisquizstep, thisapidata) ->
+		updateQuizSession: (thisdevice, thisquizstep, thisapidata) ->
 			QuizSessions.update(
-				{ taker: thistaker },
+				{ quizdevice: thisdevice },
 				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata } },
 				{ upsert: true})
-			return thistaker + ":" + thisquizstep
+			return thisdevice + ":" + thisquizstep
 
 		removeAllPoints: ->
 			Points.remove({})
