@@ -116,6 +116,7 @@ input, button, textarea {
 	&.corner-center {
 		left: 50%;
 		transform: translateX(-50%);
+			-webkit-transform: translateX(-50%);
 	}
 }
 
@@ -163,6 +164,7 @@ input, button, textarea {
 	transition: 0.2s;
 	&:active, &:hover {
 		transform: scale(0.9);
+			-webkit-transform: translateX(-50%);
 	}
 }
 
@@ -220,14 +222,26 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 	}
 }
 
+$building_icon_size: 14vw;
+@mixin building_icon_size($factor) {
+	width: $factor * $building_icon_size;
+
+	img {
+		left: -0.5 * $factor * $building_icon_size;
+		top: -0.5 * $factor * $building_icon_size;
+	}
+}
 .building-icon {
 	position: fixed;
-	width: 14vw;
+	@include building_icon_size(1);
 	z-index: 0;
+
 	img {
-		left: -7vw;
-		top: -7vw;
 		width: 100%;
+	}
+
+	@media screen and (max-width: 900px) {
+		@include building_icon_size(1.8)
 	}
 }
 
