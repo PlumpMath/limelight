@@ -232,6 +232,8 @@ if Meteor.isClient
 		dummy = $('<div class="bg-dummy">')
 		which = randFromArray(svgKeys(20))
 
+		$('.building-icon').remove()
+
 		addDummy = () ->
 			dummy.addClass('active')
 
@@ -401,10 +403,10 @@ if Meteor.isClient
 
 		quizImages: (data, num) ->
 			if(data?)
-				imgurl = globals.projection_img_dir + data.next_question[0].q_id + "/" 
+				imgurl = globals.projection_img_dir + data.next_question[0].q_id + "/"
 				if(num == 1)
 					imgurl += data.next_question[0].a1_id
-				else 
+				else
 					imgurl += data.next_question[0].a2_id
 				imgurl += "-"
 				imgurl +=  _.random(1, globals.projection_img_count[data.next_question[0].q_id])
