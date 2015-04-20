@@ -389,7 +389,7 @@ if Meteor.isClient
 			return Session.get("quizStep")
 
 		quizImages: (data, quizstep, num) ->
-+			return quizImages(data, quizstep, num)
+			return quizImages(data, quizstep, num)
 
 		shouldShowQuestions: (step) ->
 			if(step <= 1)
