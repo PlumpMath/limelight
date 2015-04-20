@@ -180,6 +180,7 @@ if Meteor.isClient
 	Template.pindrop.helpers
 		allpoints: () ->
 
+			$('body').css('background-image', 'none')
 			clearPoints()
 			doPointColors()
 
@@ -236,10 +237,10 @@ if Meteor.isClient
 					buildingShapes = globals.buildingIcons[index]
 
 					activate = () ->
-						$(this).closest('.building-icon').addClass('active')
+						$(this).closest('.building-icon').addClass('active').appendTo('body')
 
 					deactivate = () ->
-						$(this).closest('.building-icon').removeClass('active')
+						$(this).closest('.building-icon').removeClass('active').prependTo('body')
 
 					for shape in buildingShapes
 						shape.attrs.fill = scoreColorById(guess.submission_id)
@@ -326,7 +327,6 @@ if Meteor.isClient
 				dummy.fadeOut()
 			)
 
-		body.prepend(dummy)
 		fadeDummy()
 
 	updateFromApi = (url, callback) ->
@@ -376,7 +376,6 @@ if Meteor.isClient
 				return false
 
 		quizStep: () ->
-			renderQuizBG()
 			if !(Session.get("quizStep"))
 				quizInit(this)
 			return Session.get("quizStep")
@@ -477,6 +476,8 @@ if Meteor.isClient
 	Template.quiz.events
 
 		"click button.language-choice": (event) ->
+
+			renderQuizBG()
 			button_value = event.target.value
 			Session.set('selected_language', button_value)
 			Session.set("quizStep", Session.get("quizStep") + 1)
@@ -488,6 +489,8 @@ if Meteor.isClient
 			)
 
 		"click .step-choice button": (event) ->
+
+			renderQuizBG()
 
 			button_value = event.target.value
 
@@ -518,6 +521,8 @@ if Meteor.isClient
 				quizInit()
 
 		"click .restart": (event) ->
+
+			renderQuizBG()
 			Router.go('quiz', { quizDevice: Session.get('quizDevice') })
 			quizInit({ quizDevice: Session.get('quizDevice') })
 
@@ -526,7 +531,6 @@ if Meteor.isClient
 			# so coerce a string and subtract one
 			# (for zero-based array)
 			emoji_id = (+this.toString()) - 1
-			console.log(emoji_id)
 			Session.set("emoji_id", emoji_id)
 
 			Session.set("quizStep", Session.get("quizStep") + 1)
@@ -538,6 +542,7 @@ if Meteor.isClient
 
 		"click .submit-quizTakerAge": (event) ->
 			event.preventDefault()
+			renderQuizBG()
 			Session.set("quizTakerAge", $('#quizTakerAge').val())
 
 			Session.set("quizStep", Session.get("quizStep") + 1)
@@ -548,6 +553,7 @@ if Meteor.isClient
 
 		"click .submit-quizTaker": (event) ->
 			event.preventDefault()
+			renderQuizBG()
 			Session.set("quizTaker", $('#quiz-taker').val())
 
 			Session.set("quizStep", Session.get("quizStep") + 1)
