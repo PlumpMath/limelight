@@ -161,25 +161,25 @@
 	{{/if}}
 
 	{{#if equals quizStep 12}}  <!-- TO BE STYLED -->
-        <div class="step aligncenter vcenter">
-    		<h3>ENTER YOUR AGE!</h3>
+        <div class="step aligncenter">
+    		<h3>CHOOSE YOUR AVATAR!</h3>
         </div>
 	{{/if}}
 
 	{{#if equals quizStep 13}}  <!-- TO BE STYLED -->
-        <div class="step aligncenter vcenter">
+        <div class="step aligncenter">
     		<h3>ENTER YOUR NAME!</h3>
         </div>
 	{{/if}}
 
 	{{#if equals quizStep 14}}  <!-- TO BE STYLED -->
-        <div class="step aligncenter vcenter">
+        <div class="step aligncenter">
     		<h3>CHOOSE YOUR AVATAR!</h3>
         </div>
 	{{/if}}
 
 	{{#if equals quizStep 15}}  <!-- TO BE STYLED -->
-        <div class="step aligncenter vcenter">
+        <div class="step aligncenter">
 		THANKS FOR PLAYING! <br />
 		VISIT THE SCREEN TO YOUR RIGHT TO SEE WHERE YOU LANDED ON THE MAP. <br />
 		AUTO-RESTART IN <span class="countdown"></span> SECS<br />
@@ -187,13 +187,13 @@
 		{{ startCountdown }}
 	{{/if}}
 
-<div id="projection-container">
+<div id="projection-container" class="h100">
 	{{#if shouldShowImages quizStep}}
 		<img src="{{quizImages currentApiData 1}}"> <br />
     {{/if}}
 
     {{#if notEquals quizStep 1}}
-	<div class="projection-histogram cf">
+	<div class="projection-histogram abs vcenter w100">
 	{{ #each projectionGuessesSort currentApiData.guesses }}
 		<div class="histogram-item">
 			<div class="bar">
@@ -210,7 +210,7 @@
 
 
 	{{#if shouldShowImages quizStep}}
-		<img src="{{quizImages currentApiData 2}}"> <br />
+		<img class="corner corner-center corner-bottom" src="{{quizImages currentApiData 2}}">
 	{{/if}}
 
 

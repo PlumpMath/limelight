@@ -56,6 +56,7 @@ if Meteor.isClient
 		for key, value of obj.attrs
 			el.setAttribute(key, value)
 		svg.appendChild(el)
+		return el
 
 	# HACKY. Get the keys for all the SVG emoji icons ('01' -> '24' (or howMany))
 	# 24 a default for the emoji icons, otherwise pass through # as arg
@@ -220,26 +221,26 @@ if Meteor.isClient
 						viewBox: '0 0 200 200'
 					)
 					buildingShapes = globals.buildingIcons[index]
+
+					activate = () ->
+						$(this).closest('.building-icon').addClass('active')
+
+					deactivate = () ->
+						$(this).closest('.building-icon').removeClass('active')
+
 					for shape in buildingShapes
 						shape.attrs.fill = scoreColorById(guess.submission_id)
-						makeSVGelement(svg, shape)
+						shape = makeSVGelement(svg, shape)
+
+						shape.addEventListener('mouseover', activate)
+						shape.addEventListener('mouseout', deactivate)
 
 					div.appendChild(svg)
 
 					$(div).on "click", () ->
 						window.open(globals.finalistBaseUrl + $(this).data("ghid"), "_blank")
 
-
 					document.body.insertBefore(div, document.body.firstChild)
-
-					activate = () ->
-						this.classList.add('active')
-
-					deactivate = () ->
-						this.classList.remove('active')
-
-					div.addEventListener('mouseover', activate)
-					div.addEventListener('mouseout', deactivate)
 
 		renderPoint: () ->
 
