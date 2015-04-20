@@ -21,6 +21,7 @@ if Meteor.isClient
 		Session.set("insertedPoint", undefined)
 		Session.set("emoji_id", undefined)
 		Session.set("selected_language", undefined)
+		Session.set("quizStartTime", undefined)
 		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
 
 	# given min and max bounds, map a number n
@@ -440,6 +441,9 @@ if Meteor.isClient
 		x = remap(coord[0], -0.8, 1.1)
 		y = remap(coord[1], -0.8, 0.9)
 
+
+		endTime = new Date()
+
 		console.log Session.get("quizTaker")
 		console.log Session.get("quizTakerAge")
 		pointid = Points.insert
@@ -450,6 +454,8 @@ if Meteor.isClient
 			quizTaker: Session.get("quizTaker")
 			quizTakerAge: Session.get("quizTakerAge")
 			quizDevice: Session.get('quizDevice')
+			quizTime: endTime
+			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
 
 		console.log(Meteor.absoluteUrl("#" + pointid))
 		console.log globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid))
@@ -473,6 +479,8 @@ if Meteor.isClient
 			Session.set('selected_language', button_value)
 			Session.set("quizStep", Session.get("quizStep") + 1)
 			Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + "/")
+			Session.set("quizStartTime", new Date())
+
 			updateFromApi(Session.get("apiUrl"), () ->
 				$('.step').fadeIn(150)
 			)
