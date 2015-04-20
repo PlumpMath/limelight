@@ -633,6 +633,8 @@ Router.map ->
 		layoutTemplate: 'pindrop'
 		onBeforeAction: () ->
 			document.body.classList.add('pindrop')
+			theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
+			document.body.classList.add(theClass)
 			this.next()
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
@@ -642,6 +644,8 @@ Router.map ->
 		layoutTemplate: 'pindrop'
 		onBeforeAction: () ->
 			document.body.classList.add('pindrop')
+			theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
+			document.body.classList.add(theClass)
 			this.next()
 
 	this.route 'quiz',
