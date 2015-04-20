@@ -86,6 +86,44 @@ if Meteor.isClient
 		id = globals.submissionIdOrder[index]
 		return id
 
+	clearPoints = () ->
+		$('.point').remove()
+
+	doPointColors = () ->
+		points = document.getElementsByClassName('point')
+		icons = document.getElementsByClassName('building-icon')
+
+		if points.length == 0 || icons.length == 0
+			setTimeout(doPointColors, 500)
+		else
+
+			points = [].slice.call(points)
+			icons = [].slice.call(icons)
+
+			for point in points
+
+				dist = Infinity
+				ptX = parseFloat(point.style.left)
+				ptY = parseFloat(point.style.top)
+
+				for icon in icons
+
+					iconX = parseFloat(icon.style.left)
+					iconY = parseFloat(icon.style.top)
+					theDistance = distance([ptX, ptY], [iconX, iconY])
+
+					if theDistance < dist
+						dist = theDistance
+						closest = icon
+
+				if closest
+					color = closest.getAttribute('data-color')
+					shapes = [].slice.call(point.firstChild.childNodes)
+					for shape in shapes
+						shape.setAttribute('fill', color)
+
+	doPointColors()
+
 	# assume a[0] and b[0] are x, a[1] and b[1] are y
 	distance = (a, b) ->
 		x = b[0] - a[0]
@@ -127,12 +165,20 @@ if Meteor.isClient
 
 	Template.pindrop.helpers
 		allpoints: () ->
-			console.log this.quizDevice
+
+			clearPoints()
+			doPointColors()
+
 			# make /pindrop/ipad* search for points from devices of ipad*
-			if(this.quizDevice? and this.quizDevice != "default")
-				return Points.find({ quizDevice: { $regex: this.quizDevice }})
+			if (this.quizDevice? and this.quizDevice != "default")
+				pattern =
+					quizDevice: { $regex: this.quizDevice }
 			else
-				return Points.find({})
+				pattern = {}
+			numPoints = Points.find(pattern).count()
+			Session.set('numPoints', numPoints)
+			console.log(numPoints)
+			return Points.find(pattern)
 
 		renderBuildingIcons: () ->
 			# fireice.fire/ used as dummy
@@ -215,47 +261,12 @@ if Meteor.isClient
 				point.appendChild(quizTaker)
 
 				document.body.appendChild(point)
-			# need to return an empty string even though add the above SVG
-			return ''
+				return
 
 		pointColors: () ->
-			doPointColors = () ->
-				points = document.getElementsByClassName('point')
-				icons = document.getElementsByClassName('building-icon')
 
-				if points.length == 0 || icons.length == 0
-					setTimeout(doPointColors, 500)
-				else
-
-					points = [].slice.call(points)
-					icons = [].slice.call(icons)
-
-					for point in points
-
-						dist = Infinity
-						ptX = parseFloat(point.style.left)
-						ptY = parseFloat(point.style.top)
-
-						for icon in icons
-
-							iconX = parseFloat(icon.style.left)
-							iconY = parseFloat(icon.style.top)
-							theDistance = distance([ptX, ptY], [iconX, iconY])
-
-							if theDistance < dist
-								dist = theDistance
-								closest = icon
-
-						if closest
-							color = closest.getAttribute('data-color')
-							shapes = [].slice.call(point.firstChild.childNodes)
-							for shape in shapes
-								shape.setAttribute('fill', color)
 			doPointColors()
-			return ''
-
-			#pointArr = Array.prototype.slice.call(points.childNodes)
-			#console.log(pointArr)
+			return
 
 	Template.pindrop.rendered = ->
 		if (!this._rendered)
