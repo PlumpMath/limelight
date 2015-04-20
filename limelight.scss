@@ -65,6 +65,7 @@ body {
 input, button, textarea {
 	background-color: transparent;
 	border: 2px solid #000;
+	border-radius: 0;
 	box-sizing: border-box;
 	color: #000;
 	display: inline-block;
@@ -100,6 +101,7 @@ input, button, textarea {
 .vcenter {
 	top: 50%;
 	transform: translateY(-50%);
+		-webkit-transform: translateY(-50%);
 }
 
 .corner {
@@ -114,6 +116,14 @@ input, button, textarea {
 	&.corner-center {
 		left: 50%;
 		transform: translateX(-50%);
+			-webkit-transform: translateX(-50%);
+	}
+
+	.pindrop & {
+		&.corner-left { left: 3.125vw; }
+		&.corner-bottom { bottom: 3.125vw; }
+		&.corner-top { top: 3.125vw; }
+		&.corner-right { right: 3.125vw; }
 	}
 }
 
@@ -161,6 +171,7 @@ input, button, textarea {
 	transition: 0.2s;
 	&:active, &:hover {
 		transform: scale(0.9);
+			-webkit-transform: translateX(0.9);
 	}
 }
 
@@ -218,14 +229,42 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 	}
 }
 
+$building_icon_size: 14vw;
+@mixin building_icon_size($factor) {
+	margin-left: -0.5 * $factor * $building_icon_size;
+	margin-top: -0.5 * $factor * $building_icon_size;
+	width: $factor * $building_icon_size;
+}
 .building-icon {
 	position: fixed;
-	width: 14vw;
-	z-index: 0;
+	@include building_icon_size(1);
+	//z-index: 0;
+	@media screen and (max-width: 900px) {
+		@include building_icon_size(1.8)
+	}
+
 	img {
-		left: -7vw;
-		top: -7vw;
 		width: 100%;
+	}
+
+	.infobox {
+		background: #fff;
+		border: 2px solid #000;
+		display: none;
+		left: 100%;
+		padding: 0.5em;
+		position: absolute;
+		width: 100%;
+	}
+
+	&:hover {
+		.infobox {
+			display: block;
+		}
+
+		.svg {
+			fill: #000;
+		}
 	}
 }
 
@@ -287,7 +326,6 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 }
 
 .emoji {
-	background: #fff;
 	clip-path: $clipPath;
 		-webkit-clip-path: $clipPath;
 	cursor: pointer;
