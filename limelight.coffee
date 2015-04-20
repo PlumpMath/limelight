@@ -156,10 +156,7 @@ if Meteor.isClient
 				pattern = {}
 			numPoints = Points.find(pattern).count()
 			Session.set('numPoints', numPoints)
-			console.log(numPoints)
 			return Points.find(pattern, {sort:{quizTime: -1}})
-
-
 
 		renderBuildingIcons: () ->
 			# fireice.fire/ used as dummy
@@ -219,41 +216,6 @@ if Meteor.isClient
 						window.open(globals.finalistBaseUrl + $(this).data("ghid"), "_blank")
 
 					document.body.insertBefore(div, document.body.firstChild)
-
-		pointClasses: (_id) ->
-			classes = ""
-			if(window.location.hash)
-				hash = window.location.hash.substring(1)
-				if(hash == _id)
-					classes += "hoverLock"
-			return classes
-
-
-		generateEmoji: (emoji_id, closestFinalist) ->
-
-			# create SVG element
-			svg = makeSVG(
-				'class': 'emoji'
-				'viewBox': '0 0 283.46 283.46'
-			)
-			svg.setAttribute('data-emoji_id', emoji_id)
-			thisContent = globals.svgContent[emoji_id]
-
-			finalistIndex = globals.submissionIdOrder.indexOf(closestFinalist)
-			color = globals.colors[finalistIndex]
-
-			if thisContent
-				for shape in thisContent then do (shape) =>
-					shape.attrs.fill = color
-					makeSVGelement(svg, shape)
-
-#			for shape in svg.childNodes
-#				shape.setAttribute('fill', color)
-
-			tmp = document.createElement("div")
-			tmp.appendChild(svg)
-
-			return tmp.innerHTML
 
 
 	Template.pindrop.rendered = ->
@@ -322,6 +284,47 @@ if Meteor.isClient
 						callback()
 				)
 		, 1)
+
+
+	Template.point.helpers
+		pointClasses: (_id) ->
+			classes = ""
+			if(window.location.hash)
+				hash = window.location.hash.substring(1)
+				if(hash == _id)
+					classes += "hoverLock"
+			return classes
+
+
+		generateEmoji: (emoji_id, closestFinalist) ->
+
+			# create SVG element
+			svg = makeSVG(
+				'class': 'emoji'
+				'viewBox': '0 0 283.46 283.46'
+			)
+			svg.setAttribute('data-emoji_id', emoji_id)
+			thisContent = globals.svgContent[emoji_id]
+
+			finalistIndex = globals.submissionIdOrder.indexOf(closestFinalist)
+			color = globals.colors[finalistIndex]
+
+			if thisContent
+				for shape in thisContent then do (shape) =>
+					shape.attrs.fill = color
+					makeSVGelement(svg, shape)
+
+#			for shape in svg.childNodes
+#				shape.setAttribute('fill', color)
+
+			tmp = document.createElement("div")
+			tmp.appendChild(svg)
+
+			return tmp.innerHTML
+
+		Template.point.rendered = ->
+			console.log "renered point"
+
 
 
 	Template.quiz.rendered = renderQuizBG
