@@ -60,12 +60,6 @@ body {
 		color: #fff;
 	}
 
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 // Form styles
@@ -86,6 +80,16 @@ input, button, textarea, select {
 		color: #fff;
 		outline: 0;
 	}
+
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+
 }
 
 select {
