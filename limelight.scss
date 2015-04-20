@@ -196,6 +196,10 @@ select {
 		transform: scale(0.9);
 			-webkit-transform: translateX(0.9);
 	}
+
+	.pindrop-ipad & {
+		display: none;
+	}
 }
 
 .logo {
