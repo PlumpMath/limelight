@@ -375,7 +375,8 @@ if Meteor.isClient
 				updateFromApi(Session.get("apiUrl"))
 				# we don't have to have a return to it because this will change when Session.get("currentApiData") changes
 			else
-				next_q = Session.get("currentApiData").next_question[0]
+				thisData = Session.get("currentApiData")
+				next_q = thisData.next_question[0]
 				if ((next_q?) and _.random(0, 1) == 1)
 					tmpid = next_q.a1_id
 					tmptext = next_q.a1_text
@@ -383,6 +384,12 @@ if Meteor.isClient
 					next_q.a1_text = next_q.a2_text
 					next_q.a2_id = tmpid
 					next_q.a2_text = tmptext
+				thisData.next_question[0] = next_q
+
+				#updating QuizSession so that projector order of images will match button order
+				Session.set("currentApiData", thisData)
+				Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
+
 				return next_q
 		quizGuesses: () ->
 			if(Session.get("currentApiData"))
