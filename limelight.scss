@@ -62,7 +62,7 @@ body {
 }
 
 // Form styles
-input, button, textarea {
+input, button, textarea, select {
 	background-color: transparent;
 	border: 2px solid #000;
 	border-radius: 0;
@@ -79,6 +79,17 @@ input, button, textarea {
 		color: #fff;
 		outline: 0;
 	}
+}
+
+select {
+	appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+	background-image: url(img/select.svg);
+	background-position: 100% 50%;
+	background-repeat: no-repeat;
+	border-radius: 0;
+	padding-right: 4em;
 }
 
 // Layout
