@@ -228,8 +228,8 @@ if Meteor.isClient
 			point.rank = index
 			return point
 
-		## HIGHLIGHT THESE PINS
-		for pin in recentPin
+		## HIGHLIGHT THESE PINS, in decreasing order
+		for pin in recentPins
 			console.log pin
 
 	Template.pindrop.rendered = ->
