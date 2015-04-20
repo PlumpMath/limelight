@@ -160,13 +160,13 @@
 		{{ startCountdown }}
 	{{/if}}
 
-<div id="projection-container">
+<div id="projection-container" class="h100">
 	{{#if shouldShowImages quizStep}}
 		<img src="{{quizImages currentApiData 1}}"> <br />
     {{/if}}
 
     {{#if notEquals quizStep 1}}
-	<div class="projection-histogram cf">
+	<div class="projection-histogram abs vcenter w100">
 	{{ #each projectionGuessesSort currentApiData.guesses }}
 		<div class="histogram-item">
 			<div class="bar">
@@ -183,7 +183,7 @@
 
 
 	{{#if shouldShowImages quizStep}}
-		<img src="{{quizImages currentApiData 2}}"> <br />
+		<img class="corner corner-center corner-bottom" src="{{quizImages currentApiData 2}}">
 	{{/if}}
 
 
