@@ -273,6 +273,7 @@ if Meteor.isClient
 				quizTaker = document.createElement('p')
 				quizTaker.classList.add('quiz-taker')
 				quizTaker.innerHTML = this.quizTaker || 'anonymous'
+				quizTaker.innerHTML += if this.quizTakerAge then ', ' + this.quizTakerAge else ''
 				point.appendChild(quizTaker)
 
 				document.body.appendChild(point)
@@ -619,6 +620,9 @@ Router.map ->
 	this.route 'pindropExhibit',
 		path: '/pindrop/:quizDevice?',
 		layoutTemplate: 'pindrop'
+		onBeforeAction: () ->
+			document.body.classList.add('pindrop')
+			this.next()
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
 
