@@ -162,16 +162,6 @@ if Meteor.isClient
 		return (a != b)
 
 	Template.pindrop.events
-		# testing only
-		"click #drop-canvas": (event) ->
-
-			# give it a random ID btw 0 and 23 inclusive
-			emoji_id = Math.round(Math.random() * 23).toString()
-
-			Points.insert
-				pageX: event.pageX * ( 100 / window.innerWidth )
-				pageY: event.pageY * ( 100 / window.innerHeight )
-				emoji_id: emoji_id
 
 		"click .restart": (event) ->
 			$('.point').remove()
