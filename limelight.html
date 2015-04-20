@@ -24,7 +24,7 @@
         {{ pointColors }}
 
         <div class="restart corner corner-left corner-bottom">
-            <img src="/img/restart.svg">
+            <img src="/img/playgame.svg">
         </div>
         <div class="logo corner corner-right corner-bottom">
             <img src="/img/GHN_logo.svg">
@@ -114,10 +114,12 @@
         </div>
 
         <div class="corner corner-top corner-left step-counter sans">{{quizStep}}/{{totalSteps}}</div>
-        <div class="restart corner corner-left corner-bottom">
-            <img class="alignleft" src="/img/restart.svg">
-            <!-- <button class="delete">Delete</button> -->
-        </div>
+		{{#unless no_language_selected}}
+			<div class="restart corner corner-left corner-bottom">
+				<img class="alignleft" src="/img/restart.svg">
+				<!-- <button class="delete">Delete</button> -->
+			</div>
+		{{/unless}}
 
     </div>
 </template>
