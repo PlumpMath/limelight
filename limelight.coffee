@@ -260,9 +260,29 @@ if Meteor.isClient
 			console.log Session.get("quizDevice")
 			Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
 
-			if callback
+			if(callback)
 				callback()
 		return
+
+	countdownTimer = (selector, callback) ->
+		console.log "timer called"
+		t = new Date()
+		t.setSeconds(t.getSeconds() + globals.countdownSecs)
+		console.log t
+
+		setTimeout(() ->
+			$(selector).countdown t
+				.on('update.countdown', (event) ->
+					$(this).html(event.strftime('%S'))
+					console.log(event.strftime('%S'))
+				)
+				.on('finish.countdown', (event) ->
+					console.log "calling callback"
+					if(callback)
+						callback()
+				)
+		, 1)
+		
 
 	Template.quiz.rendered = renderQuizBG
 
@@ -363,6 +383,10 @@ if Meteor.isClient
 			Session.set("emoji_id", emoji_id)
 			Session.set("quizStep", Session.get("quizStep") + 1)
 
+			updateFromApi(Session.get("apiUrl"), () ->
+				$('.step').fadeIn(150)
+			)
+
 		"click .submit-quizDevice": (event) ->
 			event.preventDefault()
 			quizDevice = document.getElementById('quiz-device').value
@@ -387,10 +411,24 @@ if Meteor.isClient
 			if(Session.get('quizDevice') == "default")
 				Router.go('pindrop')
 			else
-				Router.go('quiz', { quizDevice: Session.get('quizDevice') })
-				quizInit({ quizDevice: Session.get('quizDevice') })
+
+				Session.set("quizStep", Session.get("quizStep") + 1)
+
+				updateFromApi(Session.get("apiUrl"), () ->
+					$('.step').fadeIn(150)
+				)
+
+				console.log "launchTimer"
+				countdownTimer(".countdown", () ->	
+					console.log "YOOO"
+					quizInit({ quizDevice: Session.get('quizDevice') })
+					Router.go('quiz', { quizDevice: Session.get('quizDevice') })
+				)
 
 	Template.projection.helpers
+
+		startCountdown: () ->
+			countdownTimer(".countdown")
 
 		shouldShowImages: (step) ->
 			if(step <= 1)

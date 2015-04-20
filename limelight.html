@@ -100,6 +100,7 @@
 							<input type="submit" value="Submit" class="submit-quizDevice block w100">
 						</form>
 						</div>
+						<div style="display: none; ">AUTO-RESTART IN <span class="countdown"></span> SECS</div> <!-- countdown plugin requires a selector, so we need to make an invisible DOM element -->
 					</h3>
 					{{/if}}
 
@@ -138,9 +139,12 @@
 	{{/if}}
 
 	{{#if equals quizStep 14}}  <!-- TO BE STYLED -->
+	<br /><br />
+	<br /><br />
+		{{ startCountdown }}
 		THANKS FOR PLAYING! <br />
 		VISIT THE SCREEN TO YOUR RIGHT TO SEE WHERE YOU LANDED ON THE MAP. <br />
-		AUTO-RESTART IN 59<br />
+		AUTO-RESTART IN <span class="countdown"></span> SECS<br />
 	{{/if}}
 
 	{{#if shouldShowImages quizStep}} 

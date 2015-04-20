@@ -13,6 +13,8 @@ globals.submissionIdOrder = ["GH-04380895", "GH-121371443", "GH-76091181", "GH-5
 # blue, yellow, green, pink, orange, purple
 globals.colors = ['#00BDD4', '#FBEB34', '#6EC829', '#FAB0C9', '#FFAF3E', '#925D9E']
 
+globals.countdownSecs = 10 
+
 globals.projection_img_dir = "/img/projection/"
 
 # this keeps track of how many types of projection images there are per topic
