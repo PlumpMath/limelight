@@ -235,10 +235,10 @@ $building_icon_size: 14vw;
 	margin-top: -0.5 * $factor * $building_icon_size;
 	width: $factor * $building_icon_size;
 }
+
 .building-icon {
 	position: fixed;
 	@include building_icon_size(1);
-	//z-index: 0;
 	@media screen and (max-width: 900px) {
 		@include building_icon_size(1.8)
 	}
@@ -257,12 +257,14 @@ $building_icon_size: 14vw;
 		width: 100%;
 	}
 
-	&:hover {
+	svg * { transition: 0.1s fill; }
+
+	&.active {
 		.infobox {
 			display: block;
 		}
 
-		.svg {
+		svg * {
 			fill: #000;
 		}
 	}

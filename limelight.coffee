@@ -141,6 +141,8 @@ if Meteor.isClient
 
 				for guess in guesses
 
+					index = globals.submissionIdOrder.indexOf(guess.submission_id)
+
 					div = document.createElement('div')
 					div.classList.add('building-icon')
 					# get how far left it is -- if too far to the right,
@@ -159,26 +161,31 @@ if Meteor.isClient
 					buildingImg.src = '/img/buildings/' + guess.submission_id + '.jpg'
 
 					name = document.createElement('p')
-					name.innerHTML = globals.buildingNames[globals.submissionIdOrder.indexOf(guess.submission_id)]
+					name.innerHTML = globals.buildingNames[index]
 					infobox.appendChild(buildingImg)
 					infobox.appendChild(name)
 
 					div.appendChild(infobox)
 
-					img = document.createElement('img')
-					img.src = '/img/building_icons/' + guess.submission_id + '.svg'
-					img.classList.add('svg')
-					div.appendChild(img)
+					svg = makeSVG(
+						viewBox: '0 0 200 200'
+					)
+					buildingShapes = globals.buildingIcons[index]
+					for shape in buildingShapes
+						shape.attrs.fill = scoreColorById(guess.submission_id)
+						makeSVGelement(svg, shape)
+
+					div.appendChild(svg)
 					document.body.insertBefore(div, document.body.firstChild)
 
-					moveToLast = () ->
-						document.body.appendChild(this)
+					activate = () ->
+						this.classList.add('active')
 
-					moveToFirst = () ->
-						document.body.insertBefore(this, document.body.firstChild)
+					deactivate = () ->
+						this.classList.remove('active')
 
-					div.addEventListener('mouseover', moveToLast)
-					div.addEventListener('mouseout', moveToFirst)
+					div.addEventListener('mouseover', activate)
+					div.addEventListener('mouseout', deactivate)
 
 		renderPoint: () ->
 
@@ -315,7 +322,7 @@ if Meteor.isClient
 						callback()
 				)
 		, 1)
-		
+
 
 	Template.quiz.rendered = renderQuizBG
 
@@ -460,7 +467,7 @@ if Meteor.isClient
 					$('.step').fadeIn(150)
 				)
 
-				countdownTimer(".countdown", () ->	
+				countdownTimer(".countdown", () ->
 					quizInit({ quizDevice: Session.get('quizDevice') })
 					Router.go('quiz', { quizDevice: Session.get('quizDevice') })
 				)
