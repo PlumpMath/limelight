@@ -126,7 +126,9 @@ if Meteor.isClient
 
 	Template.pindrop.helpers
 		allpoints: () ->
+			console.log this.quizDevice
 			return Points.find({})
+
 		renderBuildingIcons: () ->
 			# fireice.fire/ used as dummy
 			Meteor.call "checkApi", globals.apiBaseUrl + 'fireice.fire/', (err, results) ->
