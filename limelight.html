@@ -16,7 +16,7 @@
 
 <template name="pindrop">
     {{ renderBuildingIcons }}
-    
+
     	{{#each allpoints}}
     		{{ renderPoint }}
     	{{/each}}
@@ -127,50 +127,58 @@
 
 <template name="projection">
 {{#with projectionSession}}
-<div id="projection-container">
-
 	<!-- We are taker {{taker}}<br/>  -->
 
 	{{#if equals quizStep 1}}  <!-- TO BE STYLED -->
-		VALITSE KIELI JA ALOITA PELI <br />
-		VÄLJ SPRÅK OCH BÖRJA SPELET <br />
-		SELECT LANGUAGE TO START GAME <br />
+        <div class="step aligncenter vcenter">
+    		<h3>VALITSE KIELI JA&nbsp;ALOITA&nbsp;PELI</h3>
+            <h3>VÄLJ SPRÅK OCH&nbsp;BÖRJA&nbsp;SPELE</h3>
+            <h3>SELECT LANGUAGE TO&nbsp;START&nbsp;GAME</h3>
+        </div>
 	{{/if}}
 
 	{{#if equals quizStep 12}}  <!-- TO BE STYLED -->
-		CHOOSE YOUR AVATAR! <br />
+        <div class="step aligncenter vcenter">
+    		<h3>CHOOSE YOUR AVATAR!</h3>
+        </div>
 	{{/if}}
 
 	{{#if equals quizStep 13}}  <!-- TO BE STYLED -->
-		ENTER YOUR NAME! <br />
+        <div class="step aligncenter vcenter">
+    		<h3>ENTER YOUR NAME!</h3>
+        </div>
 	{{/if}}
 
 	{{#if equals quizStep 14}}  <!-- TO BE STYLED -->
-	<br /><br />
-	<br /><br />
+
+        <div class="step aligncenter vcenter">
 		{{ startCountdown }}
 		THANKS FOR PLAYING! <br />
 		VISIT THE SCREEN TO YOUR RIGHT TO SEE WHERE YOU LANDED ON THE MAP. <br />
 		AUTO-RESTART IN <span class="countdown"></span> SECS<br />
+        </div>
 	{{/if}}
 
+<div id="projection-container">
 	{{#if shouldShowImages quizStep}}
 		<img src="{{quizImages currentApiData 1}}"> <br />
-	{{/if}}
+    {{/if}}
 
-		<div class="projection-histogram cf">
-		{{ #each projectionGuessesSort currentApiData.guesses }}
-			<div class="histogram-item">
-				<div class="bar">
-					<div class="bar-amount-container dib">
-						<div class="bar-amount" style="height: {{ scoreTest score }}%; background: {{ scoreColorById submission_id}}"></div>
-					</div>
-					<div class="dib">{{ scoreTest score }}%</div>
+    {{#if notEquals quizStep 1}}
+	<div class="projection-histogram cf">
+	{{ #each projectionGuessesSort currentApiData.guesses }}
+		<div class="histogram-item">
+			<div class="bar">
+				<div class="bar-amount-container dib">
+					<div class="bar-amount" style="height: {{ scoreTest score }}%; background: {{ scoreColorById submission_id}}"></div>
 				</div>
+				<div class="dib">{{ scoreTest score }}%</div>
 			</div>
-
-		{{/each}}
+		</div>
+	{{/each}}
 	</div>
+    {{/if}}
+
 
 	{{#if shouldShowImages quizStep}}
 		<img src="{{quizImages currentApiData 2}}"> <br />

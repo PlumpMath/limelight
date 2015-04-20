@@ -137,6 +137,8 @@ if Meteor.isClient
 
 	Template.registerHelper "equals", (a, b) ->
 		return (a == b)
+	Template.registerHelper "notEquals", (a, b) ->
+		return (a != b)
 
 	Template.pindrop.events
 		# testing only
@@ -278,8 +280,9 @@ if Meteor.isClient
 		if (!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
+
+		$('.bg-dummy').remove()
 		# let 'ESC' close modal
-		console.log('rendered')
 		$(document).on('keydown', (e) ->
 			if e.keyCode == 27
 				$('[id^=modal]').fadeOut()
