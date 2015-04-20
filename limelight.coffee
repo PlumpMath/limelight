@@ -342,7 +342,12 @@ if Meteor.isClient
 
 		Template.point.rendered = ->
 			console.log "renered point"
-			$('.point').removeClass('loading')
+			$('.point').each(() ->
+				_this = this
+				setTimeout(() ->
+					_this.classList.remove('loading')
+				, Math.random() * 2500 + 1000)
+			)
 
 
 
