@@ -306,7 +306,7 @@ if Meteor.isClient
 
 	Template.point.helpers
 		timeFormat: (time) ->
-			console.log time
+			return moment(time).format('MMM Do YYYY')
 
 
 		pointClasses: (_id) ->
