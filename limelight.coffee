@@ -362,7 +362,7 @@ if Meteor.isClient
 		shouldShowQuestions: (step) ->
 			if(step <= 1)
 				return false
-			if(step >= globals.quizTotalSteps - 2)
+			if(step >= globals.quizTotalSteps - 3)
 				return false
 			return true
 
@@ -410,6 +410,33 @@ if Meteor.isClient
 
 		no_language_selected: () ->
 			return !(Session.get('selected_language')?)
+
+	endQuiz = () ->
+		coord = Session.get("currentApiData").coord
+		# rough x coords domain: -0.8 to 1.1,
+		# y: -0.8 to 0.9
+		x = remap(coord[0], -0.8, 1.1)
+		y = remap(coord[1], -0.8, 0.9)
+
+		console.log Session.get("quizTaker")
+		console.log Session.get("quizTakerAge")
+		Points.insert
+			pageX: x
+			pageY: y
+			emoji_id: Session.get('emoji_id')
+			quizHistory: Session.get("quizHistory")
+			quizTaker: Session.get("quizTaker")
+			quizTakerAge: Session.get("quizTakerAge")
+			quizDevice: Session.get('quizDevice')
+
+		document.body.style.backgroundImage = ''
+		if(Session.get('quizDevice') == "default")
+			Router.go('pindrop')
+		else
+			countdownTimer(".countdown", () ->
+				quizInit({ quizDevice: Session.get('quizDevice') })
+				Router.go('quiz', { quizDevice: Session.get('quizDevice') })
+			)
 
 	Template.quiz.events
 
@@ -463,47 +490,33 @@ if Meteor.isClient
 			emoji_id = (+this.toString()) - 1
 			console.log(emoji_id)
 			Session.set("emoji_id", emoji_id)
-			Session.set("quizStep", Session.get("quizStep") + 1)
 
+			Session.set("quizStep", Session.get("quizStep") + 1)
 			updateFromApi(Session.get("apiUrl"), () ->
 				$('.step').fadeIn(150)
 			)
 
+			endQuiz()
+
+		"click .submit-quizTakerAge": (event) ->
+			event.preventDefault()
+			Session.set("quizTakerAge", $('#quizTakerAge').val())
+
+			Session.set("quizStep", Session.get("quizStep") + 1)
+			updateFromApi(Session.get("apiUrl"), () ->
+				$('.step').fadeIn(150)
+			)
+
+			
 		"click .submit-quizTaker": (event) ->
 			event.preventDefault()
-			quizTaker = document.getElementById('quiz-taker').value
+			Session.set("quizTaker", $('#quiz-taker').val())
 
-			qH = Session.get("quizHistory")
+			Session.set("quizStep", Session.get("quizStep") + 1)
+			updateFromApi(Session.get("apiUrl"), () ->
+				$('.step').fadeIn(150)
+			)
 
-			coord = Session.get("currentApiData").coord
-			# rough x coords domain: -0.8 to 1.1,
-			# y: -0.8 to 0.9
-			x = remap(coord[0], -0.8, 1.1)
-			y = remap(coord[1], -0.8, 0.9)
-
-			Points.insert
-				pageX: x
-				pageY: y
-				emoji_id: Session.get('emoji_id')
-				quizHistory: qH
-				quizTaker: quizTaker
-				quizDevice: Session.get('quizDevice')
-
-			document.body.style.backgroundImage = ''
-			if(Session.get('quizDevice') == "default")
-				Router.go('pindrop')
-			else
-
-				Session.set("quizStep", Session.get("quizStep") + 1)
-
-				updateFromApi(Session.get("apiUrl"), () ->
-					$('.step').fadeIn(150)
-				)
-
-				countdownTimer(".countdown", () ->
-					quizInit({ quizDevice: Session.get('quizDevice') })
-					Router.go('quiz', { quizDevice: Session.get('quizDevice') })
-				)
 
 	Template.projection.helpers
 
@@ -514,7 +527,7 @@ if Meteor.isClient
 		shouldShowImages: (step) ->
 			if(step <= 1)
 				return false
-			if(step >= globals.quizTotalSteps - 2)
+			if(step >= globals.quizTotalSteps - 3)
 				return false
 			return true
 

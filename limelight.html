@@ -84,14 +84,26 @@
 				{{/with}}
 			{{/if}}
 
+
 			{{#if equals quizStep 12 }}
-				<h3 class="question caps bold abs w100">Today I'm feeling...
-					<div id="emoji-container" class="cf">
-					{{#each svgKeys}}
-						<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
-					{{/each}}
-					</div>
-				</h3>
+					<h3 class="question caps bold">My age is between...
+						<div id="emoji-container" class="cf">
+						<form>
+							<select id="quizTakerAge">
+								<option value="0-10">0-10</option>
+								<option value="10-20">10-20</option>
+								<option value="20-30">20-30</option>
+								<option value="30-40">30-40</option>
+								<option value="40-50">40-50</option>
+								<option value="50-60">50-60</option>
+								<option value="60-70">60-70</option>
+								<option value="70-80">70-80</option>
+								<option value="80+">80+</option>
+							</select>
+							<input type="submit" value="Submit" class="submit-quizTakerAge block w100">
+						</form>
+						</div>
+					</h3>
 			{{/if}}
 
 			{{#if equals quizStep 13 }}
@@ -104,7 +116,18 @@
 						</div>
 					</h3>
 			{{/if}}
+
 			{{#if equals quizStep 14 }}
+				<h3 class="question caps bold abs w100">Today I'm feeling...
+					<div id="emoji-container" class="cf">
+					{{#each svgKeys}}
+						<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
+					{{/each}}
+					</div>
+				</h3>
+			{{/if}}
+
+			{{#if equals quizStep 15 }}
 				<h3 class="question caps bold">
 					THANKS FOR PLAYING! <br />
 					VISIT THE SCREEN TO SEE WHERE YOU LANDED ON THE MAP. <br />
@@ -139,7 +162,7 @@
 
 	{{#if equals quizStep 12}}  <!-- TO BE STYLED -->
         <div class="step aligncenter vcenter">
-    		<h3>CHOOSE YOUR AVATAR!</h3>
+    		<h3>ENTER YOUR AGE!</h3>
         </div>
 	{{/if}}
 
@@ -150,6 +173,12 @@
 	{{/if}}
 
 	{{#if equals quizStep 14}}  <!-- TO BE STYLED -->
+        <div class="step aligncenter vcenter">
+    		<h3>CHOOSE YOUR AVATAR!</h3>
+        </div>
+	{{/if}}
+
+	{{#if equals quizStep 15}}  <!-- TO BE STYLED -->
         <div class="step aligncenter vcenter">
 		THANKS FOR PLAYING! <br />
 		VISIT THE SCREEN TO YOUR RIGHT TO SEE WHERE YOU LANDED ON THE MAP. <br />
