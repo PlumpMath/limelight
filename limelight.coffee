@@ -192,7 +192,9 @@ if Meteor.isClient
 			numPoints = Points.find(pattern).count()
 			Session.set('numPoints', numPoints)
 			console.log(numPoints)
-			return Points.find(pattern)
+			return Points.find(pattern, {sort:{quizTime: -1}})
+
+
 
 		renderBuildingIcons: () ->
 			# fireice.fire/ used as dummy
