@@ -305,6 +305,10 @@ if Meteor.isClient
 
 
 	Template.point.helpers
+		timeFormat: (time) ->
+			console.log time
+
+
 		pointClasses: (_id) ->
 			classes = ""
 			if(window.location.hash)
