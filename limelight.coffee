@@ -226,7 +226,6 @@ if Meteor.isClient
 
 		$('.bg-dummy').remove()
 
-		$('.point').removeClass('loading')
 
 		# let 'ESC' close modal
 		$(document).on('keydown', (e) ->
@@ -327,6 +326,7 @@ if Meteor.isClient
 
 		Template.point.rendered = ->
 			console.log "renered point"
+			$('.point').removeClass('loading')
 
 
 
