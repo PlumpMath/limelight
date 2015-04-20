@@ -149,6 +149,10 @@ select {
 	align-items: stretch;
 	display: flex;
 	justify-content: center;
+
+	&.flex-end {
+		align-items: flex-end;
+	}
 }
 
 .dotcontainer {
@@ -327,12 +331,28 @@ $building_icon_size: 14vw;
 }
 
 .step-choice {
-	display: block;
 	@include fontVW(4.167, 40, 18);
 	margin-left: auto;
 	margin-right: auto;
 	max-width: 600px;
-	width: 100%;
+
+	img {
+		display: none;
+	}
+
+	button {
+		display: block;
+		width: 100%;
+	}
+
+	.quiz-web & {
+		top: 1.5em;
+		width: 48%;
+		img {
+			display: block;
+			max-width: 100%;
+		}
+	}
 }
 
 #emoji-container {

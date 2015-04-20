@@ -125,6 +125,26 @@ if Meteor.isClient
 
 	doPointColors()
 
+	quizImages = (data, quizstep, num) ->
+		if (!data)
+			data = Session.get('currentApiData')
+		# in the future, this would be solved by using Deps.Dependency
+		if(data?)
+			if((Session.get("img-" + num + "-step") || '') != quizstep)
+				imgurl = globals.projection_img_dir + data.next_question[0].q_id + "/"
+				if(num == 1)
+					imgurl += data.next_question[0].a1_id
+				else
+					imgurl += data.next_question[0].a2_id
+				imgurl += "-"
+				imgurl +=  _.random(1, globals.projection_img_count[data.next_question[0].q_id])
+				imgurl += ".png"
+
+				Session.set("img-" + num + "-step", quizstep)
+				Session.set("img-" + num + "-img", imgurl)
+				return imgurl
+		return Session.get("img-" + num + "-img")
+
 	# assume a[0] and b[0] are x, a[1] and b[1] are y
 	distance = (a, b) ->
 		x = b[0] - a[0]
@@ -251,7 +271,7 @@ if Meteor.isClient
 			point.style.top = this.pageY + 'vh'
 			point.setAttribute('data-id', this._id)
 
-			if(window.location.hash) 
+			if(window.location.hash)
 				hash = window.location.hash.substring(1)
 				if(hash == this._id)
 					point.classList.add('hoverLock')
@@ -368,6 +388,9 @@ if Meteor.isClient
 				quizInit(this)
 			return Session.get("quizStep")
 
+		quizImages: (data, quizstep, num) ->
++			return quizImages(data, quizstep, num)
+
 		shouldShowQuestions: (step) ->
 			if(step <= 1)
 				return false
@@ -378,7 +401,7 @@ if Meteor.isClient
 
 		quizQuestionData: () ->
 
-			$('button.step-choice').prop('disabled', false)
+			$('.step-choice button').prop('disabled', false)
 
 			if !(Session.get("currentApiData"))
 				updateFromApi(Session.get("apiUrl"))
@@ -464,7 +487,7 @@ if Meteor.isClient
 				$('.step').fadeIn(150)
 			)
 
-		"click button.step-choice": (event) ->
+		"click .step-choice button": (event) ->
 
 			button_value = event.target.value
 
@@ -472,7 +495,7 @@ if Meteor.isClient
 			event.target.blur()
 
 			# disable button until re-enabled with new data
-			$('button.step-choice').prop('disabled', true);
+			$('.step-choice button').prop('disabled', true);
 
 			$('.step').fadeOut(150, () ->
 				qH = Session.get("quizHistory")
@@ -547,23 +570,7 @@ if Meteor.isClient
 			return true
 
 		quizImages: (data, quizstep, num) ->
-			# in the future, this would be solved by using Deps.Dependency
-			if(data?)
-				if((Session.get("img-" + num + "-step") || '') != quizstep)
-					imgurl = globals.projection_img_dir + data.next_question[0].q_id + "/"
-					if(num == 1)
-						imgurl += data.next_question[0].a1_id
-					else
-						imgurl += data.next_question[0].a2_id
-					imgurl += "-"
-					imgurl +=  _.random(1, globals.projection_img_count[data.next_question[0].q_id])
-					imgurl += ".png"
-
-					Session.set("img-" + num + "-step", quizstep)
-					Session.set("img-" + num + "-img", imgurl)
-					return imgurl
-
-			return Session.get("img-" + num + "-img")
+			return quizImages(data, quizstep, num)
 
 		scoreTest: (score) ->
 			return Math.round(score * 100)
@@ -644,6 +651,10 @@ Router.map ->
 			'quiz': {to: 'quiz'}
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
+		onBeforeAction: () ->
+			theClass = 'quiz-' + if this.params.quizDevice then 'ipad' else 'web'
+			document.body.classList.add(theClass)
+			this.next()
 
 	this.route 'projection',
 		path: '/projection/:quizDevice'
