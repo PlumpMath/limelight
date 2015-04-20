@@ -273,9 +273,6 @@ if Meteor.isClient
 			# save current results
 			Session.set("currentApiData", results.data)
 
-			console.log url
-			console.log results.data
-
 			# check if we're done
 			if('next_question' of results.data and results.data.next_question.length <= 0)
 				Session.set("apiQuestionsDone", true)
@@ -519,8 +516,8 @@ if Meteor.isClient
 		"click .restart": (event) ->
 
 			renderQuizBG()
-			Router.go('quiz', { quizDevice: Session.get('quizDevice') })
 			quizInit({ quizDevice: Session.get('quizDevice') })
+			Router.go('quiz', { quizDevice: Session.get('quizDevice') })
 
 		"click .emoji": (event) ->
 			# the data-id is of the form '01' to '24',
