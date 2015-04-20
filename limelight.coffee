@@ -438,7 +438,11 @@ if Meteor.isClient
 			quizTakerAge: Session.get("quizTakerAge")
 			quizDevice: Session.get('quizDevice')
 
-		console.log(pointid)
+		console.log(Meteor.absoluteUrl("#" + pointid))
+		console.log globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid))
+		$.get globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid)), (data) ->
+			console.log(data)
+			$(".bitlyurl").html(data)
 
 		document.body.style.backgroundImage = ''
 		if(Session.get('quizDevice') == "default")
