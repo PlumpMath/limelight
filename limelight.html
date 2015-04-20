@@ -16,12 +16,10 @@
 
 <template name="pindrop">
     {{ renderBuildingIcons }}
-    <div class="h100 flex-container">
-    	<div id="drop-canvas" class="h100 dotcontainer">
         	{{#each allpoints}}
         		{{ renderPoint }}
         	{{/each}}
-        </div>
+        
         {{ pointColors }}
 
         <div class="restart corner corner-left corner-bottom">
@@ -31,7 +29,7 @@
             <img src="/img/GHN_logo.svg">
         </div>
         <div class="about corner corner-right corner-top sans"><span data-modal="about">About</span> | <span data-modal="policy">Policy</span></div>
-    </div>
+    
 
     <div id="modal-about">
         <div class="modal-container vcenter">
@@ -143,7 +141,7 @@
 		AUTO-RESTART IN 59<br />
 	{{/if}}
 
-	{{#if shouldShowImages quizStep}} 
+	{{#if shouldShowImages quizStep}}
 		<img src="{{quizImages currentApiData 1}}"> <br />
 	{{/if}}
 
@@ -161,7 +159,7 @@
 		{{/each}}
 	</div>
 
-	{{#if shouldShowImages quizStep}} 
+	{{#if shouldShowImages quizStep}}
 		<img src="{{quizImages currentApiData 2}}"> <br />
 	{{/if}}
 

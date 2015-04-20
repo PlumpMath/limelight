@@ -136,14 +136,42 @@ if Meteor.isClient
 
 					div = document.createElement('div')
 					div.classList.add('building-icon')
-					div.style.left = remap(guess.coord[0], -1.3, 1.6) + 'vw'
+					# get how far left it is -- if too far to the right,
+					# the infobox shows up to the left instead of right
+					left = remap(guess.coord[0], -1.3, 1.6)
+					div.style.left = left + 'vw'
 					div.style.top = remap(guess.coord[1], -1.3, 1.4) + 'vh'
 					div.setAttribute('data-color', scoreColorById(guess.submission_id))
 
+					infobox = document.createElement('div')
+					infobox.classList.add('infobox')
+					if window.innerWidth - left * window.innerWidth / 100 < 400
+						infobox.style.left = '-100%'
+
+					buildingImg = document.createElement('img')
+					buildingImg.src = '/img/buildings/' + guess.submission_id + '.jpg'
+
+					name = document.createElement('p')
+					name.innerHTML = globals.buildingNames[globals.submissionIdOrder.indexOf(guess.submission_id)]
+					infobox.appendChild(buildingImg)
+					infobox.appendChild(name)
+
+					div.appendChild(infobox)
+
 					img = document.createElement('img')
 					img.src = '/img/building_icons/' + guess.submission_id + '.svg'
+					img.classList.add('svg')
 					div.appendChild(img)
 					document.body.insertBefore(div, document.body.firstChild)
+
+					moveToLast = () ->
+						document.body.appendChild(this)
+
+					moveToFirst = () ->
+						document.body.insertBefore(this, document.body.firstChild)
+
+					div.addEventListener('mouseover', moveToLast)
+					div.addEventListener('mouseout', moveToFirst)
 
 		renderPoint: () ->
 
@@ -424,7 +452,7 @@ if Meteor.isClient
 			if (guesses? && guesses.length > 0)
 				return _.sortBy guesses, (d) ->
 					return _.indexOf(globals.submissionIdOrder,d.submission_id )
-			else 
+			else
 				return _.map globals.submissionIdOrder, (d) ->
 					return {'submission_id': d, 'score': 0.0}
 
@@ -478,6 +506,9 @@ Router.map ->
 	this.route 'pindrop',
 		path: '/',
 		layoutTemplate: 'pindrop'
+		onBeforeAction: () ->
+			document.body.classList.add('pindrop')
+			this.next()
 
 	this.route 'quiz',
 		path: '/quiz/:quizDevice?' #question mark makes parameter optional
