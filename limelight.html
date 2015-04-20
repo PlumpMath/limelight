@@ -58,6 +58,7 @@
 </template>
 
 <template name="quiz">
+	<div class="bg-dummy"></div>
     <div id="quiz-container" class="h100 step-{{quizStep}}">
 
         <div class="logo corner corner-right corner-bottom">
@@ -71,7 +72,8 @@
 					<button type="button" class="language-choice block w100" value="lang.sv">SVENSKA</button>
 					<button type="button" class="language-choice block w100" value="lang.en">ENGLISH</button>
 				</div>
-			{{else}}
+			{{/if}}
+			{{#if shouldShowQuestions quizStep}}
 				{{#with quizQuestionData}}
 				<h3 class="question caps bold abs w100">{{q_text}}</h3>
 
@@ -80,17 +82,19 @@
 					<button type="button" class="step-choice" value="{{a2_id}}">{{a2_text}}</button>
 				</div>
 				{{/with}}
+			{{/if}}
 
-				{{#if apiQuestionsDone}}
-					{{#if no_emoji_id}}
-					<h3 class="question caps bold abs w100">Today I'm feeling...
-						<div id="emoji-container" class="cf">
-						{{#each svgKeys}}
-							<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
-						{{/each}}
-						</div>
-					</h3>
-					{{else}}
+			{{#if equals quizStep 12 }}
+				<h3 class="question caps bold abs w100">Today I'm feeling...
+					<div id="emoji-container" class="cf">
+					{{#each svgKeys}}
+						<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
+					{{/each}}
+					</div>
+				</h3>
+			{{/if}}
+
+			{{#if equals quizStep 13 }}
 					<h3 class="question caps bold">My name is...
 						<div id="emoji-container" class="cf">
 						<form>
@@ -98,11 +102,14 @@
 							<input type="submit" value="Submit" class="submit-quizTaker block w100">
 						</form>
 						</div>
-						<div style="display: none; ">AUTO-RESTART IN <span class="countdown"></span> SECS</div> <!-- countdown plugin requires a selector, so we need to make an invisible DOM element -->
 					</h3>
-					{{/if}}
-
-				{{/if}}
+			{{/if}}
+			{{#if equals quizStep 14 }}
+				<h3 class="question caps bold">
+					THANKS FOR PLAYING! <br />
+					VISIT THE SCREEN TO SEE WHERE YOU LANDED ON THE MAP. <br />
+				</h3>
+				<div style="display: none; ">AUTO-RESTART IN <span class="countdown"></span> SECS</div> <!-- countdown plugin requires a selector, so we need to make an invisible DOM element -->
 			{{/if}}
         </div>
 

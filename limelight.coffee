@@ -264,7 +264,7 @@ if Meteor.isClient
 	renderQuizBG = () ->
 
 		body = $('body')
-		dummy = $('<div class="bg-dummy">')
+		dummy = $('.bg-dummy')
 		which = randFromArray(svgKeys(20))
 
 		$('.building-icon').remove()
@@ -325,6 +325,15 @@ if Meteor.isClient
 			if !(Session.get("quizStep"))
 				quizInit(this)
 			return Session.get("quizStep")
+
+		shouldShowQuestions: (step) ->
+			if(step <= 1)
+				return false
+			if(step >= globals.quizTotalSteps - 2)
+				return false
+			return true
+
+
 		quizQuestionData: () ->
 
 			$('button.step-choice').prop('disabled', false)
