@@ -18,6 +18,8 @@ globals.countdownSecs = 10
 # Building names
 globals.buildingNames = ['Guggenheim Commons', 'Quiet Animal', 'Art in the City', 'Two-in-One Museum', 'The Helsinki Five', '47 Rooms']
 
+globals.finalistBaseUrl = "http://designguggenheimhelsinki.org/finalists/"
+
 globals.projection_img_dir = "/img/projection/"
 
 # this keeps track of how many types of projection images there are per topic

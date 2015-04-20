@@ -197,6 +197,7 @@ if Meteor.isClient
 					div.style.left = left + 'vw'
 					div.style.top = remap(guess.coord[1], -1.3, 1.4) + 'vh'
 					div.setAttribute('data-color', scoreColorById(guess.submission_id))
+					div.setAttribute('data-ghid', guess.submission_id)
 
 					infobox = document.createElement('div')
 					infobox.classList.add('infobox')
@@ -222,6 +223,11 @@ if Meteor.isClient
 						makeSVGelement(svg, shape)
 
 					div.appendChild(svg)
+
+					$(div).on "click", () ->
+						window.open(globals.finalistBaseUrl + $(this).data("ghid"), "_blank")
+
+
 					document.body.insertBefore(div, document.body.firstChild)
 
 					activate = () ->
