@@ -142,18 +142,22 @@ if Meteor.isClient
 			if target.attr('id') == event.currentTarget.id || target.closest('.close').length > 0
 				$(event.currentTarget).fadeOut()
 
+	makeRegexPattern = (quizDevice) ->
+		# make /pindrop/ipad* search for points from devices of ipad*
+		if (quizDevice? and quizDevice != "default")
+			pattern =
+				quizDevice: { $regex: quizDevice }
+		else
+			pattern = {}
+		return pattern
+
 
 	Template.pindrop.helpers
 		allpoints: () ->
 
 			$('body').css('background-image', 'none')
 
-			# make /pindrop/ipad* search for points from devices of ipad*
-			if (this.quizDevice? and this.quizDevice != "default")
-				pattern =
-					quizDevice: { $regex: this.quizDevice }
-			else
-				pattern = {}
+			pattern = makeRegexPattern(this.quizDevice)
 			numPoints = Points.find(pattern).count()
 			Session.set('numPoints', numPoints)
 			return Points.find(pattern, {sort:{quizTime: -1}})
@@ -218,7 +222,19 @@ if Meteor.isClient
 					document.body.insertBefore(div, document.body.firstChild)
 
 
+	highlightRecentPins = ->
+		pattern = makeRegexPattern(this.quizDevice)
+		recentPins =  Points.find(pattern, {sort:{quizTime: -1}, limit: 2}).map (point, index) ->
+			point.rank = index
+			return point
+
+		## HIGHLIGHT THESE PINS
+		for pin in recentPin
+			console.log pin
+
 	Template.pindrop.rendered = ->
+
+		highlightRecentPins()
 
 		if (!this._rendered)
 			this._rendered = true;
