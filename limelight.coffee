@@ -130,7 +130,7 @@ if Meteor.isClient
 			console.log this.quizDevice
 			# make /pindrop/ipad* search for points from devices of ipad*
 			if(this.quizDevice? and this.quizDevice != "default")
-				return Points.find({ quizDevice: this.quizDevice})
+				return Points.find({ quizDevice: { $regex: this.quizDevice }})
 			else
 				return Points.find({})
 
