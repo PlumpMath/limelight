@@ -91,40 +91,6 @@ if Meteor.isClient
 	clearPoints = () ->
 		$('.point').remove()
 
-	doPointColors = () ->
-		points = document.getElementsByClassName('point')
-		icons = document.getElementsByClassName('building-icon')
-
-		if points.length == 0 || icons.length == 0
-			setTimeout(doPointColors, 500)
-		else
-
-			points = [].slice.call(points)
-			icons = [].slice.call(icons)
-
-			for point in points
-
-				dist = Infinity
-				ptX = parseFloat(point.style.left)
-				ptY = parseFloat(point.style.top)
-
-				for icon in icons
-
-					iconX = parseFloat(icon.style.left)
-					iconY = parseFloat(icon.style.top)
-					theDistance = distance([ptX, ptY], [iconX, iconY])
-
-					if theDistance < dist
-						dist = theDistance
-						closest = icon
-
-				if closest
-					color = closest.getAttribute('data-color')
-					shapes = [].slice.call(point.firstChild.childNodes)
-					for shape in shapes
-						shape.setAttribute('fill', color)
-
-	doPointColors()
 
 	quizImages = (data, quizstep, num) ->
 		if (!data)
@@ -179,9 +145,6 @@ if Meteor.isClient
 
 	Template.pindrop.helpers
 		allpoints: () ->
-
-			clearPoints()
-			doPointColors()
 
 			# make /pindrop/ipad* search for points from devices of ipad*
 			if (this.quizDevice? and this.quizDevice != "default")
@@ -255,47 +218,41 @@ if Meteor.isClient
 
 					document.body.insertBefore(div, document.body.firstChild)
 
-		renderPoint: () ->
-
-			# create point container
-			point = document.createElement('div')
-			point.classList.add('point')
-			point.style.left = this.pageX + 'vw'
-			point.style.top = this.pageY + 'vh'
-			point.setAttribute('data-id', this._id)
-
+		pointClasses: (_id) ->
+			classes = ""
 			if(window.location.hash)
 				hash = window.location.hash.substring(1)
-				if(hash == this._id)
-					point.classList.add('hoverLock')
+				if(hash == _id)
+					classes += "hoverLock"
+			return classes
+
+
+		generateEmoji: (emoji_id, closestFinalist) ->
 
 			# create SVG element
 			svg = makeSVG(
 				'class': 'emoji'
 				'viewBox': '0 0 283.46 283.46'
 			)
-			point.appendChild(svg)
+			svg.setAttribute('data-emoji_id', emoji_id)
+			thisContent = globals.svgContent[emoji_id]
 
-			thisContent = globals.svgContent[this.emoji_id]
+			finalistIndex = globals.submissionIdOrder.indexOf(closestFinalist)
+			color = globals.colors[finalistIndex]
 
 			if thisContent
 				for shape in thisContent then do (shape) =>
-					shape.attrs.fill = 'transparent'
+					shape.attrs.fill = color
 					makeSVGelement(svg, shape)
 
-				quizTaker = document.createElement('p')
-				quizTaker.classList.add('quiz-taker')
-				quizTaker.innerHTML = this.quizTaker || 'anonymous'
-				quizTaker.innerHTML += if this.quizTakerAge then ', ' + this.quizTakerAge else ''
-				point.appendChild(quizTaker)
+#			for shape in svg.childNodes
+#				shape.setAttribute('fill', color)
 
-				document.body.appendChild(point)
-				return
+			tmp = document.createElement("div")
+			tmp.appendChild(svg)
 
-		pointColors: () ->
+			return tmp.innerHTML
 
-			doPointColors()
-			return
 
 	Template.pindrop.rendered = ->
 
@@ -443,6 +400,12 @@ if Meteor.isClient
 		x = remap(coord[0], -0.8, 1.1)
 		y = remap(coord[1], -0.8, 0.9)
 
+		closestFinalist = _.max(Session.get("currentApiData").guesses, (chr) ->
+			return chr.score
+			).submission_id
+
+		console.log closestFinalist
+
 
 		endTime = new Date()
 
@@ -458,6 +421,7 @@ if Meteor.isClient
 			quizDevice: Session.get('quizDevice')
 			quizTime: endTime
 			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
+			closestFinalist: closestFinalist
 
 		console.log(Meteor.absoluteUrl("#" + pointid))
 		console.log globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid))
