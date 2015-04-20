@@ -101,6 +101,8 @@ select {
 	background-repeat: no-repeat;
 	border-radius: 0;
 	padding-right: 4em;
+	text-align: center;
+	width: 100%;
 }
 
 // Layout
@@ -350,7 +352,7 @@ $building_icon_size: 14vw;
 		width: 100%;
 	}
 
-	.quiz-web & {
+	.quiz-default & {
 		top: 1.5em;
 		width: 48%;
 		img {
@@ -362,12 +364,13 @@ $building_icon_size: 14vw;
 
 .step-container {
 	display: block;
-	.quiz-web & {
+	.quiz-default & {
 		display: flex;
 	}
 }
 
 #emoji-container {
+	font-size: 40px;
 	margin: 0 auto;
 	max-width: 600px;
 	top: 1em;
@@ -380,6 +383,14 @@ $building_icon_size: 14vw;
 	float: left;
 	margin: 5px;
 	width: calc(16.666% - 10px);
+
+	@media screen and (max-width: 600px) {
+		width: calc(20% - 10px);
+	}
+
+	@media screen and (max-width: 410px) {
+		width: calc(25% - 10px);
+	}
 }
 
 // Projection

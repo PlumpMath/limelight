@@ -650,7 +650,7 @@ Router.map ->
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
 		onBeforeAction: () ->
-			theClass = 'quiz-' + if this.params.quizDevice then 'ipad' else 'web'
+			theClass = 'quiz-' + if this.params.quizDevice then 'ipad' else 'default'
 			document.body.classList.add(theClass)
 			this.next()
 
