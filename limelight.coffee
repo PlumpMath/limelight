@@ -347,6 +347,12 @@ if Meteor.isClient
 	Template.quiz.rendered = renderQuizBG
 
 	Template.quiz.helpers
+		isQuizKiosk: () ->
+			if(this.quizKiosk? and this.quizKiosk != 'default')
+				return true
+			else
+				return false
+
 		quizStep: () ->
 			renderQuizBG()
 			if !(Session.get("quizStep"))
@@ -496,6 +502,7 @@ if Meteor.isClient
 
 		startCountdown: () ->
 			countdownTimer(".countdown")
+			return ""
 
 		shouldShowImages: (step) ->
 			if(step <= 1)

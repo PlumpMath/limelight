@@ -59,7 +59,7 @@
 
 <template name="quiz">
 	<div class="bg-dummy"></div>
-    <div id="quiz-container" class="h100 step-{{quizStep}}">
+	<div id="quiz-container" class="h100 step-{{quizStep}} {{#if isQuizKiosk}}is-quiz-kiosk{{/if}}">
 
         <div class="logo corner corner-right corner-bottom">
             <img src="/img/GHN_logo.svg">
