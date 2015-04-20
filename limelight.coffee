@@ -1,6 +1,7 @@
 Points = new Mongo.Collection("points")
 QuizSessions = new Mongo.Collection("quizsessions")
 @qs = QuizSessions
+@pts = Points
 
 if Meteor.isClient
 
@@ -127,7 +128,11 @@ if Meteor.isClient
 	Template.pindrop.helpers
 		allpoints: () ->
 			console.log this.quizDevice
-			return Points.find({})
+			# make /pindrop/ipad* search for points from devices of ipad*
+			if(this.quizDevice? and this.quizDevice != "default")
+				return Points.find({ quizDevice: this.quizDevice})
+			else
+				return Points.find({})
 
 		renderBuildingIcons: () ->
 			# fireice.fire/ used as dummy
@@ -197,10 +202,10 @@ if Meteor.isClient
 					shape.attrs.fill = 'transparent'
 					makeSVGelement(svg, shape)
 
-				quizDevice = document.createElement('p')
-				quizDevice.classList.add('quiz-device')
-				quizDevice.innerHTML = this.quizDevice || 'anonymous'
-				point.appendChild(quizDevice)
+				quizTaker = document.createElement('p')
+				quizTaker.classList.add('quiz-taker')
+				quizTaker.innerHTML = this.quizTaker || 'anonymous'
+				point.appendChild(quizTaker)
 
 				document.body.appendChild(point)
 			# need to return an empty string even though add the above SVG
@@ -297,19 +302,15 @@ if Meteor.isClient
 		return
 
 	countdownTimer = (selector, callback) ->
-		console.log "timer called"
 		t = new Date()
 		t.setSeconds(t.getSeconds() + globals.countdownSecs)
-		console.log t
 
 		setTimeout(() ->
 			$(selector).countdown t
 				.on('update.countdown', (event) ->
 					$(this).html(event.strftime('%S'))
-					console.log(event.strftime('%S'))
 				)
 				.on('finish.countdown', (event) ->
-					console.log "calling callback"
 					if(callback)
 						callback()
 				)
@@ -419,9 +420,9 @@ if Meteor.isClient
 				$('.step').fadeIn(150)
 			)
 
-		"click .submit-quizDevice": (event) ->
+		"click .submit-quizTaker": (event) ->
 			event.preventDefault()
-			quizDevice = document.getElementById('quiz-device').value
+			quizTaker = document.getElementById('quiz-taker').value
 
 			qH = Session.get("quizHistory")
 
@@ -435,11 +436,11 @@ if Meteor.isClient
 				pageX: x
 				pageY: y
 				emoji_id: Session.get('emoji_id')
-				qH: qH
-				quizDevice: quizDevice
+				quizHistory: qH
+				quizTaker: quizTaker
+				quizDevice: Session.get('quizDevice')
 
 			document.body.style.backgroundImage = ''
-			console.log Session.get('quizDevice')
 			if(Session.get('quizDevice') == "default")
 				Router.go('pindrop')
 			else
@@ -450,9 +451,7 @@ if Meteor.isClient
 					$('.step').fadeIn(150)
 				)
 
-				console.log "launchTimer"
 				countdownTimer(".countdown", () ->	
-					console.log "YOOO"
 					quizInit({ quizDevice: Session.get('quizDevice') })
 					Router.go('quiz', { quizDevice: Session.get('quizDevice') })
 				)
@@ -541,7 +540,7 @@ Router.map ->
 		path: '/pindrop/:quizDevice?',
 		layoutTemplate: 'pindrop'
 		data: ->
-			return { quizDevice : this.params.quizDevice || '' }
+			return { quizDevice : this.params.quizDevice || 'default' }
 
 	this.route 'pindrop',
 		path: '/',
