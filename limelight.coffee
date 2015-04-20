@@ -225,6 +225,9 @@ if Meteor.isClient
 			Session.set("pindropRendered", true)
 
 		$('.bg-dummy').remove()
+
+		$('.point').removeClass('loading')
+
 		# let 'ESC' close modal
 		$(document).on('keydown', (e) ->
 			if e.keyCode == 27
