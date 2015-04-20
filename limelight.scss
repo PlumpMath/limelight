@@ -59,6 +59,13 @@ body {
 		background: #000;
 		color: #fff;
 	}
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 // Form styles
@@ -222,6 +229,10 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 		display: none;
 		position: absolute;
 		padding: 0.5em;
+	}
+
+	&.hoverLock .quiz-taker {
+		display: block !important
 	}
 
 	&:hover {

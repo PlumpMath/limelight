@@ -249,6 +249,12 @@ if Meteor.isClient
 			point.classList.add('point')
 			point.style.left = this.pageX + 'vw'
 			point.style.top = this.pageY + 'vh'
+			point.setAttribute('data-id', this._id)
+
+			if(window.location.hash) 
+				hash = window.location.hash.substring(1)
+				if(hash == this._id)
+					point.classList.add('hoverLock')
 
 			# create SVG element
 			svg = makeSVG(
@@ -278,6 +284,7 @@ if Meteor.isClient
 			return
 
 	Template.pindrop.rendered = ->
+
 		if (!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
@@ -288,6 +295,8 @@ if Meteor.isClient
 			if e.keyCode == 27
 				$('[id^=modal]').fadeOut()
 		)
+
+
 
 	renderQuizBG = () ->
 
@@ -419,7 +428,7 @@ if Meteor.isClient
 
 		console.log Session.get("quizTaker")
 		console.log Session.get("quizTakerAge")
-		Points.insert
+		pointid = Points.insert
 			pageX: x
 			pageY: y
 			emoji_id: Session.get('emoji_id')
@@ -427,6 +436,8 @@ if Meteor.isClient
 			quizTaker: Session.get("quizTaker")
 			quizTakerAge: Session.get("quizTakerAge")
 			quizDevice: Session.get('quizDevice')
+
+		console.log(pointid)
 
 		document.body.style.backgroundImage = ''
 		if(Session.get('quizDevice') == "default")
