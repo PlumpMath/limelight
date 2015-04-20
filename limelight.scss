@@ -149,10 +149,10 @@ select {
 	align-items: stretch;
 	display: flex;
 	justify-content: center;
+}
 
-	&.flex-end {
-		align-items: flex-end;
-	}
+.flex-end {
+	align-items: flex-end;
 }
 
 .dotcontainer {
@@ -331,6 +331,7 @@ $building_icon_size: 14vw;
 }
 
 .step-choice {
+	display: block;
 	@include fontVW(4.167, 40, 18);
 	margin-left: auto;
 	margin-right: auto;
@@ -352,6 +353,13 @@ $building_icon_size: 14vw;
 			display: block;
 			max-width: 100%;
 		}
+	}
+}
+
+.step-container {
+	display: block;
+	.quiz-web & {
+		display: flex;
 	}
 }
 
