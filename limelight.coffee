@@ -297,16 +297,14 @@ if Meteor.isClient
 
 		$('.building-icon').remove()
 
-		addDummy = () ->
-			dummy.addClass('active')
-
-		removeDummy = () ->
-			body.css('background-image', 'url(/img/bg/background1440x1440-' + which + '.svg)')
-			dummy.removeClass('active')
+		fadeDummy = () ->
+			dummy.fadeIn(() ->
+				body.css('background-image', 'url(/img/bg/background1440x1440-' + which + '.svg)')
+				dummy.fadeOut()
+			)
 
 		body.prepend(dummy)
-		setTimeout(addDummy, 10)
-		setTimeout(removeDummy, 200)
+		fadeDummy()
 
 	updateFromApi = (url, callback) ->
 		Meteor.call "checkApi", url, (error, results) ->
@@ -508,7 +506,7 @@ if Meteor.isClient
 				$('.step').fadeIn(150)
 			)
 
-			
+
 		"click .submit-quizTaker": (event) ->
 			event.preventDefault()
 			Session.set("quizTaker", $('#quiz-taker').val())
