@@ -532,17 +532,24 @@ if Meteor.isClient
 				return false
 			return true
 
-		quizImages: (data, num) ->
+		quizImages: (data, quizstep, num) ->
+			# in the future, this would be solved by using Deps.Dependency
 			if(data?)
-				imgurl = globals.projection_img_dir + data.next_question[0].q_id + "/"
-				if(num == 1)
-					imgurl += data.next_question[0].a1_id
-				else
-					imgurl += data.next_question[0].a2_id
-				imgurl += "-"
-				imgurl +=  _.random(1, globals.projection_img_count[data.next_question[0].q_id])
-				imgurl += ".png"
-				return imgurl
+				if((Session.get("img-" + num + "-step") || '') != quizstep)
+					imgurl = globals.projection_img_dir + data.next_question[0].q_id + "/"
+					if(num == 1)
+						imgurl += data.next_question[0].a1_id
+					else
+						imgurl += data.next_question[0].a2_id
+					imgurl += "-"
+					imgurl +=  _.random(1, globals.projection_img_count[data.next_question[0].q_id])
+					imgurl += ".png"
+
+					Session.set("img-" + num + "-step", quizstep)
+					Session.set("img-" + num + "-img", imgurl)
+					return imgurl
+
+			return Session.get("img-" + num + "-img")
 
 		scoreTest: (score) ->
 			return Math.round(score * 100)
