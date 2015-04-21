@@ -198,7 +198,7 @@ if Meteor.isClient
 						infobox.style.left = '-100%'
 
 					buildingImg = document.createElement('img')
-					buildingImg.src = '/img/buildings/' + guess.submission_id + '.jpg'
+					buildingImg.src = '/img/buildings/' + guess.submission_id + '.png'
 
 					name = document.createElement('p')
 					name.innerHTML = globals.buildingNames[index]
