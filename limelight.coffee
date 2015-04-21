@@ -123,14 +123,6 @@ if Meteor.isClient
 				return imgurl
 		return Session.get("img-" + num + "-img")
 
-	# assume a[0] and b[0] are x, a[1] and b[1] are y
-	distance = (a, b) ->
-		x = b[0] - a[0]
-		y = b[1] - a[1]
-		d = Math.sqrt(x * x + y * y)
-		return d
-
-
 	# Helper vars
 	xmlns = 'http://www.w3.org/2000/svg'
 
