@@ -105,9 +105,9 @@ if Meteor.isClient
 			if((Session.get("img-" + num + "-step") || '') != data.next_question[0].q_id)
 
 				if(projectionmobile == "projection")
-					imgurl = globals.conceptimgs_projection_img_dir 
+					imgurl = globals.conceptimgs_projection_img_dir
 				else
-					imgurl = globals.conceptimgs_mobile_img_dir 
+					imgurl = globals.conceptimgs_mobile_img_dir
 
 				imgurl += data.next_question[0].q_id + "/"
 				if(num == 1)
@@ -656,33 +656,28 @@ if Meteor.isServer
 			this.unblock();
 			return Meteor.http.call("GET", url)
 
-
+pindropOnBeforeAction = () ->
+	document.body.classList.add('pindrop')
+	theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
+	document.body.classList.add(theClass)
+	# preload will get removed a few seconds after load --
+	# so pins loaded on page load are less dramatic than those added
+	# live from the quiz
+	document.body.classList.add('preload')
 
 Router.map ->
 
 	this.route 'pindropExhibit',
 		path: '/pindrop/:quizDevice?',
 		layoutTemplate: 'pindrop'
-		onBeforeAction: () ->
-			document.body.classList.add('pindrop')
-			theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
-			document.body.classList.add(theClass)
-			this.next()
+		onBeforeAction: pindropOnBeforeAction
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
 
 	this.route 'pindrop',
 		path: '/',
 		layoutTemplate: 'pindrop'
-		onBeforeAction: () ->
-			document.body.classList.add('pindrop')
-			theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
-			document.body.classList.add(theClass)
-			# preload will get removed a few seconds after load --
-			# so pins loaded on page load are less dramatic than those added
-			# live from the quiz
-			document.body.classList.add('preload')
-			this.next()
+		onBeforeAction: pindropOnBeforeAction
 
 	this.route 'quiz',
 		path: '/quiz/:quizDevice?' #question mark makes parameter optional
