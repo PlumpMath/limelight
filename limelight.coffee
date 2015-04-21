@@ -363,6 +363,30 @@ if Meteor.isClient
 			return tmp.innerHTML
 
 		Template.point.rendered = ->
+
+			point = this.firstNode
+			quizTime = this.data.quizTime
+
+			# if over 1 hour old, scale up to 0.5, stay there
+			past = new Date(quizTime).getTime()
+			now = new Date().getTime()
+
+			stopAt = 72 # number of hours at which to stop scaling down (will stay at 0.5)
+
+			if past + 60 * 60 * 1000 < now
+
+				hours = (now - past) / (60 * 60 * 1000)
+
+				scaleFactor = remap(hours, 1, stopAt)
+				scaleFactor = 1 - (scaleFactor / 200)
+				if scaleFactor < 0.5
+					scaleFactor = 0.5
+
+				[].slice.call(point.children).forEach((el) ->
+					if el.classList.contains('emoji')
+						el.style.transform = 'scale(' + scaleFactor + ')'
+				)
+
 			$('.point').each((i) ->
 				_this = this
 				if i < 10
