@@ -559,7 +559,7 @@ if Meteor.isClient
 			event.preventDefault()
 			renderQuizBG()
 			Session.set("quizTakerEmail", "SKIP")
-			Session.set("quizTakerTwitter", "SKIP") 
+			Session.set("quizTakerTwitter", "SKIP")
 			Session.set("quizTakerUpdateme", "SKIP") #'SKIP' to distinguish between just a blank, which can be confusing when looking at the data later
 
 			Session.set("quizStep", Session.get("quizStep") + 1)
