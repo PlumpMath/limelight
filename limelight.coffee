@@ -96,18 +96,24 @@ if Meteor.isClient
 	# and then store it in session variable
 	# next time we look for it, check for session var. This ensures that images are only selected once.
 	# in the future, this would be solved by using Deps.Dependency
-	quizImages = (data, quizstep, num) ->
+	Template.registerHelper "quizImages",  (data, quizstep, num, projectionmobile) ->
 		if (!data)
 			data = Session.get('currentApiData')
 		if(data?)
 			if((Session.get("img-" + num + "-step") || '') != quizstep)
-				imgurl = globals.projection_img_dir + data.next_question[0].q_id + "/"
+
+				if(projectionmobile == "projection")
+					imgurl = globals.conceptimgs_projection_img_dir 
+				else
+					imgurl = globals.conceptimgs_mobile_img_dir 
+
+				imgurl += data.next_question[0].q_id + "/"
 				if(num == 1)
 					imgurl += data.next_question[0].a1_id
 				else
 					imgurl += data.next_question[0].a2_id
 				imgurl += "-"
-				imgurl +=  _.random(1, globals.projection_img_count[data.next_question[0].q_id])
+				imgurl +=  _.random(1, globals.conceptimgs_img_count[data.next_question[0].q_id])
 				imgurl += ".png"
 
 				Session.set("img-" + num + "-step", quizstep)
@@ -371,8 +377,6 @@ if Meteor.isClient
 				quizInit(this)
 			return Session.get("quizStep")
 
-		quizImages: (data, quizstep, num) ->
-			return quizImages(data, quizstep, num)
 
 		shouldShowQuestions: (step) ->
 			if(step <= 1)
@@ -598,8 +602,6 @@ if Meteor.isClient
 				return false
 			return true
 
-		quizImages: (data, quizstep, num) ->
-			return quizImages(data, quizstep, num)
 
 		scoreTest: (score) ->
 			return Math.round(score * 100)

@@ -22,11 +22,12 @@ globals.buildingNames = ['Guggenheim Commons', 'Quiet Animal', 'Art in the City'
 
 globals.finalistBaseUrl = "http://designguggenheimhelsinki.org/finalists/"
 
-globals.projection_img_dir = "/img/projection/"
+globals.conceptimgs_projection_img_dir = "/img/conceptimgs-projection/"
+globals.conceptimgs_mobile_img_dir = "/img/conceptimgs-mobile/"
 
 # this keeps track of how many types of projection images there are per topic
 # stored as constant because better than reading img count from directory each time
-globals.projection_img_count = {
+globals.conceptimgs_img_count = {
 	'conceptual':5,
 	'curvedstraight':3,
 	'femininity':3,
