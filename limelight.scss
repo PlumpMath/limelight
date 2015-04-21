@@ -541,19 +541,27 @@ $building_icon_size: 14vw;
 }
 
 .modal-content {
+	font-size: 1.2em;
 	height: 300px;
 	max-height: 100%;
 	overflow: auto;
-	padding: 0.5em;
-	top: 1.2em;
+	padding: 2em;
+	top: 19px;
+
+	*:first-child {
+		margin-top: 0;
+	}
 }
 
-$columns: 2;
+$columns: 2 100px;
 .two-column {
 
 	columns: $columns;
 		-webkit-columns: $columns;
 		-moz-columns: $columns;
+	column-gap: 4em;
+		-webkit-column-gap: 4em;
+		-moz-column-gap: 4em;
 
 	*:first-child { margin-top: 0; }
 }

@@ -261,6 +261,8 @@ if Meteor.isClient
 				$('[id^=modal]').fadeOut()
 		)
 
+		showModal('about')
+
 
 
 	renderQuizBG = () ->
