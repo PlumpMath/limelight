@@ -281,8 +281,6 @@ if Meteor.isClient
 				$('[id^=modal]').fadeOut()
 		)
 
-		showModal('about')
-
 
 
 	renderQuizBG = () ->
@@ -399,8 +397,8 @@ if Meteor.isClient
 
 				scaleFactor = remap(hours, 1, stopAt)
 				scaleFactor = 1 - (scaleFactor / 200)
-				if scaleFactor < 0.5
-					scaleFactor = 0.5
+				if scaleFactor < 0.4
+					scaleFactor = 0.4
 
 				[].slice.call(point.children).forEach((el) ->
 					if el.classList.contains('emoji')
