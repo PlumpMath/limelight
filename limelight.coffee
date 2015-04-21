@@ -369,6 +369,7 @@ if Meteor.isClient
 					this.children[1].style.opacity = i / 10
 				else
 					this.classList.remove('recent')
+
 				setTimeout(() ->
 					_this.classList.remove('loading')
 				, Math.random() * 500 + 100)

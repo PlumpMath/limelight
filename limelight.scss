@@ -467,6 +467,7 @@ $building_icon_size: 14vw;
 	display: block;
 	.quiz-default & {
 		display: flex;
+		display: -webkit-flex;
 	}
 }
 
