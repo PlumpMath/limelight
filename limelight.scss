@@ -415,7 +415,7 @@ $building_icon_size: 14vw;
 	max-width: 600px;
 
 	img {
-		padding-bottom: 20px; 
+		padding-bottom: 20px;
 	}
 
 	button {
@@ -451,6 +451,13 @@ $building_icon_size: 14vw;
 	margin: 0 auto;
 	max-width: 600px;
 	top: 1em;
+
+	form:invalid {
+		input[type="submit"] { display: none; }
+	}
+	form:valid {
+		input[type="submit"] { display: block; }
+	}
 }
 
 .emoji {
