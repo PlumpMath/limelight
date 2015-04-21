@@ -518,10 +518,12 @@ if Meteor.isClient
 				quizInit()
 
 		"click .restart": (event) ->
-
 			renderQuizBG()
 			quizInit({ quizDevice: Session.get('quizDevice') })
 			Router.go('quiz', { quizDevice: Session.get('quizDevice') })
+
+		"click .logo": (event) ->
+			Router.go('pindrop')
 
 		"click .emoji": (event) ->
 			# the data-id is of the form '01' to '24',
@@ -660,14 +662,20 @@ if Meteor.isServer
 			return Meteor.http.call("GET", url)
 
 pindropOnBeforeAction = () ->
-	document.body.classList.add('pindrop')
+	$('body').addClass('pindrop')
 	theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
-	document.body.classList.add(theClass)
+	$('body').addClass(theClass)
 	# preload will get removed a few seconds after load --
 	# so pins loaded on page load are less dramatic than those added
 	# live from the quiz
-	document.body.classList.add('preload')
+	$('body').addClass('preload')
 	this.next()
+
+pindropOnStop = () ->
+	$('body').removeClass('pindrop')
+	theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
+	$('body').removeClass(theClass)
+	$('body').removeClass('preload')
 
 Router.map ->
 
@@ -675,6 +683,7 @@ Router.map ->
 		path: '/pindrop/:quizDevice?',
 		layoutTemplate: 'pindrop'
 		onBeforeAction: pindropOnBeforeAction
+		onStop: pindropOnStop
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
 
@@ -682,6 +691,7 @@ Router.map ->
 		path: '/',
 		layoutTemplate: 'pindrop'
 		onBeforeAction: pindropOnBeforeAction
+		onStop: pindropOnStop
 
 	this.route 'quiz',
 		path: '/quiz/:quizDevice?' #question mark makes parameter optional
@@ -691,9 +701,14 @@ Router.map ->
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
 		onBeforeAction: () ->
+			$('body').addClass('quiz')
 			theClass = 'quiz-' + if this.params.quizDevice && this.params.quizDevice != 'default' then 'ipad' else 'default'
-			document.body.classList.add(theClass)
+			$('body').addClass(theClass)
 			this.next()
+		onStop: () ->
+			$('body').removeClass('quiz')
+			theClass = 'quiz-' + if this.params.quizDevice && this.params.quizDevice != 'default' then 'ipad' else 'default'
+			$('body').removeClass(theClass)
 
 	this.route 'projection',
 		path: '/projection/:quizDevice'
@@ -701,7 +716,9 @@ Router.map ->
 		yieldTemplate:
 			'projection': {to: 'projection'}
 		onBeforeAction: () ->
-			document.body.classList.add('projection')
+			$('body').addClass('projection')
 			this.next()
+		onStop: () ->
+			$('body').removeClass('projection')
 		data: ->
 			return { quizDevice : this.params.quizDevice }
