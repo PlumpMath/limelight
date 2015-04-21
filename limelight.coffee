@@ -142,6 +142,7 @@ if Meteor.isClient
 
 		"click .restart": (event) ->
 			$('.point').remove()
+			quizInit({ quizDevice: Session.get('quizDevice') })
 			Router.go('quiz', { quizDevice: this.quizDevice })
 
 		# show and hide the modal
