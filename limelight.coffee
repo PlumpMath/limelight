@@ -359,13 +359,15 @@ if Meteor.isClient
 					shape.attrs.fill = color
 					makeSVGelement(svg, shape)
 
-#			for shape in svg.childNodes
-#				shape.setAttribute('fill', color)
-
 			tmp = document.createElement("div")
 			tmp.appendChild(svg)
 
 			return tmp.innerHTML
+
+		isRecent: () ->
+			# generated in the last hour?
+			recent = new Date(this.quizTime).getTime() + 60 * 1000 > new Date().getTime()
+			return if recent then 'recent' else ''
 
 		Template.point.rendered = ->
 			console.log "rendered point"
