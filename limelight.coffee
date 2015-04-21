@@ -96,13 +96,14 @@ if Meteor.isClient
 	# and then store it in session variable
 	# next time we look for it, check for session var. This ensures that images are only selected once per q_id.
 	# in the future, this would be solved by using Deps.Dependency
-	Template.registerHelper "quizImages",  (data, quizstep, num, projectionmobile) ->
+	Template.registerHelper "quizImages",  (data, num, projectionmobile) ->
 		if (!data)
 			data = Session.get('currentApiData')
 		if(data?)
 
 			console.log data
 			if((Session.get("img-" + num + "-step") || '') != data.next_question[0].q_id)
+				Session.set("img-" + num + "-step", data.next_question[0].q_id)
 
 				if(projectionmobile == "projection")
 					imgurl = globals.conceptimgs_projection_img_dir
@@ -118,7 +119,6 @@ if Meteor.isClient
 				imgurl +=  _.random(1, globals.conceptimgs_img_count[data.next_question[0].q_id])
 				imgurl += ".png"
 
-				Session.set("img-" + num + "-step", data.next_question[0].q_id)
 				Session.set("img-" + num + "-img", imgurl)
 				return imgurl
 		return Session.get("img-" + num + "-img")
@@ -615,6 +615,14 @@ if Meteor.isClient
 
 		totalSteps: () ->
 			return globals.quizTotalSteps
+
+	Template.projection.rendered = ->
+		if (!this._rendered)
+			for filename in globals.conceptimgs_img_filenames 
+				tempimage = new Image()
+				tempimage.src = globals.conceptimgs_projection_img_dir + filename
+			this._rendered = true;
+
 
 	# Futura web font
 	wf = {}

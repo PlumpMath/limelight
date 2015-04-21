@@ -39,6 +39,11 @@ globals.conceptimgs_img_count = {
 	'sustainable':2,
 	'tradition':2}
 
+
+globals.conceptimgs_img_filenames = ["conceptual/conceptual-1.png", "conceptual/conceptual-2.png", "conceptual/conceptual-3.png", "conceptual/conceptual-4.png", "conceptual/conceptual-5.png", "conceptual/formal-1.png", "conceptual/formal-2.png", "conceptual/formal-3.png", "conceptual/formal-4.png", "conceptual/formal-5.png", "curvedstraight/curved-1.png", "curvedstraight/curved-2.png", "curvedstraight/curved-3.png", "curvedstraight/straight-1.png", "curvedstraight/straight-2.png", "curvedstraight/straight-3.png", "femininity/feminine-1.png", "femininity/feminine-2.png", "femininity/feminine-3.png", "femininity/masculine-1.png", "femininity/masculine-2.png", "femininity/masculine-3.png", "finnish/finnish-1.png", "finnish/global-1.png", "fireice/fire-1.png", "fireice/fire-2.png", "fireice/fire-3.png", "fireice/ice-1.png", "fireice/ice-2.png", "fireice/ice-3.png", "historyfuture/future-1.png", "historyfuture/future-2.png", "historyfuture/future-3.png", "historyfuture/future-4.png", "historyfuture/history-1.png", "historyfuture/history-2.png", "historyfuture/history-3.png", "historyfuture/history-4.png", "stoic/iconic-1.png", "stoic/iconic-2.png", "stoic/iconic-3.png", "stoic/stoic-1.png", "stoic/stoic-2.png", "stoic/stoic-3.png", "sunrisesunset/sunrise-1.png", "sunrisesunset/sunrise-2.png", "sunrisesunset/sunset-1.png", "sunrisesunset/sunset-2.png", "sustainable/must_be_sustainable-1.png", "sustainable/must_be_sustainable-2.png", "sustainable/nice_to_be_sustainable-1.png", "sustainable/nice_to_be_sustainable-2.png", "tradition/experimental-1.png", "tradition/experimental-2.png", "tradition/traditional-1.png", "tradition/traditional-2.png"] 
+
+
+
 # all the types of SVGs we'll allow
 rect = (x, y, w, h, classes) ->
     obj = { type: 'rect', attrs: { x: x, y: y, width: w, height: h } }
