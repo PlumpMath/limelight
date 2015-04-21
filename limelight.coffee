@@ -543,7 +543,13 @@ if Meteor.isClient
 			# disable button until re-enabled with new data
 			$('.step-choice button').prop('disabled', true);
 
+
+
 			$('.step').fadeOut(150, () ->
+				# clear the images until new ones come along
+				Session.set("img-2-img", undefined)
+				Session.set("img-1-img", undefined)
+
 				qH = Session.get("quizHistory")
 				qH.push Session.get("currentApiData").next_question[0].q_id + "." + button_value
 
