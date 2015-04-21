@@ -131,6 +131,13 @@ if Meteor.isClient
 	Template.registerHelper "notEquals", (a, b) ->
 		return (a != b)
 
+	Template.registerHelper "isQuizKiosk", () ->
+		if(Session.get("quizDevice")? and Session.get("quizDevice") != 'default')
+			return true
+		else
+			return false
+
+
 	Template.pindrop.events
 
 		"click .restart": (event) ->
@@ -372,11 +379,6 @@ if Meteor.isClient
 	Template.quiz.rendered = renderQuizBG
 
 	Template.quiz.helpers
-		isQuizKiosk: () ->
-			if(Session.get("quizDevice")? and Session.get("quizDevice") != 'default')
-				return true
-			else
-				return false
 
 		quizStep: () ->
 			if !(Session.get("quizStep"))
