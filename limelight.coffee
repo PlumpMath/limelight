@@ -242,6 +242,9 @@ if Meteor.isClient
 
 		$('.bg-dummy').remove()
 
+		setTimeout(() ->
+			document.body.classList.remove('preload')
+		, 3000)
 
 		# let 'ESC' close modal
 		$(document).on('keydown', (e) ->
@@ -645,6 +648,10 @@ Router.map ->
 			document.body.classList.add('pindrop')
 			theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
 			document.body.classList.add(theClass)
+			# preload will get removed a few seconds after load --
+			# so pins loaded on page load are less dramatic than those added
+			# live from the quiz
+			document.body.classList.add('preload')
 			this.next()
 
 	this.route 'quiz',
