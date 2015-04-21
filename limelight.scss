@@ -82,12 +82,14 @@ input, button, textarea, select {
 		outline: 0;
 	}
 
-    -webkit-touch-callout: none;
+	// commented out -- unable to type (for inputting name, etc.)
+	// on iPad
+    /* -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    user-select: none; */
 
 	.small-inputs & {
 		font-size: 0.5em;
@@ -413,7 +415,7 @@ $building_icon_size: 14vw;
 	max-width: 600px;
 
 	img {
-		padding-bottom: 20px; 
+		padding-bottom: 20px;
 	}
 
 	button {
@@ -449,6 +451,13 @@ $building_icon_size: 14vw;
 	margin: 0 auto;
 	max-width: 600px;
 	top: 1em;
+
+	form:invalid {
+		input[type="submit"] { display: none; }
+	}
+	form:valid {
+		input[type="submit"] { display: block; }
+	}
 }
 
 .emoji {
