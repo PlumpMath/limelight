@@ -621,7 +621,7 @@ if Meteor.isClient
 
 	Template.projection.rendered = ->
 		if (!this._rendered)
-			for filename in globals.conceptimgs_img_filenames 
+			for filename in globals.conceptimgs_img_filenames
 				tempimage = new Image()
 				tempimage.src = globals.conceptimgs_projection_img_dir + filename
 			this._rendered = true;
@@ -689,7 +689,7 @@ Router.map ->
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
 		onBeforeAction: () ->
-			theClass = 'quiz-' + if this.params.quizDevice then 'ipad' else 'default'
+			theClass = 'quiz-' + if this.params.quizDevice && this.params.quizDevice != 'default' then 'ipad' else 'default'
 			document.body.classList.add(theClass)
 			this.next()
 

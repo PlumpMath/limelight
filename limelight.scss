@@ -439,6 +439,9 @@ $building_icon_size: 14vw;
 	max-width: 600px;
 
 	img {
+		display: block;
+		margin: 0 auto;
+		max-width: 220px !important;
 		padding-bottom: 20px;
 	}
 
