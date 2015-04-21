@@ -453,10 +453,18 @@ $building_icon_size: 14vw;
 	top: 1em;
 
 	form:invalid {
-		input[type="submit"] { display: none; }
+		input[type="submit"] {
+			border-color: #aaa;
+			color: #aaa;
+			z-index: -1;
+		}
 	}
 	form:valid {
-		input[type="submit"] { display: block; }
+		input[type="submit"] {
+			border-color: #000;
+			color: #000;
+			z-index: 1;
+		}
 	}
 }
 
