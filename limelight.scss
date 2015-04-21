@@ -449,8 +449,8 @@ $building_icon_size: 14vw;
 		display: block;
 		margin: 0 auto;
 		max-width: 220px !important;
-		padding-bottom: 20px;
 		width: 100%;
+		padding-bottom: 8px;
 	}
 
 	button {
@@ -467,6 +467,12 @@ $building_icon_size: 14vw;
 			max-width: 100%;
 		}
 		button { position: absolute; }
+	}
+
+	& .caption {
+		font-size: 0.5em;
+		padding-bottom: 15px;
+		text-align: center;
 	}
 }
 
