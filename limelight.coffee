@@ -22,6 +22,9 @@ if Meteor.isClient
 		Session.set("emoji_id", undefined)
 		Session.set("selected_language", undefined)
 		Session.set("quizStartTime", undefined)
+		Session.set("img-1-caption", undefined)
+		Session.set("img-2-caption", undefined)
+
 		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
 
 	# given min and max bounds, map a number n
@@ -101,23 +104,27 @@ if Meteor.isClient
 			data = Session.get('currentApiData')
 		if(data?)
 
-			console.log data
 			if((Session.get("img-" + num + "-step") || '') != data.next_question[0].q_id)
 				Session.set("img-" + num + "-step", data.next_question[0].q_id)
 
 				if(projectionmobile == "projection")
 					imgurl = globals.conceptimgs_projection_img_dir
+					imgurl += data.next_question[0].q_id + "/"
+					if(num == 1)
+						imgurl += data.next_question[0].a1_id
+					else
+						imgurl += data.next_question[0].a2_id
+					imgurl += "-"
+					imgurl +=  _.random(1, globals.conceptimgs_img_count[data.next_question[0].q_id])
+					imgurl += ".png"
 				else
-					imgurl = globals.conceptimgs_mobile_img_dir
-
-				imgurl += data.next_question[0].q_id + "/"
-				if(num == 1)
-					imgurl += data.next_question[0].a1_id
-				else
-					imgurl += data.next_question[0].a2_id
-				imgurl += "-"
-				imgurl +=  _.random(1, globals.conceptimgs_img_count[data.next_question[0].q_id])
-				imgurl += ".png"
+					if(num == 1)
+						keydir = data.next_question[0].q_id + "/" + data.next_question[0].a1_id + "/"
+					else
+						keydir = data.next_question[0].q_id + "/" + data.next_question[0].a2_id + "/"
+					imgfile = _.sample(globals.conceptimgs_mobile_img_filenames[keydir])
+					imgurl = globals.conceptimgs_mobile_img_dir = "/img/conceptimgs-mobile/" + keydir + imgfile
+					Session.set("img-" + num + "-caption", imgfile.split(".")[0])
 
 				Session.set("img-" + num + "-img", imgurl)
 				return imgurl
@@ -457,6 +464,10 @@ if Meteor.isClient
 		svgKeys: () ->
 			return svgKeys()
 
+		imgCaption: (num) ->
+			return Session.get("img-" + num + "-caption")
+
+
 		no_emoji_id: () ->
 			return !(Session.get('emoji_id')?)
 
@@ -492,10 +503,7 @@ if Meteor.isClient
 			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
 			closestFinalist: closestFinalist
 
-		console.log(Meteor.absoluteUrl("#" + pointid))
-		console.log globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid))
 		$.get globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid)), (data) ->
-			console.log(data)
 			$(".bitlyurl").html(data)
 
 		document.body.style.backgroundImage = ''
