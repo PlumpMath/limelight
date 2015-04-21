@@ -63,6 +63,14 @@ body {
 	&.pindrop { background-image: none !important; }
 }
 
+// ----- Custom projection layout
+.projection {
+	.h100 {
+		padding-left: 470px;
+		width: 900px;
+	}
+}
+
 // Form styles
 input, button, textarea, select {
 	background-color: transparent;
