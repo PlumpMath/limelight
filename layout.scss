@@ -1,0 +1,80 @@
+@mixin clearfix {
+    &:before,
+    &:after {
+        content: " "; /* 1 */
+        display: table; /* 2 */
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
+.clearfix { @include clearfix; }
+
+// Cribbed from Chris Coyier/CSS-Tricks: http://css-tricks.com/spacing-the-bottom-of-modules/
+@mixin normalize {
+    & > *:first-child,
+    & > *:first-child > *:first-child,
+    & > *:first-child > *:first-child > *:first-child {
+        margin-top: 0 !important;
+    }
+    & > *:last-child,
+    & > *:last-child > *:last-child,
+    & > *:last-child > *:last-child > *:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+.normalize { @include normalize; }
+
+.container {
+    display: flex;
+    &.stack {
+        flex-direction: column;
+    }
+
+    &.maintain {
+        flex-wrap: nowrap;
+    }
+}
+
+$columns: 12;
+$gutter: 20px;
+@mixin column($num) {
+    flex: 0 1 calc((#{$num * 100% / $columns} - #{ ( $num * ( $columns - 1 ) * $gutter - $columns * ( $num - 1 ) * $gutter ) / $columns }));
+}
+
+.column,
+.columns {
+    margin-right: $gutter;
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    // for floating media only
+    &.alignright,
+    &.alignleft {
+        img {
+            width: 100%;
+        }
+    }
+}
+
+.one.column {
+    @include column(1);
+}
+
+.columns {
+    &.two { @include column(2); }
+    &.three { @include column(3); }
+    &.four { @include column(4); }
+    &.five { @include column(5); }
+    &.six { @include column(6); }
+    &.seven { @include column(7); }
+    &.eight { @include column(8); }
+    &.nine { @include column(9); }
+    &.ten { @include column(10); }
+    &.eleven { @include column(11); }
+    &.twelve { @include column(12); }
+}
