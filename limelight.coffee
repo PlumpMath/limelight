@@ -25,7 +25,7 @@ if Meteor.isClient
 		Session.set("img-1-caption", undefined)
 		Session.set("img-2-caption", undefined)
 
-		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
+		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData"), Session.get("selected_language")
 
 	# given min and max bounds, map a number n
 	# onto 0 --> 100
@@ -321,7 +321,7 @@ if Meteor.isClient
 				Session.set("apiQuestionsDone", true)
 
 			# update quiz session for projection template
-			Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
+			Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData"), Session.get("selected_language")
 
 			if(callback)
 				callback()
@@ -432,6 +432,9 @@ if Meteor.isClient
 				quizInit(this)
 			return Session.get("quizStep")
 
+		selectedLanguage: () ->
+			console.log Session.get('selected_language')
+			return Session.get('selected_language')
 
 		shouldShowQuestions: (step) ->
 			if(step <= 1)
@@ -590,7 +593,7 @@ if Meteor.isClient
 			)
 
 
-		"click .submit-quizTakerAge": (event) ->
+		"click button.submit-quizTakerAge": (event) ->
 			event.preventDefault()
 			renderQuizBG()
 			Session.set("quizTakerAge", $('#quizTakerAge').val())
@@ -601,7 +604,7 @@ if Meteor.isClient
 			)
 
 
-		"click .submit-quizTaker-name": (event) ->
+		"click .submit-quizTakerName": (event) ->
 			event.preventDefault()
 			renderQuizBG()
 			Session.set("quizTakerName", $('#quiz-taker-name').val())
@@ -612,7 +615,7 @@ if Meteor.isClient
 			)
 
 
-		"click .skip-quizTaker-info": (event) ->
+		"click .skip-quizTakerInfo": (event) ->
 			event.preventDefault()
 			renderQuizBG()
 			Session.set("quizTakerEmail", "SKIP")
@@ -698,10 +701,10 @@ if Meteor.isClient
 
 if Meteor.isServer
 	Meteor.methods
-		updateQuizSession: (thisdevice, thisquizstep, thisapidata) ->
+		updateQuizSession: (thisdevice, thisquizstep, thisapidata, thislanguage) ->
 			QuizSessions.update(
 				{ quizdevice: thisdevice },
-				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata } },
+				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata, selectedLanguage: thislanguage } },
 				{ upsert: true})
 			return thisdevice + ":" + thisquizstep
 

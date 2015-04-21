@@ -436,6 +436,12 @@ $building_icon_size: 14vw;
 	top: 1.5em;
 }
 
+.lang { display: none; }
+.lang\.en .lang\.en { display: block !important; }
+.lang\.fi .lang\.fi { display: block !important; }
+.lang\.sv .lang\.sv { display: block !important; }
+
+
 .step {
 	margin: 0 auto;
 	max-width: 1024px;
