@@ -18,7 +18,8 @@
 <template name="point">
 	<div class="point loading {{pointClasses _id}}" data-id="{{_id}}" style="left: {{pageX}}vw; top: {{pageY}}vh;">
 		{{{generateEmoji emoji_id closestFinalist}}}
-		<p class="quiz-taker">{{quizTakerName}}, {{quizTakerAge}}, {{timeFormat quizTime}}</p>
+		<span class="quiz-taker-preview">{{quizTakerName}}, {{quizTakerAge}}</span>
+        <p class="quiz-taker">{{quizTakerName}}, {{quizTakerAge}}, {{timeFormat quizTime}}</p>
 	</div>
 </template>
 
