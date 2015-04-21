@@ -256,6 +256,10 @@ input[type="checkbox"] {
 	img {
 		float: right;
 	}
+
+	#quiz-container & {
+		cursor: pointer;
+	}
 }
 
 .about {
