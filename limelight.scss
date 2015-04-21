@@ -64,13 +64,12 @@ body {
 }
 
 // ----- Custom projection layout
-/*
 .projection {
-	.h100 {
-		padding-left: 470px;
-		width: 900px;
+	.flex-container {
+		width: 920px;
+		margin-left: 410px;
 	}
-} */
+} 
 
 // Form styles
 input, button, textarea, select {
