@@ -116,6 +116,8 @@ label {
 
 select {
 	appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
 	background-image: url(img/select.svg);
 	background-position: 100% 50%;
 	background-repeat: no-repeat;
@@ -127,6 +129,8 @@ select {
 
 input[type="checkbox"] {
 	appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
 	background: transparent;
 	display: inline-block;
 	height: 40px;
@@ -484,6 +488,11 @@ $building_icon_size: 14vw;
 	.quiz-default & {
 		display: flex;
 	}
+}
+
+.caption {
+	font-size: 0.7em;
+	text-align: center;
 }
 
 .bitlyurl {

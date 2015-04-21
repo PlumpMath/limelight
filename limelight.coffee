@@ -412,7 +412,7 @@ if Meteor.isClient
 				_this = this
 				if i < 10
 					this.classList.add('recent')
-					this.children[1].style.opacity = i / 10
+					this.children[1].style.opacity = ( 10 - i ) / 10
 				else
 					this.classList.remove('recent')
 
