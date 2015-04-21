@@ -666,6 +666,7 @@ pindropOnBeforeAction = () ->
 	# so pins loaded on page load are less dramatic than those added
 	# live from the quiz
 	document.body.classList.add('preload')
+	this.next()
 
 Router.map ->
 
