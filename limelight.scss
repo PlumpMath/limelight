@@ -208,10 +208,6 @@ select {
 	img {
 		float: right;
 	}
-
-	.pindrop & {
-		z-index: -1; // show up behind building icons, etc
-	}
 }
 
 .about {
