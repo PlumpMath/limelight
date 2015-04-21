@@ -286,6 +286,17 @@ if Meteor.isClient
 	updateFromApi = (url, callback) ->
 		Meteor.call "checkApi", url, (error, results) ->
 
+			# swap the two questions here, so that it's also written into session and shown in the projection
+			next_q = results.data.next_question[0]
+			if ((next_q?) and _.random(0, 1) == 1)
+				tmpid = next_q.a1_id
+				tmptext = next_q.a1_text
+				next_q.a1_id = next_q.a2_id
+				next_q.a1_text = next_q.a2_text
+				next_q.a2_id = tmpid
+				next_q.a2_text = tmptext
+			results.data.next_question[0] = next_q
+
 			# save current results
 			Session.set("currentApiData", results.data)
 
@@ -398,22 +409,8 @@ if Meteor.isClient
 				updateFromApi(Session.get("apiUrl"))
 				# we don't have to have a return to it because this will change when Session.get("currentApiData") changes
 			else
-				thisData = Session.get("currentApiData")
-				next_q = thisData.next_question[0]
-				if ((next_q?) and _.random(0, 1) == 1)
-					tmpid = next_q.a1_id
-					tmptext = next_q.a1_text
-					next_q.a1_id = next_q.a2_id
-					next_q.a1_text = next_q.a2_text
-					next_q.a2_id = tmpid
-					next_q.a2_text = tmptext
-				thisData.next_question[0] = next_q
+				return Session.get("currentApiData").next_question[0]
 
-				#updating QuizSession so that projector order of images will match button order
-				Session.set("currentApiData", thisData)
-				Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
-
-				return next_q
 		quizGuesses: () ->
 			if(Session.get("currentApiData"))
 				return Session.get("currentApiData").guesses
