@@ -1,6 +1,6 @@
 @globals = {}
 
-globals.apiBaseUrl = "http://54.148.142.11:8081/play/"
+globals.apiBaseUrl = "http://54.186.17.53:8081/play/"
 #"http://localhost:4000/ba-simple-proxy.php?url=http%3A%2F%2F54.148.142.11%3A8080%2Fplay%2F&full_headers=1&full_status=1"
 
 globals.bitlyApiUrl = "https://api-ssl.bitly.com/v3/shorten?access_token=338e0d4e8bde809dabbd7667e9928b6a279b6600&format=txt&longUrl="
