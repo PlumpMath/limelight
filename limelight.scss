@@ -82,12 +82,14 @@ input, button, textarea, select {
 		outline: 0;
 	}
 
-    -webkit-touch-callout: none;
+	// commented out -- unable to type (for inputting name, etc.)
+	// on iPad
+    /* -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    user-select: none; */
 
 	.small-inputs & {
 		font-size: 0.5em;
