@@ -347,16 +347,6 @@ if Meteor.isClient
 		timeFormat: (time) ->
 			return moment(time).format('MMM Do YYYY')
 
-
-		pointClasses: (_id) ->
-			classes = ""
-			if(window.location.hash)
-				hash = window.location.hash.substring(1)
-				if(hash == _id)
-					classes += "hoverLock"
-			return classes
-
-
 		generateEmoji: (emoji_id, closestFinalist) ->
 
 			# create SVG element
@@ -384,6 +374,13 @@ if Meteor.isClient
 			return tmp.innerHTML
 
 		Template.point.rendered = ->
+
+
+			if(window.location.hash)
+				hash = window.location.hash.substring(1)
+				if(this.data._id == hash)
+					$(".point[data-id='" + hash + "']").addClass("hoverLock")
+
 
 			point = this.firstNode
 			quizTime = this.data.quizTime
@@ -433,7 +430,6 @@ if Meteor.isClient
 			return Session.get("quizStep")
 
 		selectedLanguage: () ->
-			console.log Session.get('selected_language')
 			return Session.get('selected_language')
 
 		shouldShowQuestions: (step) ->
@@ -512,7 +508,8 @@ if Meteor.isClient
 
 		document.body.style.backgroundImage = ''
 		if(Session.get('quizDevice') == "default")
-			Router.go('pindrop')
+			console.log "yeah we're default"
+			Router.go('pindrop', {},  { hash: pointid })
 		else
 			countdownTimer(".countdown", () ->
 				quizInit({ quizDevice: Session.get('quizDevice') })
