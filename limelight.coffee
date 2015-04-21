@@ -92,15 +92,17 @@ if Meteor.isClient
 		$('.point').remove()
 
 
-	# load an image for this quizstep and this number (so step 9, number 2 = 9-2)
+	# load an image for this q_id and this number (so step 9, number 2 = 9-2)
 	# and then store it in session variable
-	# next time we look for it, check for session var. This ensures that images are only selected once.
+	# next time we look for it, check for session var. This ensures that images are only selected once per q_id.
 	# in the future, this would be solved by using Deps.Dependency
 	Template.registerHelper "quizImages",  (data, quizstep, num, projectionmobile) ->
 		if (!data)
 			data = Session.get('currentApiData')
 		if(data?)
-			if((Session.get("img-" + num + "-step") || '') != quizstep)
+
+			console.log data
+			if((Session.get("img-" + num + "-step") || '') != data.next_question[0].q_id)
 
 				if(projectionmobile == "projection")
 					imgurl = globals.conceptimgs_projection_img_dir 
@@ -116,7 +118,7 @@ if Meteor.isClient
 				imgurl +=  _.random(1, globals.conceptimgs_img_count[data.next_question[0].q_id])
 				imgurl += ".png"
 
-				Session.set("img-" + num + "-step", quizstep)
+				Session.set("img-" + num + "-step", data.next_question[0].q_id)
 				Session.set("img-" + num + "-img", imgurl)
 				return imgurl
 		return Session.get("img-" + num + "-img")
