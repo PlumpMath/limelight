@@ -60,6 +60,7 @@ body {
 		color: #fff;
 	}
 
+	&.pindrop { background-image: none !important; }
 }
 
 // Form styles
@@ -81,7 +82,6 @@ input, button, textarea, select {
 		outline: 0;
 	}
 
-
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -89,7 +89,20 @@ input, button, textarea, select {
     -ms-user-select: none;
     user-select: none;
 
+	.small-inputs & {
+		font-size: 0.5em;
+	}
+}
 
+::-webkit-input-placeholder { color: #000; }
+:-moz-input-placeholder { color: #000; }
+::-moz-input-placeholder { color: #000; }
+:-ms-input-placeholder { color: #000; }
+
+label {
+	display: inline-block;
+	margin-left: 4px;
+	.small-inputs & { font-size: 0.5em; }
 }
 
 select {
@@ -103,6 +116,31 @@ select {
 	padding-right: 4em;
 	text-align: center;
 	width: 100%;
+}
+
+input[type="checkbox"] {
+	appearance: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+	background: transparent;
+	display: inline-block;
+	height: 40px;
+	vertical-align: middle;
+	width: 40px;
+
+	&:checked {
+		&:after {
+			content: "";
+			background-image: url(/img/checkbox.svg);
+			background-size: 100%;
+			display: block;
+			height: 60px;
+			left: -8px;
+			position: absolute;
+			top: -16px;
+			width: 60px;
+		}
+	}
 }
 
 // Layout
