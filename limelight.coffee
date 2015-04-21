@@ -245,6 +245,19 @@ if Meteor.isClient
 
 	Template.pindrop.rendered = ->
 
+		$('a.popup').click( (e) ->
+			e.preventDefault();
+			window.open(this.href, 'targetWindow',
+				'toolbar=no,
+				location=no,
+				status=no,
+				menubar=no,
+				scrollbars=yes,
+				resizable=yes,
+				width=600,
+				height=300');
+		)
+
 		if (!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
