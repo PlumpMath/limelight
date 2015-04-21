@@ -17,9 +17,9 @@
 
 <template name="point">
 	<div class="point loading {{pointClasses _id}}" data-id="{{_id}}" style="left: {{pageX}}vw; top: {{pageY}}vh;">
-		{{quizTaker}}, {{quizTakerAge}}
+		{{quizTakerName}}, {{quizTakerAge}}
 		{{{generateEmoji emoji_id closestFinalist}}}
-		<p class="quiz-taker">{{quizTaker}}, {{quizTakerAge}}, {{timeFormat quizTime}}</p>
+		<p class="quiz-taker">{{quizTakerName}}, {{quizTakerAge}}, {{timeFormat quizTime}}</p>
 	</div>
 </template>
 
@@ -128,8 +128,8 @@
                     <div class="vcenter abs w100">
 						<div id="emoji-container" class="cf">
 						<form>
-							<input id="quiz-taker" type="text" placeholder="Type here..." class="aligncenter block w100" required>
-							<input type="submit" value="Submit" class="submit-quizTaker block w100">
+							<input id="quiz-taker-name" type="text" placeholder="Type here..." class="aligncenter block w100" required>
+							<input type="submit" value="Submit" class="submit-quizTaker-name block w100">
 						</form>
 						</div>
 					</div>
@@ -146,6 +146,22 @@
 			{{/if}}
 
 			{{#if equals quizStep 15 }}
+				<h3 class="question caps bold">Please send me a link to my results</h3>
+				<div class="vcenter abs w100">
+					<div id="emoji-container" class="cf">
+					<form>
+						<input id="quiz-taker-email" type="text" placeholder="Email here..." class="aligncenter block w100" required>
+						<input id="quiz-taker-twitter" type="text" placeholder="@twitter here..." class="aligncenter block w100" required>
+						<input id="quiz-taker-updateme" type="checkbox" value="updateme_true">Keep me updated on Guggenheim Helsinki<br>
+
+						<input type="submit" value="Submit" class="submit-quizTaker-info block w100">
+						<input type="submit" value="Skip" class="skip-quizTaker-info block w100">
+					</form>
+					</div>
+				</div>
+			{{/if}}
+
+			{{#if equals quizStep 16 }}
 				<h3 class="question caps bold">
 					THANKS FOR PLAYING! <br />
 					VISIT THE SCREEN TO SEE WHERE YOU LANDED ON THE MAP. <br /> <br />
@@ -183,7 +199,7 @@
 
 	{{#if equals quizStep 12}}  <!-- TO BE STYLED -->
         <div class="step aligncenter">
-    		<h3>CHOOSE YOUR AVATAR!</h3>
+    		<h3>SELECT YOUR AGE!</h3>
         </div>
 	{{/if}}
 
@@ -200,6 +216,12 @@
 	{{/if}}
 
 	{{#if equals quizStep 15}}  <!-- TO BE STYLED -->
+        <div class="step aligncenter">
+    		<h3>ENTER YOUR INFO TO BE EMAILED/TWEETED A LINK TO YOUR RESULTS!</h3>
+        </div>
+	{{/if}}
+
+	{{#if equals quizStep 16}}  <!-- TO BE STYLED -->
         <div class="step aligncenter">
 		THANKS FOR PLAYING! <br />
 		VISIT THE SCREEN TO YOUR RIGHT TO SEE WHERE YOU LANDED ON THE MAP. <br />

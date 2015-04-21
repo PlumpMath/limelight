@@ -278,7 +278,6 @@ if Meteor.isClient
 				Session.set("apiQuestionsDone", true)
 
 			# update quiz session for projection template
-			console.log Session.get("quizDevice")
 			Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
 
 			if(callback)
@@ -372,7 +371,7 @@ if Meteor.isClient
 		shouldShowQuestions: (step) ->
 			if(step <= 1)
 				return false
-			if(step >= globals.quizTotalSteps - 3)
+			if(step >= globals.quizTotalSteps - 4)
 				return false
 			return true
 
@@ -432,21 +431,20 @@ if Meteor.isClient
 			return chr.score
 			).submission_id
 
-		console.log closestFinalist
-
-
 		endTime = new Date()
 
-		console.log Session.get("quizTaker")
-		console.log Session.get("quizTakerAge")
+
 		pointid = Points.insert
 			pageX: x
 			pageY: y
 			emoji_id: Session.get('emoji_id')
 			quizHistory: Session.get("quizHistory")
-			quizTaker: Session.get("quizTaker")
-			quizTakerAge: Session.get("quizTakerAge")
 			quizDevice: Session.get('quizDevice')
+			quizTakerName: Session.get("quizTakerName")
+			quizTakerAge: Session.get("quizTakerAge")
+			quizTakerEmail: Session.get("quizTakerEmail")
+			quizTakerTwitter: Session.get("quizTakerTwitter")
+			quizTakerUpdateme: Session.get("quizTakerUpdateme")
 			quizTime: endTime
 			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
 			closestFinalist: closestFinalist
@@ -531,7 +529,6 @@ if Meteor.isClient
 				$('.step').fadeIn(150)
 			)
 
-			endQuiz()
 
 		"click .submit-quizTakerAge": (event) ->
 			event.preventDefault()
@@ -544,15 +541,42 @@ if Meteor.isClient
 			)
 
 
-		"click .submit-quizTaker": (event) ->
+		"click .submit-quizTaker-name": (event) ->
 			event.preventDefault()
 			renderQuizBG()
-			Session.set("quizTaker", $('#quiz-taker').val())
+			Session.set("quizTakerName", $('#quiz-taker-name').val())
 
 			Session.set("quizStep", Session.get("quizStep") + 1)
 			updateFromApi(Session.get("apiUrl"), () ->
 				$('.step').fadeIn(150)
 			)
+
+
+		"click .skip-quizTaker-info": (event) ->
+			event.preventDefault()
+			renderQuizBG()
+			Session.set("quizTakerEmail", "SKIP")
+			Session.set("quizTakerTwitter", "SKIP") 
+			Session.set("quizTakerUpdateme", "SKIP") #'SKIP' to distinguish between just a blank, which can be confusing when looking at the data later
+
+			Session.set("quizStep", Session.get("quizStep") + 1)
+			updateFromApi(Session.get("apiUrl"), () ->
+				$('.step').fadeIn(150)
+			)
+			endQuiz()
+
+		"click .submit-quizTaker-info": (event) ->
+			event.preventDefault()
+			renderQuizBG()
+			Session.set("quizTakerEmail", $('#quiz-taker-email').val())
+			Session.set("quizTakerTwitter", $('#quiz-taker-twitter').val())
+			Session.set("quizTakerUpdateme", $('#quiz-taker-updateme').val())
+
+			Session.set("quizStep", Session.get("quizStep") + 1)
+			updateFromApi(Session.get("apiUrl"), () ->
+				$('.step').fadeIn(150)
+			)
+			endQuiz()
 
 
 	Template.projection.helpers
@@ -564,7 +588,7 @@ if Meteor.isClient
 		shouldShowImages: (step) ->
 			if(step <= 1)
 				return false
-			if(step >= globals.quizTotalSteps - 3)
+			if(step >= globals.quizTotalSteps - 4)
 				return false
 			return true
 
