@@ -615,7 +615,7 @@ if Meteor.isClient
 			)
 
 
-		"click .skip-quizTakerInfo": (event) ->
+		"click .skip-quizTaker-info": (event) ->
 			event.preventDefault()
 			renderQuizBG()
 			Session.set("quizTakerEmail", "SKIP")
