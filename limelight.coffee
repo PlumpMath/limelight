@@ -245,8 +245,6 @@ if Meteor.isClient
 
 	Template.pindrop.rendered = ->
 
-		highlightRecentPins()
-
 		if (!this._rendered)
 			this._rendered = true;
 			Session.set("pindropRendered", true)
@@ -364,15 +362,13 @@ if Meteor.isClient
 
 			return tmp.innerHTML
 
-		isRecent: () ->
-			# generated in the last hour?
-			recent = new Date(this.quizTime).getTime() + 60 * 60 * 1000 > new Date().getTime()
-			return if recent then 'recent' else ''
-
 		Template.point.rendered = ->
-			console.log "rendered point"
-			$('.point').each(() ->
+			$('.point').each((i) ->
 				_this = this
+				if i < 10
+					this.classList.add('recent')
+				else
+					this.classList.remove('recent')
 				setTimeout(() ->
 					_this.classList.remove('loading')
 				, Math.random() * 500 + 100)
