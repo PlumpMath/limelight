@@ -375,6 +375,9 @@ if Meteor.isClient
 					shape.attrs.fill = color
 					makeSVGelement(svg, shape)
 
+			# should be ok to move points last in DOM order and leave them there
+			svg.setAttribute('onmouseover', "document.body.appendChild(this.parentNode)")
+
 			tmp = document.createElement("div")
 			tmp.appendChild(svg)
 
