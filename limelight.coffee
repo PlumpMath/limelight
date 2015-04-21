@@ -367,7 +367,7 @@ if Meteor.isClient
 
 	Template.quiz.helpers
 		isQuizKiosk: () ->
-			if(this.quizKiosk? and this.quizKiosk != 'default')
+			if(Session.get("quizDevice")? and Session.get("quizDevice") != 'default')
 				return true
 			else
 				return false
