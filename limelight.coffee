@@ -366,7 +366,7 @@ if Meteor.isClient
 
 		isRecent: () ->
 			# generated in the last hour?
-			recent = new Date(this.quizTime).getTime() + 60 * 1000 > new Date().getTime()
+			recent = new Date(this.quizTime).getTime() + 60 * 60 * 1000 > new Date().getTime()
 			return if recent then 'recent' else ''
 
 		Template.point.rendered = ->
