@@ -239,17 +239,6 @@ if Meteor.isClient
 
 					document.body.insertBefore(div, document.body.firstChild)
 
-
-	highlightRecentPins = ->
-		pattern = makeRegexPattern(this.quizDevice)
-		recentPins =  Points.find(pattern, {sort:{quizTime: -1}, limit: 2}).map (point, index) ->
-			point.rank = index
-			return point
-
-		## HIGHLIGHT THESE PINS, in decreasing order
-		for pin in recentPins
-			console.log pin
-
 	Template.pindrop.rendered = ->
 
 		$('a.popup').click( (e) ->
@@ -264,6 +253,20 @@ if Meteor.isClient
 				width=600,
 				height=300');
 		)
+
+		checkBrandNew = () ->
+			$('.point').each(() ->
+				past = new Date(this.getAttribute('data-quiztime')).getTime()
+				now = new Date().getTime()
+
+				# if under 3 minutes old, it's brand new!
+				if (now - past) / (60 * 1000) <= 3
+					console.log('brand new')
+				else
+					this.classList.remove('brand-new')
+			)
+
+		setInterval(checkBrandNew, 10000)
 
 		if (!this._rendered)
 			this._rendered = true;
