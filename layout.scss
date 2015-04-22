@@ -1,3 +1,10 @@
+// ----- Breakpoints for responsive styles
+$break_large: 1200px;
+$break_medium: 1000px;
+$break_small: 800px;
+$break_small_very: 600px;
+$break_tiny: 480px;
+
 @mixin clearfix {
     &:before,
     &:after {
@@ -36,12 +43,32 @@
     &.maintain {
         flex-wrap: nowrap;
     }
+
+    @media screen and (max-width: $break_small) {
+        flex-wrap: wrap;
+    }
 }
 
 $columns: 12;
 $gutter: 20px;
 @mixin column($num) {
     flex: 0 1 calc((#{$num * 100% / $columns} - #{ ( $num * ( $columns - 1 ) * $gutter - $columns * ( $num - 1 ) * $gutter ) / $columns }));
+
+    @media screen and (max-width: $break_small) {
+        flex: 0 1 100%;
+        margin-right: 0;
+    }
+}
+
+@mixin column-small($num) {
+    @media screen and (max-width: $break_small) {
+        flex: 0 1 calc((#{$num * 100% / $columns} - #{ ( $num * ( $columns - 1 ) * 0.333 * $gutter - $columns * ( $num - 1 ) * 0.333 * $gutter ) / $columns })) !important;
+        margin-right: 0.333 * $gutter !important;
+
+        &:last-child {
+            margin-right: 0 !important;
+        }
+    }
 }
 
 .column,
@@ -78,3 +105,16 @@ $gutter: 20px;
     &.eleven { @include column(11); }
     &.twelve { @include column(12); }
 }
+
+.one-s { @include column-small(1); }
+.two-s { @include column-small(2); }
+.three-s { @include column-small(3); }
+.four-s { @include column-small(4); }
+.five-s { @include column-small(5); }
+.six-s { @include column-small(6); }
+.seven-s { @include column-small(7); }
+.eight-s { @include column-small(8); }
+.nine-s { @include column-small(9); }
+.ten-s { @include column-small(10); }
+.eleven-s { @include column-small(11); }
+.twelve-s { @include column-small(12); }
