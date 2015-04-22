@@ -382,7 +382,7 @@ if Meteor.isClient
 			if (window.location.hash)
 				hash = window.location.hash.substring(1)
 				if(id == hash)
-					$(".point[data-id='" + hash + "']").addClass("hoverLock")
+					$(".point[data-id='" + hash + "']").addClass("hoverLock").appendTo('body')
 
 			past = new Date(quizTime).getTime()
 			now = new Date().getTime()
@@ -395,10 +395,6 @@ if Meteor.isClient
 
 			# if over 1 hour old, scale up to 0.5, stay there
 			stopAt = 72 # number of hours at which to stop scaling down (will stay at 0.5)
-
-			# if the user just came from the quiz, highlight theirs
-			if Session.get('pointid') && id == Session.get('pointid')
-				this.firstNode.classList.add('current-user')
 
 			if past + 60 * 60 * 1000 < now
 
@@ -413,6 +409,21 @@ if Meteor.isClient
 					if el.classList.contains('emoji')
 						el.style.transform = 'scale(' + scaleFactor + ')'
 				)
+
+			# if the user just came from the quiz, highlight theirs
+			if Session.get('pointid') && id == Session.get('pointid')
+				point.classList.add('current-user')
+
+			# click to enter hover state and update URL
+			point.addEventListener('click', ->
+				if !this.classList.contains('hoverLock')
+					$('.hoverLock').removeClass('hoverLock')
+					this.classList.add('hoverLock')
+					window.location = '#' + id
+				else
+					this.classList.remove('hoverLock')
+					window.location = '#'
+			)
 
 			$('.point').each((i) ->
 				_this = this
