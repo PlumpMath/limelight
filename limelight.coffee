@@ -86,6 +86,29 @@ if Meteor.isClient
 		if cb
 			cb(modal)
 
+	# wrapper specifically for the infobox
+	showModalInfobox = (point, _this) ->
+		showModal('infobox', ($modal) ->
+
+			# clear previous info
+			$modal.find('[data-fill]').html('')
+
+			attrs = point[0].attributes
+			for k, v of attrs
+				# now get the *real* key and value
+				key = v.name
+				value = v.value
+				if key && key.slice(0, 4) == 'data' && $modal.find('[' + key + ']')
+					$modal.find('[' + key + ']').html(value)
+					# parse date
+					if key.toLowerCase() == 'data-quiztime'
+						$modal.find('[' + key + ']').html(moment(value).format('MMM Do YYYY'))
+
+			# update FB and TW share links
+			$modal.find('.fb_icon a').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23' + _this._id)
+			$modal.find('.twitter_icon a').attr('href', 'https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2Fquiz%23' + _this._id)
+		)
+
 	scoreColorById = (id) ->
 		index = globals.submissionIdOrder.indexOf(id)
 		color = globals.colors[index]
@@ -170,28 +193,7 @@ if Meteor.isClient
 			_this = this
 			point = $(event.target).closest('.point')
 
-			showModal('infobox', ($modal) ->
-
-				# clear previous info
-				$modal.find('[data-fill]').html('')
-
-				attrs = point[0].attributes
-				for k, v of attrs
-					# now get the *real* key and value
-					key = v.name
-					value = v.value
-					if key && key.slice(0, 4) == 'data' && $modal.find('[' + key + ']')
-						$modal.find('[' + key + ']').html(value)
-						# parse date
-						if key.toLowerCase() == 'data-quiztime'
-							$modal.find('[' + key + ']').html(moment(value).format('MMM Do YYYY'))
-
-				# update FB and TW share links
-				$modal.find('.fb_icon a').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23' + _this._id)
-				$modal.find('.twitter_icon a').attr('href', 'https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2Fquiz%23' + _this._id)
-			)
-
-
+			showModalInfobox(point, _this)
 
 			if !event.target.classList.contains('hoverLock')
 				$('.hoverLock').removeClass('hoverLock')
@@ -419,14 +421,11 @@ if Meteor.isClient
 			return tmp.innerHTML
 
 		pageCoord: (coords, axis) ->
-			console.log coords
-			console.log axis
-			if(axis == 'x')
-				return remap(coords[0], globals.xCoordDomain[0], globals.xCoordDomain[1])
-			else
-				return remap(coords[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) 
-
-
+			return remap(
+				coords[0],
+				globals[axis + 'CoordDomain'][0],
+				globals[axis + 'CoordDomain'][1]
+			)
 
 		Template.point.rendered = ->
 
@@ -434,10 +433,12 @@ if Meteor.isClient
 			point = this.firstNode
 			quizTime = this.data.quizTime
 
-			if (window.location.hash)
+			if ( window.location.hash )
 				hash = window.location.hash.substring(1)
-				if(id == hash)
-					$(".point[data-id='" + hash + "']").addClass("hoverLock").appendTo('body')
+				if (id == hash)
+					point.classList.add('hoverLock')
+					document.body.appendChild(point)
+					showModalInfobox($(point), this)
 
 			past = new Date(quizTime).getTime()
 			now = new Date().getTime()
