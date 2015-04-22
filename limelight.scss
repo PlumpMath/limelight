@@ -552,7 +552,7 @@ $building_icon_size: 14vw;
 		color: #aaa;
 		z-index: -1;
 	}
-	#quiz-taker-email:invalid + #quiz-taker-twitter:valid ~ .language buttono,
+	#quiz-taker-email:invalid + #quiz-taker-twitter:valid ~ .language button,
 	#quiz-taker-email:valid ~ .language button {
 		border-color: #000 !important;
 		color: #000 !important;
