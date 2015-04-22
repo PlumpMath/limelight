@@ -262,10 +262,12 @@ input[type="checkbox"] {
 }
 
 .logo {
+	max-width: 50%;
 	width: auto;
 
 	img {
 		float: right;
+		max-width: 100%;
 	}
 
 	#quiz-container & {
@@ -274,9 +276,9 @@ input[type="checkbox"] {
 }
 
 .about {
+	@include fontVW(4.167, 40, 20);
 	z-index: 200;
 	cursor: pointer;
-	font-size: 170%;
 
 	.pindrop-ipad & {
 		display: none;
