@@ -531,27 +531,29 @@ $building_icon_size: 14vw;
 	top: 1em;
 
 	form:invalid {
-		input[type="submit"] {
+		input[type="submit"],
+		.submit-quizTakerName {
 			border-color: #aaa;
 			color: #aaa;
 			z-index: -1;
 		}
 	}
 	form:valid {
-		input[type="submit"] {
+		input[type="submit"],
+		.submit-quizTakerName {
 			border-color: #000;
 			color: #000;
 			z-index: 1;
 		}
 	}
 }
-	#quiz-taker-email:invalid + #quiz-taker-twitter:invalid ~ input[type="submit"] {
+	#quiz-taker-email:invalid + #quiz-taker-twitter:invalid ~ .language button {
 		border-color: #aaa;
 		color: #aaa;
 		z-index: -1;
 	}
-	#quiz-taker-email:invalid + #quiz-taker-twitter:valid ~ input[type="submit"],
-	#quiz-taker-email:valid ~ input[type="submit"] {
+	#quiz-taker-email:invalid + #quiz-taker-twitter:valid ~ .language buttono,
+	#quiz-taker-email:valid ~ .language button {
 		border-color: #000 !important;
 		color: #000 !important;
 		z-index: 1 !important;
