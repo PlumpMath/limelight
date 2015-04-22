@@ -8,6 +8,9 @@ globals.bitlyApiUrl = "https://api-ssl.bitly.com/v3/shorten?access_token=338e0d4
 # this is the number of total steps
 globals.quizTotalSteps = 16
 
+globals.xCoordDomain = [-1.3, 1.6]
+globals.yCoordDomain = [-1.3, 1.4]
+
 # SVG colors
 globals.submissionIdOrder = ["GH-5631681770", "GH-121371443", "GH-04380895", "GH-1128435973", "GH-76091181", "GH-5059206475"]
 

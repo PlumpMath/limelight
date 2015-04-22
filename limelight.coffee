@@ -235,9 +235,9 @@ if Meteor.isClient
 					div.classList.add('building-icon')
 					# get how far left it is -- if too far to the right,
 					# the infobox shows up to the left instead of right
-					left = remap(guess.coord[0], -1.3, 1.6)
+					left = remap(guess.coord[0], globals.xCoordDomain[0], globals.xCoordDomain[1])
 					div.style.left = left + 'vw'
-					div.style.top = remap(guess.coord[1], -1.3, 1.4) + 'vh'
+					div.style.top = remap(guess.coord[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) + 'vh'
 					div.setAttribute('data-color', scoreColorById(guess.submission_id))
 					div.setAttribute('data-ghid', guess.submission_id)
 
@@ -418,6 +418,18 @@ if Meteor.isClient
 
 			return tmp.innerHTML
 
+		pageCoord: (coords, axis) ->
+			console.log coords
+			console.log axis
+			# rough x coords domain: -0.8 to 1.1,
+			# y: -0.8 to 0.9
+			if(axis == 'x')
+				return remap(coords[0], globals.xCoordDomain[0], globals.xCoordDomain[1])
+			else
+				return remap(coords[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) 
+
+
+
 		Template.point.rendered = ->
 
 			id = this.data._id
@@ -530,12 +542,9 @@ if Meteor.isClient
 		no_language_selected: () ->
 			return !(Session.get('selected_language')?)
 
+
 	endQuiz = () ->
-		coord = Session.get("currentApiData").coord
-		# rough x coords domain: -0.8 to 1.1,
-		# y: -0.8 to 0.9
-		x = remap(coord[0], -0.8, 1.1)
-		y = remap(coord[1], -0.8, 0.9)
+		coords = Session.get("currentApiData").coord
 
 		closestFinalist = _.max(Session.get("currentApiData").guesses, (chr) ->
 			return chr.score
@@ -545,8 +554,7 @@ if Meteor.isClient
 
 
 		pointid = Meteor.call "insertPoint",
-			pageX: x
-			pageY: y
+			coords: coords
 			emoji_id: Session.get('emoji_id')
 			quizHistory: Session.get("quizHistory")
 			quizDevice: Session.get('quizDevice')

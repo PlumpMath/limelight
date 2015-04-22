@@ -22,7 +22,7 @@
 
 
 <template name="point">
-	<div class="point loading" data-id="{{_id}}" style="left: {{pageX}}vw; top: {{pageY}}vh;" data-quizTime="{{ quizTime }}" data-quizTakerName="{{quizTakerName}}" data-quizTakerAge="{{quizTakerAge}}">
+	<div class="point loading" data-id="{{_id}}" style="left: {{pageCoord coords 'x'}}vw; top: {{pageCoord coords 'y'}}vh;" data-quizTime="{{ quizTime }}" data-quizTakerName="{{quizTakerName}}" data-quizTakerAge="{{quizTakerAge}}">
 		{{{generateEmoji emoji_id closestFinalist}}}
 		<span class="quiz-taker-preview">{{quizTakerName}}</span>
         <p class="quiz-taker">{{quizTakerName}}<br>{{quizTakerAge}}<br>{{timeFormat quizTime}}</p>
