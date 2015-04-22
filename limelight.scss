@@ -42,6 +42,18 @@ h1, h2, h3, h4, h5, h6 { font-weight: normal; }
 @mixin tight { margin: 0; padding: 0; }
 .tight { @include tight; }
 
+@mixin fontVW($size, $max, $min) {
+	font-size: #{$size}vw;
+
+	@media screen and (min-width: #{round($max * 100 / $size)}px) {
+		font-size: #{$max}px;
+	}
+
+	@media screen and (max-width: #{round($min * 100 / $size)}px) {
+		font-size: #{$min}px;
+	}
+}
+
 html, body {
 	@include monospace;
 	height: 100%;
@@ -78,6 +90,7 @@ input, button, textarea, select {
 	box-sizing: border-box;
 	color: #000;
 	display: inline-block;
+	@include fontVW(4.167, 40, 18);
 	@include monospace;
 	padding: 0.6em 1em;
 	margin: 0 0 1em;
@@ -99,7 +112,7 @@ input, button, textarea, select {
     user-select: none; */
 
 	.small-inputs & {
-		font-size: 0.5em;
+		@include fontVW(3.2, 30, 15);
 	}
 }
 
@@ -112,7 +125,7 @@ label {
 	float: left;
 	margin-left: 10px;
 	max-width: 60%;
-	.small-inputs & { font-size: 0.5em; }
+	.small-inputs & { @include fontVW(3.2, 30, 15); }
 }
 
 select {
@@ -121,6 +134,7 @@ select {
 		-moz-appearance: none;
 	background-image: url(img/select.svg);
 	background-position: 100% 50%;
+	background-size: auto 100%;
 	background-repeat: no-repeat;
 	border-radius: 0;
 	padding-right: 4em;
@@ -428,18 +442,6 @@ $building_icon_size: 14vw;
 	}
 }
 
-@mixin fontVW($size, $max, $min) {
-	font-size: #{$size}vw;
-
-	@media screen and (min-width: #{round($max * 100 / $size)}px) {
-		font-size: #{$max}px;
-	}
-
-	@media screen and (max-width: #{round($min * 100 / $size)}px) {
-		font-size: #{$min}px;
-	}
-}
-
 .language-choice {
 	@include fontVW(4.167, 40, 18);
 	margin: 1.5em auto;
@@ -466,6 +468,13 @@ $building_icon_size: 14vw;
 	margin: 0 auto;
 	max-width: 1024px;
 	padding: 3.125vw;
+
+	// Need to pull up on small screens
+	@media screen and (max-width: 600px) {
+		> .vcenter {
+			margin-top: -2.5em;
+		}
+	}
 }
 .step-counter {
 	font-size: 3.125vw;
