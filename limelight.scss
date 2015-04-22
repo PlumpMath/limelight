@@ -407,6 +407,7 @@ $building_icon_size: 14vw;
 	}
 
 	&.active {
+		z-index: 999;
 		.infobox {
 			display: block;
 		}
