@@ -160,6 +160,18 @@ if Meteor.isClient
 			if target.attr('id') == event.currentTarget.id || target.closest('.close').length > 0
 				$(event.currentTarget).fadeOut()
 
+		"click .point": (event) ->
+			console.log event.target
+			$("#modal-infobox").fadeIn()
+			if !this.classList.contains('hoverLock')
+				$('.hoverLock').removeClass('hoverLock')
+				this.classList.add('hoverLock')
+				window.location = '#' + id
+			else
+				this.classList.remove('hoverLock')
+				window.location = '#'
+
+
 	makeRegexPattern = (quizDevice) ->
 		# make /pindrop/ipad* search for points from devices of ipad*
 		if (quizDevice? and quizDevice != "default")
@@ -414,16 +426,6 @@ if Meteor.isClient
 			if Session.get('pointid') && id == Session.get('pointid')
 				point.classList.add('current-user')
 
-			# click to enter hover state and update URL
-			point.addEventListener('click', ->
-				if !this.classList.contains('hoverLock')
-					$('.hoverLock').removeClass('hoverLock')
-					this.classList.add('hoverLock')
-					window.location = '#' + id
-				else
-					this.classList.remove('hoverLock')
-					window.location = '#'
-			)
 
 			$('.point').each((i) ->
 				_this = this
