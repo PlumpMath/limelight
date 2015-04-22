@@ -385,10 +385,17 @@ if Meteor.isClient
 			point = this.firstNode
 			quizTime = this.data.quizTime
 
-			# if over 1 hour old, scale up to 0.5, stay there
+
 			past = new Date(quizTime).getTime()
 			now = new Date().getTime()
 
+			# if under 3 minutes old, it's brand new!
+			if (now - past) / (60 * 1000) <= 3
+				point.classList.add('brand-new')
+			else
+				point.classList.remove('brand-new')
+
+			# if over 1 hour old, scale up to 0.5, stay there
 			stopAt = 72 # number of hours at which to stop scaling down (will stay at 0.5)
 
 			if past + 60 * 60 * 1000 < now
