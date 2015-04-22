@@ -421,8 +421,6 @@ if Meteor.isClient
 		pageCoord: (coords, axis) ->
 			console.log coords
 			console.log axis
-			# rough x coords domain: -0.8 to 1.1,
-			# y: -0.8 to 0.9
 			if(axis == 'x')
 				return remap(coords[0], globals.xCoordDomain[0], globals.xCoordDomain[1])
 			else
@@ -552,12 +550,13 @@ if Meteor.isClient
 
 		endTime = new Date()
 
+		console.log Meteor.call "getClientIp"
 
 		pointid = Meteor.call "insertPoint",
 			coords: coords
 			emoji_id: Session.get('emoji_id')
 			quizHistory: Session.get("quizHistory")
-			quizDevice: Session.get('quizDevice')
+			quizDevice: ( Session.get('quizDevice') || 'default' )
 			quizTakerName: Session.get("quizTakerName")
 			quizTakerAge: Session.get("quizTakerAge")
 			quizTakerEmail: Session.get("quizTakerEmail")
@@ -760,7 +759,7 @@ if Meteor.isClient
 		s.parentNode.insertBefore(wf, s)
 
 
-
+# these functions both on client and server to take advantage of meteor's stub functionality
 Meteor.methods
 	insertPoint: (data) ->
 		pointid = Points.insert data
@@ -775,16 +774,19 @@ Meteor.methods
 			{ upsert: true})
 		return thisdevice + ":" + thisquizstep
 
-	removeAllPoints: ->
-		if(Meteor.isServer)
-			Points.remove({})
-			QuizSessions.remove({})
 
+if(Meteor.isServer)
+	Meteor.methods
+		removeAllPoints: ->
+				Points.remove({})
+				QuizSessions.remove({})
 
-	checkApi: (url) ->
-		if(Meteor.isServer)
-			this.unblock();
-			return Meteor.http.call("GET", url)
+		getClientIp: ->
+			return this.connection.clientAddress;
+
+		checkApi: (url) ->
+				this.unblock();
+				return Meteor.http.call("GET", url)
 
 
 
