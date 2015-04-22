@@ -322,8 +322,7 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 	}
 
 	.preload & {
-		transition: 0.5s
-		transform, 0.5s opacity;
+		transition: 0.5s;
 
 		&.loading {
 			transform: scale(2) translateY(-150px);
@@ -387,6 +386,7 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 			display: block !important
 		}
 		svg {
+			animation: none;
 			transform: scale(2);
 		}
 	}
@@ -561,16 +561,10 @@ $building_icon_size: 14vw;
 		}
 	}
 }
-	#quiz-taker-email:invalid + #quiz-taker-twitter:invalid ~ .language button {
+	#quiz-taker-email:invalid ~ .language button {
 		border-color: #aaa;
 		color: #aaa;
 		z-index: -1;
-	}
-	#quiz-taker-email:invalid + #quiz-taker-twitter:valid ~ .language button,
-	#quiz-taker-email:valid ~ .language button {
-		border-color: #000 !important;
-		color: #000 !important;
-		z-index: 1 !important;
 	}
 
 .emoji {
