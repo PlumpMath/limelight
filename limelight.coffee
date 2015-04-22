@@ -698,6 +698,10 @@ if Meteor.isClient
 
 
 Meteor.methods
+	insertPoint: (data) ->
+		pointid = Points.insert data
+		return pointid
+
 	updateQuizSession: (thisdevice, thisquizstep, thisapidata, thislanguage) ->
 		QuizSessions.update(
 			{ quizdevice: thisdevice },
@@ -706,16 +710,16 @@ Meteor.methods
 		return thisdevice + ":" + thisquizstep
 
 	removeAllPoints: ->
-		Points.remove({})
-		QuizSessions.remove({})
+		if(Meteor.isServer) 
+			Points.remove({})
+			QuizSessions.remove({})
+
 
 	checkApi: (url) ->
-		this.unblock();
-		return Meteor.http.call("GET", url)
+		if(Meteor.isServer) 
+			this.unblock();
+			return Meteor.http.call("GET", url)
 
-	insertPoint: (data) ->
-		pointid = Points.insert data
-		return pointid
 
 
 pindropOnBeforeAction = () ->
