@@ -269,17 +269,20 @@ if Meteor.isClient
 					deactivate = () ->
 						$(this).closest('.building-icon').removeClass('active').prependTo('body')
 
+					div.appendChild(svg)
+
 					for shape in buildingShapes
 						shape.attrs.fill = scoreColorById(guess.submission_id)
 						shape = makeSVGelement(svg, shape)
 
 						shape.addEventListener('mouseover', activate)
 						shape.addEventListener('mouseout', deactivate)
-
-					div.appendChild(svg)
-
-					$(div).on "click", () ->
-						window.open(globals.finalistBaseUrl + $(this).data("ghid"), "_blank")
+						shape.addEventListener('click', () ->
+							window.open(
+								globals.finalistBaseUrl + $(this).closest('.building-icon').data('ghid'),
+								'_blank'
+							)
+						)
 
 					document.body.insertBefore(div, document.body.firstChild)
 
