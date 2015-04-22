@@ -487,8 +487,8 @@ if Meteor.isClient
 
 		endTime = new Date()
 
-
-		pointid = Points.insert
+			
+		pointid = Meteor.call "insertPoint", 
 			pageX: x
 			pageY: y
 			emoji_id: Session.get('emoji_id')
@@ -696,22 +696,27 @@ if Meteor.isClient
 		s.parentNode.insertBefore(wf, s)
 
 
-if Meteor.isServer
-	Meteor.methods
-		updateQuizSession: (thisdevice, thisquizstep, thisapidata, thislanguage) ->
-			QuizSessions.update(
-				{ quizdevice: thisdevice },
-				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata, selectedLanguage: thislanguage } },
-				{ upsert: true})
-			return thisdevice + ":" + thisquizstep
 
-		removeAllPoints: ->
-			Points.remove({})
-			QuizSessions.remove({})
+Meteor.methods
+	updateQuizSession: (thisdevice, thisquizstep, thisapidata, thislanguage) ->
+		QuizSessions.update(
+			{ quizdevice: thisdevice },
+			{ $set: { quizStep: thisquizstep, currentApiData: thisapidata, selectedLanguage: thislanguage } },
+			{ upsert: true})
+		return thisdevice + ":" + thisquizstep
 
-		checkApi: (url) ->
-			this.unblock();
-			return Meteor.http.call("GET", url)
+	removeAllPoints: ->
+		Points.remove({})
+		QuizSessions.remove({})
+
+	checkApi: (url) ->
+		this.unblock();
+		return Meteor.http.call("GET", url)
+
+	insertPoint: (data) ->
+		pointid = Points.insert data
+		return pointid
+
 
 pindropOnBeforeAction = () ->
 	$('body').addClass('pindrop')
