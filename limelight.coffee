@@ -375,16 +375,14 @@ if Meteor.isClient
 
 		Template.point.rendered = ->
 
-
-			if(window.location.hash)
-				hash = window.location.hash.substring(1)
-				if(this.data._id == hash)
-					$(".point[data-id='" + hash + "']").addClass("hoverLock")
-
-
+			id = this.data._id
 			point = this.firstNode
 			quizTime = this.data.quizTime
 
+			if (window.location.hash)
+				hash = window.location.hash.substring(1)
+				if(id == hash)
+					$(".point[data-id='" + hash + "']").addClass("hoverLock")
 
 			past = new Date(quizTime).getTime()
 			now = new Date().getTime()
@@ -397,6 +395,10 @@ if Meteor.isClient
 
 			# if over 1 hour old, scale up to 0.5, stay there
 			stopAt = 72 # number of hours at which to stop scaling down (will stay at 0.5)
+
+			# if the user just came from the quiz, highlight theirs
+			if Session.get('pointid') && id == Session.get('pointid')
+				this.firstNode.classList.add('current-user')
 
 			if past + 60 * 60 * 1000 < now
 
@@ -414,6 +416,7 @@ if Meteor.isClient
 
 			$('.point').each((i) ->
 				_this = this
+
 				if i < 10
 					this.classList.add('recent')
 					this.children[1].style.opacity = ( 10 - i ) / 10
@@ -494,8 +497,8 @@ if Meteor.isClient
 
 		endTime = new Date()
 
-			
-		pointid = Meteor.call "insertPoint", 
+
+		pointid = Meteor.call "insertPoint",
 			pageX: x
 			pageY: y
 			emoji_id: Session.get('emoji_id')
@@ -707,6 +710,8 @@ if Meteor.isClient
 Meteor.methods
 	insertPoint: (data) ->
 		pointid = Points.insert data
+		if Meteor.isClient
+			Session.set('pointid', pointid)
 		return pointid
 
 	updateQuizSession: (thisdevice, thisquizstep, thisapidata, thislanguage) ->
@@ -717,13 +722,13 @@ Meteor.methods
 		return thisdevice + ":" + thisquizstep
 
 	removeAllPoints: ->
-		if(Meteor.isServer) 
+		if(Meteor.isServer)
 			Points.remove({})
 			QuizSessions.remove({})
 
 
 	checkApi: (url) ->
-		if(Meteor.isServer) 
+		if(Meteor.isServer)
 			this.unblock();
 			return Meteor.http.call("GET", url)
 
