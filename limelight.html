@@ -1,7 +1,6 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta property="og:url" content="http://app.designguggenheimhelsinki.org">
     <meta property="og:title" content="Guggenheim Helsinki Now Matchmaker">
     <meta property="og:image" content="http://app.designguggenheimhelsinki.org/img/GHN_facebook_Good.png">
     <meta property="og:image:width" content="851">
@@ -23,7 +22,7 @@
 
 
 <template name="point">
-	<div class="point loading" data-id="{{_id}}" style="left: {{pageX}}vw; top: {{pageY}}vh;" data-quiztime="{{ quizTime }}">
+	<div class="point loading" data-id="{{_id}}" style="left: {{pageX}}vw; top: {{pageY}}vh;" data-quizTime="{{ quizTime }}" data-quizTakerName="{{quizTakerName}}" data-quizTakerAge="{{quizTakerAge}}">
 		{{{generateEmoji emoji_id closestFinalist}}}
 		<span class="quiz-taker-preview">{{quizTakerName}}</span>
         <p class="quiz-taker">{{quizTakerName}}<br>{{quizTakerAge}}<br>{{timeFormat quizTime}}</p>
@@ -123,11 +122,25 @@
 	</div>
 
     <div id="modal-infobox">
-        <div class="modal-container vcenter">
+        <div class="modal-container vcenter modal-small">
             <div class="close corner corner-top corner-right"><span>&#10005;</span></div>
             <div class="modal-content">
-				<h2 class="aligncenter caps">AboutABOUTABOUT</h2>
-				<div class="name">Name AGegroup Citiy/Country Date Share on Facebok Twittera</div>
+				<div data-quizTaker data-fill></div>
+                <div data-quizTakerAge data-fill></div>
+                <div data-quizTime data-fill></div><br><br>
+                <p>Share on</p>
+                <div>
+                    <span class="fb_icon icon">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23quiz" class="popup">
+                            <img src="/img/fb_icon_black.svg">
+                        </a>
+                    </span>
+                    <span class="twitter_icon icon">
+                        <a href="https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2Fquiz" class="popup">
+                            <img src="/img/twitter_icon_black.svg">
+                        </a>
+                    </span>
+                </div>
 			</div>
 		</div>
 	</div>

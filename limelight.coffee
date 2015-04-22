@@ -78,8 +78,13 @@ if Meteor.isClient
 			i += 1
 		return keys
 
-	showModal = (which) ->
-		$('#modal-' + which).fadeIn()
+	showModal = (which, cb) ->
+		# fade in the modal and execute a callback on it
+		# (for example to inject content)
+		modal = $('#modal-' + which)
+		modal.fadeIn()
+		if cb
+			cb(modal)
 
 	scoreColorById = (id) ->
 		index = globals.submissionIdOrder.indexOf(id)
@@ -161,14 +166,39 @@ if Meteor.isClient
 				$(event.currentTarget).fadeOut()
 
 		"click .point": (event) ->
-			console.log event.target
-			$("#modal-infobox").fadeIn()
-			if !this.classList.contains('hoverLock')
+
+			_this = this
+			point = $(event.target).closest('.point')
+
+			showModal('infobox', ($modal) ->
+
+				# clear previous info
+				$modal.find('[data-fill]').html('')
+
+				attrs = point[0].attributes
+				for k, v of attrs
+					# now get the *real* key and value
+					key = v.name
+					value = v.value
+					if key && key.slice(0, 4) == 'data' && $modal.find('[' + key + ']')
+						$modal.find('[' + key + ']').html(value)
+						# parse date
+						if key.toLowerCase() == 'data-quiztime'
+							$modal.find('[' + key + ']').html(moment(value).format('MMM Do YYYY'))
+
+				# update FB and TW share links
+				$modal.find('.fb_icon a').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23' + _this._id)
+				$modal.find('.twitter_icon a').attr('href', 'https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2Fquiz%23' + _this._id)
+			)
+
+
+
+			if !event.target.classList.contains('hoverLock')
 				$('.hoverLock').removeClass('hoverLock')
-				this.classList.add('hoverLock')
-				window.location = '#' + id
+				event.target.classList.add('hoverLock')
+				window.location = '#' + this._id
 			else
-				this.classList.remove('hoverLock')
+				event.target.classList.remove('hoverLock')
 				window.location = '#'
 
 

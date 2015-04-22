@@ -632,6 +632,8 @@ $building_icon_size: 14vw;
 	max-width: 900px;
 	overflow: hidden;
 
+	&.modal-small { max-width: 400px; }
+
 	h2 {
 		margin: 1em 0;
 	}
