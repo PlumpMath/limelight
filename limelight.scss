@@ -109,8 +109,9 @@ input, button, textarea, select {
 :-ms-input-placeholder { color: #000; }
 
 label {
-	display: inline-block;
-	margin-left: 4px;
+	float: left;
+	margin-left: 10px;
+	max-width: 60%;
 	.small-inputs & { font-size: 0.5em; }
 }
 
@@ -132,9 +133,8 @@ input[type="checkbox"] {
 		-webkit-appearance: none;
 		-moz-appearance: none;
 	background: transparent;
-	display: inline-block;
+	float: left;
 	height: 40px;
-	vertical-align: middle;
 	width: 40px;
 
 	&:checked {
@@ -439,11 +439,10 @@ $building_icon_size: 14vw;
 }
 
 .question {
-	font-size: 40px;
-	margin: 0 0 3.125vw;
+	@include fontVW(4, 40, 28);
+	margin: 0 0 0.5em;
 	padding: 0 1em;
 	text-align: center;
-	top: 1.5em;
 }
 
 .lang { display: none; }
@@ -482,8 +481,7 @@ $building_icon_size: 14vw;
 	}
 
 	.quiz-default & {
-		padding-bottom: 8.5vw; // because of buttons absolute (for faux top-align)
-		top: 1.5em;
+		padding-bottom: 15vw; // because of buttons absolute (for faux top-align)
 		width: 48%;
 		img {
 			display: block;
@@ -492,7 +490,7 @@ $building_icon_size: 14vw;
 		button { position: absolute; }
 	}
 
-	& .caption {
+	.caption {
 		font-size: 0.35em;
 		padding-bottom: 15px;
 		text-align: center;
@@ -555,11 +553,11 @@ $building_icon_size: 14vw;
 	margin: 5px;
 	width: calc(16.666% - 10px);
 
-	@media screen and (max-width: 600px) {
+	@media screen and (max-width: 560px) {
 		width: calc(20% - 10px);
 	}
 
-	@media screen and (max-width: 410px) {
+	@media screen and (max-width: 380px) {
 		width: calc(25% - 10px);
 	}
 }

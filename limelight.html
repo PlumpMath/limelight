@@ -141,22 +141,24 @@
 			{{/if}}
 			{{#if shouldShowQuestions quizStep}}
 				{{#with quizQuestionData}}
-				<h3 class="question caps bold abs w100">{{q_text}}</h3>
+                <div class="vcenter">
+    				<h3 class="question caps bold">{{q_text}}</h3>
 
-                <div class="step-container flex-end vcenter">
-					<div class="step-choice">
-						{{#unless isQuizKiosk}}
-							<img src="{{quizImages null 1 'mobile'}}">
-							<div class="caption">{{imgCaption 1}}</div>
-						{{/unless}}
-        				<button type="button" value="{{a1_id}}">{{a1_text}}</button>
-                    </div>
-                    <div class="step-choice">
-						{{#unless isQuizKiosk}}
-							<img src="{{quizImages null 2 'mobile'}}">
-							<div class="caption">{{imgCaption 2}}</div>
-						{{/unless}}
-    					<button type="button" value="{{a2_id}}">{{a2_text}}</button>
+                    <div class="step-container flex-end">
+    					<div class="step-choice">
+    						{{#unless isQuizKiosk}}
+    							<img src="{{quizImages null 1 'mobile'}}">
+    							<div class="caption">{{imgCaption 1}}</div>
+    						{{/unless}}
+            				<button type="button" value="{{a1_id}}">{{a1_text}}</button>
+                        </div>
+                        <div class="step-choice">
+    						{{#unless isQuizKiosk}}
+    							<img src="{{quizImages null 2 'mobile'}}">
+    							<div class="caption">{{imgCaption 2}}</div>
+    						{{/unless}}
+        					<button type="button" value="{{a2_id}}">{{a2_text}}</button>
+                        </div>
                     </div>
                 </div>
 				{{/with}}
@@ -164,13 +166,14 @@
 
 
 			{{#if equals quizStep 12 }}
-				<h3 class="question caps bold {{selectedLanguage}}">
-					<div class="lang lang.en">My age is between...</div>
-					<div class="lang lang.fi">Ikäni on...</div>
-					<div class="lang lang.sv">Min ålder är mellan...</div>
-				</h3>
 
 				<div class="vcenter abs w100">
+                    <h3 class="question caps bold {{selectedLanguage}}">
+    					<div class="lang lang.en">My age is between...</div>
+    					<div class="lang lang.fi">Ikäni on...</div>
+    					<div class="lang lang.sv">Min ålder är mellan...</div>
+    				</h3>
+
 					<div id="emoji-container" class="cf">
 					<form>
 						<select id="quizTakerAge">
@@ -196,12 +199,13 @@
 			{{/if}}
 
 			{{#if equals quizStep 13 }}
-				<h3 class="question caps bold {{selectedLanguage}}">
-					<div class="lang lang.en">My name is...</div>
-					<div class="lang lang.fi">Minun nimeni on...</div>
-					<div class="lang lang.sv">Jag heter...</div>
-				</h3>
 				<div class="vcenter abs w100">
+                    <h3 class="question caps bold {{selectedLanguage}}">
+    					<div class="lang lang.en">My name is...</div>
+    					<div class="lang lang.fi">Minun nimeni on...</div>
+    					<div class="lang lang.sv">Jag heter...</div>
+    				</h3>
+
 					<div id="emoji-container" class="cf">
 					<form>
 						<input id="quiz-taker-name" type="text" placeholder="Type here..." class="aligncenter block w100" maxlength="64" required>
@@ -217,35 +221,39 @@
 			{{/if}}
 
 			{{#if equals quizStep 14 }}
-				<h3 class="question caps bold abs w100 {{selectedLanguage}}">
-					<div class="lang lang.en">Today I'm feeling...</div>
-					<div class="lang lang.fi">Voin tänään...</div>
-					<div class="lang lang.sv">I dag känner jag mig...</div>
-				</h3>
 				<div id="emoji-container" class="cf">
-				{{#each svgKeys}}
-					<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
-				{{/each}}
+                    <h3 class="question caps bold {{selectedLanguage}}">
+    					<div class="lang lang.en">Today I'm feeling...</div>
+    					<div class="lang lang.fi">Voin tänään...</div>
+    					<div class="lang lang.sv">I dag känner jag mig...</div>
+    				</h3>
+
+    				{{#each svgKeys}}
+    					<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
+    				{{/each}}
 				</div>
 			{{/if}}
 
 			{{#if equals quizStep 15 }}
-				<h3 class="question caps bold {{selectedLanguage}}">
-					<div class="lang lang.en">Please send me a link to my results by...</div>
-					<div class="lang lang.fi">Lähettäkää linkki tuloksiini...</div>
-					<div class="lang lang.sv">Skicka mig länken till mina resultat per...</div>
-				</h3>
 				<div class="vcenter abs w100">
+                    <h3 class="question caps bold {{selectedLanguage}}">
+    					<div class="lang lang.en">Please send me a link to my results by...</div>
+    					<div class="lang lang.fi">Lähettäkää linkki tuloksiini...</div>
+    					<div class="lang lang.sv">Skicka mig länken till mina resultat per...</div>
+    				</h3>
+
 					<div id="emoji-container" class="cf small-inputs">
 					<form>
 						<input id="quiz-taker-email" type="email" placeholder="Email here..." class="aligncenter block w100" required>
 						<input id="quiz-taker-twitter" type="text" placeholder="@twitter here..." class="aligncenter block w100" minlength="2" required>
-						<input id="quiz-taker-updateme" type="checkbox" value="updateme_true">
-						<div class="{{selectedLanguage}}">
-							<label for="quiz-taker-updateme" class="lang lang.en">Keep me updated on Guggenheim Helsinki by email</label>
-							<label for="quiz-taker-updateme" class="lang lang.fi">Haluan vastaanottaa Guggenheim Helsinki -museota koskevia tiedotteita</label>
-							<label for="quiz-taker-updateme" class="lang lang.sv">Skicka mig aktuell information om Guggenheim Helsingfors per e-post</label>
-						</div>
+                        <div class="clearfix">
+    						<input id="quiz-taker-updateme" type="checkbox" value="updateme_true">
+    						<div class="{{selectedLanguage}}">
+    							<label for="quiz-taker-updateme" class="lang lang.en">Keep me updated on Guggenheim Helsinki by email</label>
+    							<label for="quiz-taker-updateme" class="lang lang.fi">Haluan vastaanottaa Guggenheim Helsinki -museota koskevia tiedotteita</label>
+    							<label for="quiz-taker-updateme" class="lang lang.sv">Skicka mig aktuell information om Guggenheim Helsingfors per e-post</label>
+    						</div>
+                        </div>
 						<div class="{{selectedLanguage}}">
 							<button class="submit-quizTakerInfo block w100 lang lang.en">Submit</button>
 							<button class="submit-quizTakerInfo block w100 lang lang.fi">LLLähetä</button>
