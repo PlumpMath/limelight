@@ -583,12 +583,10 @@ if Meteor.isClient
 
 		endTime = new Date()
 
-		console.log Session.get("quizStepTimes")
 		qst = Session.get("quizStepTimes")
 		qsd = {}
 		for i in [2..globals.quizTotalSteps-1]
 			qsd["steps-" + i + "-" + (i+1)] = (qst["start-" + (i + 1)].getTime() - qst["start-" + i].getTime()) / 1000
-		console.log qsd
 
 		pointid = Meteor.call "insertPoint",
 			coords: coords
