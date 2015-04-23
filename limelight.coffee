@@ -788,13 +788,8 @@ Meteor.methods
 
 if(Meteor.isServer)
 	Meteor.methods
-		removeAllPoints: ->
-				Points.remove({})
-				QuizSessions.remove({})
-
 		getClientIp: ->
 			return this.connection.clientAddress
-
 
 		checkApi: (url) ->
 				this.unblock();
