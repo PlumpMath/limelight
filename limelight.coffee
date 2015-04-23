@@ -25,6 +25,14 @@ if Meteor.isClient
 		Session.set("img-1-caption", undefined)
 		Session.set("img-2-caption", undefined)
 
+		# we do this here (as opposed to at endQuiz) because this call is async and we want to give it enough time
+		Session.set("quizTakerIp", undefined)
+		Meteor.call "getClientIp", (err, res) ->
+			if(err)
+				console.log err.reason
+			else
+				Session.set("quizTakerIp", res)
+
 		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData"), Session.get("selected_language")
 
 	# given min and max bounds, map a number n
@@ -560,7 +568,6 @@ if Meteor.isClient
 
 		endTime = new Date()
 
-		console.log Meteor.call "getClientIp"
 
 		pointid = Meteor.call "insertPoint",
 			coords: coords
@@ -572,6 +579,7 @@ if Meteor.isClient
 			quizTakerEmail: Session.get("quizTakerEmail")
 			quizTakerTwitter: Session.get("quizTakerTwitter")
 			quizTakerUpdateme: Session.get("quizTakerUpdateme")
+			quizTakerIp: Session.get("quizTakerIp")
 			quizTime: endTime
 			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
 			closestFinalist: closestFinalist
