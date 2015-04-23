@@ -21,9 +21,15 @@ if Meteor.isClient
 		Session.set("emoji_id", undefined)
 		Session.set("selected_language", undefined)
 		Session.set("quizStartTime", undefined)
+		Session.set("img-2-img", undefined)
+		Session.set("img-1-img", undefined)
 		Session.set("img-1-caption", undefined)
 		Session.set("img-2-caption", undefined)
 		Session.set("img-history", {})
+
+		Session.set("quizTakerName", undefined)
+		Session.set("quizTakerAge", undefined)
+		Session.set("quizTakerEmail", undefined)
 
 		# we do this here (as opposed to at endQuiz) because this call is async and we want to give it enough time
 		Session.set("quizTakerIp", undefined)
@@ -442,7 +448,7 @@ if Meteor.isClient
 			return tmp.innerHTML
 
 		pageCoord: (coords, axis) ->
-			pageFactor = 1 # x/100 of window width/height -- point will vary by up to
+			pageFactor = 0.5 # x/100 of window width/height -- point will vary by up to
 						   # this much in both directions
 			factor = 2 * pageFactor * ( Math.random() - 0.5 )
 			
@@ -450,7 +456,7 @@ if Meteor.isClient
 				coords[0],
 				globals[axis + 'CoordDomain'][0],
 				globals[axis + 'CoordDomain'][1]
-			) + factor
+			) # + factor
 
 		Template.point.rendered = ->
 
