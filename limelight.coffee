@@ -23,6 +23,7 @@ if Meteor.isClient
 		Session.set("quizStartTime", undefined)
 		Session.set("img-1-caption", undefined)
 		Session.set("img-2-caption", undefined)
+		Session.set("img-history", {})
 
 		# we do this here (as opposed to at endQuiz) because this call is async and we want to give it enough time
 		Session.set("quizTakerIp", undefined)
@@ -163,8 +164,16 @@ if Meteor.isClient
 
 					Session.set("img-" + num + "-caption", captionDecoded)
 
+				imghistory = Session.get("img-history")
+				if(num == 1) 
+					imghistory["img-" + data.next_question[0].q_id  + "-" + data.next_question[0].a1_id] = imgurl
+				else
+					imghistory["img-" + data.next_question[0].q_id  + "-" + data.next_question[0].a2_id] = imgurl
+				Session.set("img-history", imghistory)
+
 				Session.set("img-" + num + "-img", imgurl)
 				return imgurl
+
 		return Session.get("img-" + num + "-img")
 
 	# Helper vars
@@ -572,6 +581,7 @@ if Meteor.isClient
 			coords: coords
 			emoji_id: Session.get('emoji_id')
 			quizHistory: Session.get("quizHistory")
+			imgHistory: Session.get('img-history')
 			quizDevice: ( Session.get('quizDevice') || 'default' )
 			quizTakerName: Session.get("quizTakerName")
 			quizTakerAge: Session.get("quizTakerAge")
@@ -588,7 +598,7 @@ if Meteor.isClient
 			$(".bitlyurl").html(data)
 
 		document.body.style.backgroundImage = ''
-		if(Session.get('quizDevice') == "default")
+		if((Session.get('quizDevice') || 'default') == "default")
 			console.log "yeah we're default"
 			Router.go('pindrop', {},  { hash: pointid })
 		else
