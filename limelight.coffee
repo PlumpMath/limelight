@@ -1,7 +1,5 @@
 Points = new Mongo.Collection("points")
 QuizSessions = new Mongo.Collection("quizsessions")
-@qs = QuizSessions
-@pts = Points
 
 if Meteor.isClient
 
@@ -18,12 +16,28 @@ if Meteor.isClient
 		Session.set("quizDevice", that.quizDevice)
 		# all of these will be set during the quiz
 		Session.set("currentApiData", undefined)
-		Session.set("insertedPoint", undefined)
 		Session.set("emoji_id", undefined)
 		Session.set("selected_language", undefined)
 		Session.set("quizStartTime", undefined)
+		Session.set("img-2-img", undefined)
+		Session.set("img-1-img", undefined)
 		Session.set("img-1-caption", undefined)
 		Session.set("img-2-caption", undefined)
+		Session.set("img-history", {})
+		Session.set("quizStepTimes", {})
+		Session.set("quizStepDurations", {})
+
+		Session.set("quizTakerName", undefined)
+		Session.set("quizTakerAge", undefined)
+		Session.set("quizTakerEmail", undefined)
+
+		# we do this here (as opposed to at endQuiz) because this call is async and we want to give it enough time
+		Session.set("quizTakerIp", undefined)
+		Meteor.call "getClientIp", (err, res) ->
+			if(err)
+				console.log err.reason
+			else
+				Session.set("quizTakerIp", res)
 
 		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData"), Session.get("selected_language")
 
@@ -152,10 +166,20 @@ if Meteor.isClient
 						keydir = data.next_question[0].q_id + "/" + data.next_question[0].a2_id + "/"
 					imgfile = _.sample(globals.conceptimgs_mobile_img_filenames[keydir])
 					imgurl = globals.conceptimgs_mobile_img_dir = "/img/conceptimgs-mobile/" + keydir + imgfile
-					Session.set("img-" + num + "-caption", imgfile.split(".")[0])
+					captionDecoded = $("<div/>").html(imgfile.split(".")[0]).text() #for the degree symbol
+
+					Session.set("img-" + num + "-caption", captionDecoded)
+
+				imghistory = Session.get("img-history") || {}
+				if(num == 1) 
+					imghistory["img-" + data.next_question[0].q_id  + "-" + data.next_question[0].a1_id] = imgurl
+				else
+					imghistory["img-" + data.next_question[0].q_id  + "-" + data.next_question[0].a2_id] = imgurl
+				Session.set("img-history", imghistory)
 
 				Session.set("img-" + num + "-img", imgurl)
 				return imgurl
+
 		return Session.get("img-" + num + "-img")
 
 	# Helper vars
@@ -424,15 +448,14 @@ if Meteor.isClient
 			return tmp.innerHTML
 
 		pageCoord: (coords, axis) ->
-			pageFactor = 1 # x/100 of window width/height -- point will vary by up to
+			pageFactor = 0.5 # x/100 of window width/height -- point will vary by up to
 						   # this much in both directions
 			factor = 2 * pageFactor * ( Math.random() - 0.5 )
-			
-			return remap(
-				coords[0],
-				globals[axis + 'CoordDomain'][0],
-				globals[axis + 'CoordDomain'][1]
-			) + factor
+		
+			if(axis == 'x')
+				return remap(coords[0], globals.xCoordDomain[0], globals.xCoordDomain[1]) + factor
+			else 
+				return remap(coords[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) + factor
 
 		Template.point.rendered = ->
 
@@ -558,27 +581,34 @@ if Meteor.isClient
 
 		endTime = new Date()
 
-		console.log Meteor.call "getClientIp"
+		qst = Session.get("quizStepTimes")
+		qsd = {}
+		for i in [2..globals.quizTotalSteps-1]
+			qsd["steps-" + i + "-" + (i+1)] = (qst["start-" + (i + 1)].getTime() - qst["start-" + i].getTime()) / 1000
 
 		pointid = Meteor.call "insertPoint",
 			coords: coords
 			emoji_id: Session.get('emoji_id')
 			quizHistory: Session.get("quizHistory")
+			imgHistory: Session.get('img-history')
 			quizDevice: ( Session.get('quizDevice') || 'default' )
 			quizTakerName: Session.get("quizTakerName")
 			quizTakerAge: Session.get("quizTakerAge")
 			quizTakerEmail: Session.get("quizTakerEmail")
 			quizTakerTwitter: Session.get("quizTakerTwitter")
 			quizTakerUpdateme: Session.get("quizTakerUpdateme")
+			quizTakerIp: Session.get("quizTakerIp")
+			quizTakerLanguage: Session.get("selected_language")
 			quizTime: endTime
 			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
+			quizStepDuration: qsd
 			closestFinalist: closestFinalist
 
 		$.get globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid)), (data) ->
 			$(".bitlyurl").html(data)
 
 		document.body.style.backgroundImage = ''
-		if(Session.get('quizDevice') == "default")
+		if((Session.get('quizDevice') || 'default') == "default")
 			console.log "yeah we're default"
 			Router.go('pindrop', {},  { hash: pointid })
 		else
@@ -587,6 +617,17 @@ if Meteor.isClient
 				Router.go('quiz', { quizDevice: Session.get('quizDevice') })
 			)
 
+	addStepSaveTimeUpdateApi = ->
+		Session.set("quizStep", Session.get("quizStep") + 1)
+
+		qst = Session.get("quizStepTimes") || {}
+		qst["start-" + Session.get("quizStep")] = new Date()
+		Session.set("quizStepTimes", qst)
+
+		updateFromApi(Session.get("apiUrl"), () ->
+			$('.step').fadeIn(150)
+		)
+
 	Template.quiz.events
 
 		"click button.language-choice": (event) ->
@@ -594,13 +635,10 @@ if Meteor.isClient
 			renderQuizBG()
 			button_value = event.target.value
 			Session.set('selected_language', button_value)
-			Session.set("quizStep", Session.get("quizStep") + 1)
 			Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + "/")
 			Session.set("quizStartTime", new Date())
 
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 
 		"click .step-choice button": (event) ->
 
@@ -614,8 +652,6 @@ if Meteor.isClient
 			# disable button until re-enabled with new data
 			$('.step-choice button').prop('disabled', true);
 
-
-
 			$('.step').fadeOut(150, () ->
 				# clear the images until new ones come along
 				Session.set("img-2-img", undefined)
@@ -627,11 +663,7 @@ if Meteor.isClient
 				Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + ">" + qH.join(">") + "/")
 				Session.set("quizHistory", qH)
 
-				Session.set("quizStep", Session.get("quizStep") + 1)
-
-				updateFromApi(Session.get("apiUrl"), () ->
-					$('.step').fadeIn(150)
-				)
+				addStepSaveTimeUpdateApi()
 			)
 
 		"click button.delete": ->
@@ -655,10 +687,7 @@ if Meteor.isClient
 			emoji_id = (+this.toString()) - 1
 			Session.set("emoji_id", emoji_id)
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 
 
 		"click button.submit-quizTakerAge": (event) ->
@@ -666,10 +695,7 @@ if Meteor.isClient
 			renderQuizBG()
 			Session.set("quizTakerAge", $('#quizTakerAge').val())
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 
 
 		"click .submit-quizTakerName": (event) ->
@@ -677,10 +703,7 @@ if Meteor.isClient
 			renderQuizBG()
 			Session.set("quizTakerName", $('#quiz-taker-name').val())
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 
 
 		"click .skip-quizTaker-info": (event) ->
@@ -690,10 +713,7 @@ if Meteor.isClient
 			Session.set("quizTakerTwitter", "SKIP")
 			Session.set("quizTakerUpdateme", "SKIP") #'SKIP' to distinguish between just a blank, which can be confusing when looking at the data later
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 			endQuiz()
 
 		"click .submit-quizTaker-info": (event) ->
@@ -703,10 +723,7 @@ if Meteor.isClient
 			Session.set("quizTakerTwitter", $('#quiz-taker-twitter').val())
 			Session.set("quizTakerUpdateme", $('#quiz-taker-updateme').val())
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 			endQuiz()
 
 
@@ -749,6 +766,7 @@ if Meteor.isClient
 	Template.projection.rendered = ->
 		if (!this._rendered)
 			for filename in globals.conceptimgs_img_filenames
+				#js img preloading
 				tempimage = new Image()
 				tempimage.src = globals.conceptimgs_projection_img_dir + filename
 			this._rendered = true;
@@ -785,12 +803,8 @@ Meteor.methods
 
 if(Meteor.isServer)
 	Meteor.methods
-		removeAllPoints: ->
-				Points.remove({})
-				QuizSessions.remove({})
-
 		getClientIp: ->
-			return this.connection.clientAddress;
+			return this.connection.clientAddress
 
 		checkApi: (url) ->
 				this.unblock();

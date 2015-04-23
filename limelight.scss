@@ -342,8 +342,6 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 		margin-left: -17px;
 		position: absolute;
 		top: 0;
-
-		* { transition: 0.1s fill; }
 	}
 
 	&.brand-new {
@@ -462,7 +460,7 @@ $building_icon_size: 14vw;
 }
 
 .question {
-	@include fontVW(4, 40, 28);
+	@include fontVW(4, 40, 24);
 	margin: 0 0 0.5em;
 	padding: 0 1em;
 	text-align: center;
@@ -492,7 +490,7 @@ $building_icon_size: 14vw;
 
 .step-choice {
 	display: block;
-	@include fontVW(4.167, 40, 18);
+	@include fontVW(4.167, 40, 17);
 	margin-left: auto;
 	margin-right: auto;
 	max-width: 600px;
