@@ -516,8 +516,19 @@ if Meteor.isClient
 			)
 
 
+	Template.quiz.rendered = ->
+		renderQuizBG()
+		if (!this._rendered)
+			all_mobileimgs = _.flatten _.map globals.conceptimgs_mobile_img_filenames, (d, k) ->
+				return _.map d, (d) ->
+					return k + d
+			for filename in all_mobileimgs
+				#js img preloading
+				tempimage = new Image()
+				tempimage.src = globals.conceptimgs_mobile_img_dir + filename
+			this._rendered = true;
 
-	Template.quiz.rendered = renderQuizBG
+
 
 	Template.quiz.helpers
 
