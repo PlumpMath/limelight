@@ -152,7 +152,9 @@ if Meteor.isClient
 						keydir = data.next_question[0].q_id + "/" + data.next_question[0].a2_id + "/"
 					imgfile = _.sample(globals.conceptimgs_mobile_img_filenames[keydir])
 					imgurl = globals.conceptimgs_mobile_img_dir = "/img/conceptimgs-mobile/" + keydir + imgfile
-					Session.set("img-" + num + "-caption", imgfile.split(".")[0])
+					captionDecoded = $("<div/>").html(imgfile.split(".")[0]).text() #for the degree symbol
+
+					Session.set("img-" + num + "-caption", captionDecoded)
 
 				Session.set("img-" + num + "-img", imgurl)
 				return imgurl
@@ -749,6 +751,7 @@ if Meteor.isClient
 	Template.projection.rendered = ->
 		if (!this._rendered)
 			for filename in globals.conceptimgs_img_filenames
+				#js img preloading
 				tempimage = new Image()
 				tempimage.src = globals.conceptimgs_projection_img_dir + filename
 			this._rendered = true;

@@ -59,7 +59,7 @@ globals.conceptimgs_mobile_img_filenames = {
 	"historyfuture/future/": ["GH-3722319208.png", "GH-4451591216.png", "GH-9134107803.png", "Jorge Mutis (US).png"],
 	"historyfuture/history/": ["Daniele Cappelletti (IT).png", "GH-1558702318.png", "Pedro Duarte Bento (US).png", "Pedro Duarte Bento_(US).png"],
 	"stoic/iconic/": ["GH-88944825.png", "SPACE (IN).png", "Zhu Wenyi (CN).png"],
-	"stoic/stoic/": ["70˚ Arkitektur (NO).png", "GH-3121761363.png", "Watson Architecture + Design (AU).png"],
+	"stoic/stoic/": ["70&deg; Arkitektur (NO).png", "GH-3121761363.png", "Watson Architecture + Design (AU).png"],
 	"sunrisesunset/sunrise/": ["GH-6632329199.png", "Haiko Cornelissen Architecten (US).png"],
 	"sunrisesunset/sunset/": ["GH-7034052661.png", "LAT19 (MX).png"],
 	"sustainable/must_be_sustainable/": ["Arthur Cotton Moore Associates (US).png", "Kengo Kuma & Associates (JP).png"],
