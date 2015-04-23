@@ -26,6 +26,8 @@ if Meteor.isClient
 		Session.set("img-1-caption", undefined)
 		Session.set("img-2-caption", undefined)
 		Session.set("img-history", {})
+		Session.set("quizStepTimes", {})
+		Session.set("quizStepDurations", {})
 
 		Session.set("quizTakerName", undefined)
 		Session.set("quizTakerAge", undefined)
@@ -170,7 +172,7 @@ if Meteor.isClient
 
 					Session.set("img-" + num + "-caption", captionDecoded)
 
-				imghistory = Session.get("img-history")
+				imghistory = Session.get("img-history") || {}
 				if(num == 1) 
 					imghistory["img-" + data.next_question[0].q_id  + "-" + data.next_question[0].a1_id] = imgurl
 				else
@@ -581,6 +583,12 @@ if Meteor.isClient
 
 		endTime = new Date()
 
+		console.log Session.get("quizStepTimes")
+		qst = Session.get("quizStepTimes")
+		qsd = {}
+		for i in [2..globals.quizTotalSteps-1]
+			qsd["steps-" + i + "-" + (i+1)] = (qst["start-" + (i + 1)].getTime() - qst["start-" + i].getTime()) / 1000
+		console.log qsd
 
 		pointid = Meteor.call "insertPoint",
 			coords: coords
@@ -597,6 +605,7 @@ if Meteor.isClient
 			quizTakerLanguage: Session.get("selected_language")
 			quizTime: endTime
 			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
+			quizStepDuration: qsd
 			closestFinalist: closestFinalist
 
 		$.get globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid)), (data) ->
@@ -612,6 +621,17 @@ if Meteor.isClient
 				Router.go('quiz', { quizDevice: Session.get('quizDevice') })
 			)
 
+	addStepSaveTimeUpdateApi = ->
+		Session.set("quizStep", Session.get("quizStep") + 1)
+
+		qst = Session.get("quizStepTimes") || {}
+		qst["start-" + Session.get("quizStep")] = new Date()
+		Session.set("quizStepTimes", qst)
+
+		updateFromApi(Session.get("apiUrl"), () ->
+			$('.step').fadeIn(150)
+		)
+
 	Template.quiz.events
 
 		"click button.language-choice": (event) ->
@@ -619,13 +639,10 @@ if Meteor.isClient
 			renderQuizBG()
 			button_value = event.target.value
 			Session.set('selected_language', button_value)
-			Session.set("quizStep", Session.get("quizStep") + 1)
 			Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + "/")
 			Session.set("quizStartTime", new Date())
 
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 
 		"click .step-choice button": (event) ->
 
@@ -639,8 +656,6 @@ if Meteor.isClient
 			# disable button until re-enabled with new data
 			$('.step-choice button').prop('disabled', true);
 
-
-
 			$('.step').fadeOut(150, () ->
 				# clear the images until new ones come along
 				Session.set("img-2-img", undefined)
@@ -652,11 +667,7 @@ if Meteor.isClient
 				Session.set("apiUrl", globals.apiBaseUrl + ">" + Session.get('selected_language') + ">" + qH.join(">") + "/")
 				Session.set("quizHistory", qH)
 
-				Session.set("quizStep", Session.get("quizStep") + 1)
-
-				updateFromApi(Session.get("apiUrl"), () ->
-					$('.step').fadeIn(150)
-				)
+				addStepSaveTimeUpdateApi()
 			)
 
 		"click button.delete": ->
@@ -680,10 +691,7 @@ if Meteor.isClient
 			emoji_id = (+this.toString()) - 1
 			Session.set("emoji_id", emoji_id)
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 
 
 		"click button.submit-quizTakerAge": (event) ->
@@ -691,10 +699,7 @@ if Meteor.isClient
 			renderQuizBG()
 			Session.set("quizTakerAge", $('#quizTakerAge').val())
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 
 
 		"click .submit-quizTakerName": (event) ->
@@ -702,10 +707,7 @@ if Meteor.isClient
 			renderQuizBG()
 			Session.set("quizTakerName", $('#quiz-taker-name').val())
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 
 
 		"click .skip-quizTaker-info": (event) ->
@@ -715,10 +717,7 @@ if Meteor.isClient
 			Session.set("quizTakerTwitter", "SKIP")
 			Session.set("quizTakerUpdateme", "SKIP") #'SKIP' to distinguish between just a blank, which can be confusing when looking at the data later
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 			endQuiz()
 
 		"click .submit-quizTaker-info": (event) ->
@@ -728,10 +727,7 @@ if Meteor.isClient
 			Session.set("quizTakerTwitter", $('#quiz-taker-twitter').val())
 			Session.set("quizTakerUpdateme", $('#quiz-taker-updateme').val())
 
-			Session.set("quizStep", Session.get("quizStep") + 1)
-			updateFromApi(Session.get("apiUrl"), () ->
-				$('.step').fadeIn(150)
-			)
+			addStepSaveTimeUpdateApi()
 			endQuiz()
 
 
