@@ -887,3 +887,9 @@ Router.map ->
 			$('body').removeClass('projection')
 		data: ->
 			return { quizDevice : this.params.quizDevice }
+
+Router.route('/api/v1/points', () ->
+	this.response.end JSON.stringify(Points.find({}, {sort:{quizTime: -1}}).fetch())
+, {where: 'server'})
+
+
