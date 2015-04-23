@@ -18,7 +18,6 @@ if Meteor.isClient
 		Session.set("quizDevice", that.quizDevice)
 		# all of these will be set during the quiz
 		Session.set("currentApiData", undefined)
-		Session.set("insertedPoint", undefined)
 		Session.set("emoji_id", undefined)
 		Session.set("selected_language", undefined)
 		Session.set("quizStartTime", undefined)
@@ -580,6 +579,7 @@ if Meteor.isClient
 			quizTakerTwitter: Session.get("quizTakerTwitter")
 			quizTakerUpdateme: Session.get("quizTakerUpdateme")
 			quizTakerIp: Session.get("quizTakerIp")
+			quizTakerLanguage: Session.get("selected_language")
 			quizTime: endTime
 			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
 			closestFinalist: closestFinalist
