@@ -839,6 +839,9 @@ pindropOnStop = () ->
 	$('body').removeClass(theClass)
 	$('body').removeClass('preload')
 
+Router.configure
+	trackPageView: true
+
 Router.map ->
 
 	this.route 'pindropExhibit',
