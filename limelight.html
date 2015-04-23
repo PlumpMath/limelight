@@ -1,6 +1,22 @@
 <head>
-  <title>limelight</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:title" content="Guggenheim Helsinki Now Matchmaker">
+    <meta property="og:image" content="http://app.designguggenheimhelsinki.org/img/GHN_facebook_Good.png">
+    <meta property="og:image:width" content="851">
+    <meta property="og:image:height" content="315">
+
+    <link rel="shortcut icon" href="/img/favicon/favicon-96x96.png">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/favicon/apple-icon-precomposed.png">
+
+    <title>Guggenheim Helsinki Now</title>
 </head>
 
 <body>
@@ -16,10 +32,10 @@
 
 
 <template name="point">
-	<div class="point loading {{pointClasses _id}}" data-id="{{_id}}" style="left: {{pageX}}vw; top: {{pageY}}vh;">
+	<div class="point loading" data-id="{{_id}}" style="left: {{pageCoord coords 'x'}}vw; top: {{pageCoord coords 'y'}}vh;" data-quizTime="{{ quizTime }}" data-quizTakerName="{{quizTakerName}}" data-quizTakerAge="{{quizTakerAge}}">
 		{{{generateEmoji emoji_id closestFinalist}}}
 		<span class="quiz-taker-preview">{{quizTakerName}}</span>
-        <p class="quiz-taker">{{quizTakerName}}, {{quizTakerAge}}, {{timeFormat quizTime}}</p>
+        <p class="quiz-taker">{{quizTakerName}}<br>{{quizTakerAge}}<br>{{timeFormat quizTime}}</p>
 	</div>
 </template>
 
@@ -37,33 +53,51 @@
         <div class="logo corner corner-right corner-bottom">
             <img src="/img/GHN_logo.svg">
         </div>
-		<div class="about corner corner-right corner-top sans"><span data-modal="about">About</span> | <span data-modal="policy">Policy</span> <span class="fb_icon icon"><img src="/img/fb_icon_black.svg"></span> <span class="twitter_icon icon"><img src="/img/twitter_icon_black.svg"></span></div>
+		<div class="about corner corner-right corner-top sans">
+            <span data-modal="about">About</span> |
+            <span data-modal="policy">Policy</span>
+            <span class="fb_icon icon">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%2Fquiz" class="popup">
+                    <img src="/img/fb_icon_black.svg">
+                </a>
+            </span>
+            <span class="twitter_icon icon">
+                <a href="https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2Fquiz&original_referer=Guggenheim_HKI" class="popup">
+                    <img src="/img/twitter_icon_black.svg">
+                </a>
+            </span>
+    </div>
 
     <div id="modal-about">
         <div class="modal-container vcenter">
             <div class="close corner corner-top corner-right"><span>&#10005;</span></div>
             <div class="modal-content">
 				<h2 class="aligncenter caps">About</h2>
-				EN
-				If buildings had personalities, which of the six finalists of the Guggenheim Helsinki Design Competition would most closely resemble your own? This experimental game will ask you a series of playful questions to determine an understanding of your personality. Using a custom program developed for Guggenheim Helsinki Now, an exhibition at the Kunsthalle Helsinki from April 24–May 16, 2015, your result will be placed on a map including the six finalist proposals, suggesting your architectural match.
+				<div class="container">
+                    <div class="four twelve-s columns">
+                        <h3 class="aligncenter">EN</h3>
+        				<p>If buildings had personalities, which of the six finalists of the Guggenheim Helsinki Design Competition would most closely resemble your own? This experimental game will ask you a series of playful questions to determine an understanding of your personality. Using a custom program developed for Guggenheim Helsinki Now, an exhibition at the Kunsthalle Helsinki from April 24–May 16, 2015, your result will be placed on a map including the six finalist proposals, suggesting your architectural match.</p>
 
-				Credits
-				Hugo Liu, data scientist and taste researcher, Dan Taeyoung, technologist and architect, and Scott Donaldson, technologist and architect.
+        				<p>Credits<br>
+        				Hugo Liu, data scientist and taste researcher, Dan Taeyoung, technologist and architect, and Scott Donaldson, technologist and architect.</p>
+                    </div>
 
+                    <div class="four twelve-s columns">
+    				<h3 class="aligncenter">FI</h3>
+        				<p>Jos rakennuksilla olisi persoonat, mikä kuudesta finalistista muistuttaisi eniten omaasi? Tämä kokeellinen peli pyytää sinua vastaamaan leikkimielisiin kysymyksiin, jotka kuvaavat persoonaasi. Ohjelma sijoittaa sinut kuuden finalistin kartalle, jolloin näet mikä niistä muistuttaa eniten sinua.</p>
 
-				FI
-				Jos rakennuksilla olisi persoonat, mikä kuudesta finalistista muistuttaisi eniten omaasi? Tämä kokeellinen peli pyytää sinua vastaamaan leikkimielisiin kysymyksiin, jotka kuvaavat persoonaasi. Ohjelma sijoittaa sinut kuuden finalistin kartalle, jolloin näet mikä niistä muistuttaa eniten sinua.
+        				<p>Tekijät:<br>
+        				Tieto- ja makututkija Hugo Liu, teknologi ja arkkitehti Dan Taeyoung sekä teknologi ja arkkitehti Scott Donaldson.</p>
+                    </div>
 
-				Tekijät:
-				Tieto- ja makututkija Hugo Liu, teknologi ja arkkitehti Dan Taeyoung sekä teknologi ja arkkitehti Scott Donaldson.
+                    <div class="four twelve-s columns">
+                        <h3 class="aligncenter">SV</h3>
+        				<p>Om byggnader hade personlighet, så vilken av de sex finalisternas skulle närmast påminna om din egen? I det här experimentella spelet ska du svara på några lekfulla frågor om din personlighet. Programmet placerar dig på en karta där också de sex finalisterna är inprickade, och visar vilkenm som mest påminner om dig.</p>
 
-
-				SV
-				Om byggnader hade personlighet, så vilken av de sex finalisternas skulle närmast påminna om din egen? I det här experimentella spelet ska du svara på några lekfulla frågor om din personlighet. Programmet placerar dig på en karta där också de sex finalisterna är inprickade, och visar vilkenm som mest påminner om dig.
-
-				Upphovsmän:
-				Hugo Liu, datavetenskapsman och smakforskare och Dan Taeyoung, teknolog och arkitekt, och Scott Donaldson, teknolog och arkitekt.
-
+        				<p>Upphovsmän:<br>
+        				Hugo Liu, datavetenskapsman och smakforskare och Dan Taeyoung, teknolog och arkitekt, och Scott Donaldson, teknolog och arkitekt.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -73,22 +107,55 @@
             <div class="close corner corner-top corner-right"><span>&#10005;</span></div>
             <div class="modal-content">
 				<h2 class="aligncenter caps">Policy</h2>
-				  EN
-				  By playing The Matchmaker Game and identifying your name, you agree to have your results placed on a map that is accessible online and in the Guggenheim Helsinki Now exhibition, and used in connection with this exhibition and other Guggenheim programs, in any media, by THE Guggenheim and third parties. If you choose to provide your contact information, a link to your results will be sent to you. Please note that The Matchmaker Game is not specifically designed to be used by children. If you are under the age of 13, please obtain permission from your parent or guardian before playing.
-
-				    FI
-					Pelaamalla Matchmaker-peliä ja ilmoittamalla nimesi hyväksyt, että tuloksesi sijoitetaan kartalle, joka on nähtävissä verkossa ja Guggenheim Helsinki Now -näyttelyssä. Lisäksi Guggenheim ja kolmannet osapuolet voivat käyttää tuloksia tämän näyttelyn ja muiden Guggenheim-ohjelmien yhteydessä missä tahansa mediassa. Jos ilmoitat yhteystietosi, sinulle lähetetään linkki omiin tuloksiisi. Ota huomioon, että Matchmaker-peliä ei ole erityisesti suunniteltu lapsille. Jos et ole vielä täyttänyt 13, pyydä vanhempien tai holhoojan lupa pelaamiseen.
-
-					  SV
-					  Genom att spela spelet Matchmaker och meddela ditt namn ger du tillstånd till att dina resultat visas på en karta som är tillgänglig online och vid utställningen Guggenheim Helsinki Now och används i anknytning till denna utställning och andra Guggenheimevenemang, i alla medier, av Guggenheimstiftelsen och tredjeparter. Om du väljer att ange dina kontaktuppgifter, kommer du att få en länk till dina resultat. Observera att spelet Matchmaker inte är särskilt anpassat för barn. Be om tillstånd av en förälder eller förmyndare innan du börjar spela, om du är under 13 år.
+                    <div class="container">
+                        <div class="four twelve-s columns">
+                            <h3 class="aligncenter">EN</h3>
+                            <p>By playing The Matchmaker Game and identifying your name, you agree to have your results placed on a map that is accessible online and in the Guggenheim Helsinki Now exhibition, and used in connection with this exhibition and other Guggenheim programs, in any media, by THE Guggenheim and third parties. If you choose to provide your contact information, a link to your results will be sent to you. Please note that The Matchmaker Game is not specifically designed to be used by children. If you are under the age of 13, please obtain permission from your parent or guardian before playing.</p>
+                        </div>
 
 
-					  Website © 2015 The Solomon R. Guggenheim Foundation (SRGF). All rights reserved.
+                        <div class="four twelve-s columns">
+    				        <h3 class="aligncenter">FI</h3>
+        					<p>Pelaamalla Matchmaker-peliä ja ilmoittamalla nimesi hyväksyt, että tuloksesi sijoitetaan kartalle, joka on nähtävissä verkossa ja Guggenheim Helsinki Now -näyttelyssä. Lisäksi Guggenheim ja kolmannet osapuolet voivat käyttää tuloksia tämän näyttelyn ja muiden Guggenheim-ohjelmien yhteydessä missä tahansa mediassa. Jos ilmoitat yhteystietosi, sinulle lähetetään linkki omiin tuloksiisi. Ota huomioon, että Matchmaker-peliä ei ole erityisesti suunniteltu lapsille. Jos et ole vielä täyttänyt 13, pyydä vanhempien tai holhoojan lupa pelaamiseen.</p>
+                        </div>
 
+                        <div class="four twelve-s columns">
+                            <h3 class="aligncenter">SV</h3>
+                            <p>Genom att spela spelet Matchmaker och meddela ditt namn ger du tillstånd till att dina resultat visas på en karta som är tillgänglig online och vid utställningen Guggenheim Helsinki Now och används i anknytning till denna utställning och andra Guggenheimevenemang, i alla medier, av Guggenheimstiftelsen och tredjeparter. Om du väljer att ange dina kontaktuppgifter, kommer du att få en länk till dina resultat. Observera att spelet Matchmaker inte är särskilt anpassat för barn. Be om tillstånd av en förälder eller förmyndare innan du börjar spela, om du är under 13 år.</p>
+                        </div>
+
+                  </div>
+                    <p class="aligncenter">Website &copy; 2015 The Solomon R. Guggenheim Foundation (SRGF). All rights reserved.</p>
 
 			</div>
         </div>
-    </div>
+	</div>
+
+    <div id="modal-infobox">
+        <div class="modal-container vcenter modal-small">
+            <div class="close corner corner-top corner-right"><span>&#10005;</span></div>
+            <div class="modal-content">
+				<div data-quizTakerName data-fill></div>
+                <div data-quizTakerAge data-fill></div>
+                <div data-quizTime data-fill></div><br><br>
+                <p>Share on</p>
+                <div>
+                    <span class="fb_icon icon">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23quiz" class="popup">
+                            <img src="/img/fb_icon_black.svg">
+                        </a>
+                    </span>
+                    <span class="twitter_icon icon">
+                        <a href="https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2Fquiz" class="popup">
+                            <img src="/img/twitter_icon_black.svg">
+                        </a>
+                    </span>
+                </div>
+			</div>
+		</div>
+	</div>
+
+
 </template>
 
 <template name="quiz">
@@ -109,20 +176,24 @@
 			{{/if}}
 			{{#if shouldShowQuestions quizStep}}
 				{{#with quizQuestionData}}
-				<h3 class="question caps bold abs w100">{{q_text}}</h3>
+                <div class="vcenter">
+    				<h3 class="question caps bold">{{q_text}}</h3>
 
-                <div class="step-container flex-end vcenter">
-					<div class="step-choice">
-						{{#unless isQuizKiosk}}
-							<img src="{{quizImages null 1 'mobile'}}">
-						{{/unless}}
-        				<button type="button" value="{{a1_id}}">{{a1_text}}</button>
-                    </div>
-                    <div class="step-choice">
-						{{#unless isQuizKiosk}}
-							<img src="{{quizImages null 2 'mobile'}}">
-						{{/unless}}
-    					<button type="button" value="{{a2_id}}">{{a2_text}}</button>
+                    <div class="step-container flex-end">
+    					<div class="step-choice">
+    						{{#unless isQuizKiosk}}
+    							<img src="{{quizImages null 1 'mobile'}}">
+    							<div class="caption">{{imgCaption 1}}</div>
+    						{{/unless}}
+            				<button type="button" value="{{a1_id}}">{{a1_text}}</button>
+                        </div>
+                        <div class="step-choice">
+    						{{#unless isQuizKiosk}}
+    							<img src="{{quizImages null 2 'mobile'}}">
+    							<div class="caption">{{imgCaption 2}}</div>
+    						{{/unless}}
+        					<button type="button" value="{{a2_id}}">{{a2_text}}</button>
+                        </div>
                     </div>
                 </div>
 				{{/with}}
@@ -130,74 +201,135 @@
 
 
 			{{#if equals quizStep 12 }}
-					<h3 class="question caps bold">My age is between...</h3>
-                    <div class="vcenter abs w100">
-						<div id="emoji-container" class="cf">
-						<form>
-							<select id="quizTakerAge">
-								<option value="0-10">0-10</option>
-								<option value="10-20">10-20</option>
-								<option value="20-30">20-30</option>
-								<option value="30-40">30-40</option>
-								<option value="40-50">40-50</option>
-								<option value="50-60">50-60</option>
-								<option value="60-70">60-70</option>
-								<option value="70-80">70-80</option>
-								<option value="80+">80+</option>
-							</select>
-							<input type="submit" value="Submit" class="submit-quizTakerAge block w100">
-						</form>
+
+				<div class="vcenter abs w100">
+                    <h3 class="question caps bold {{selectedLanguage}}">
+    					<div class="lang lang.en">My age is between...</div>
+    					<div class="lang lang.fi">Ikäni on...</div>
+    					<div class="lang lang.sv">Min ålder är mellan...</div>
+    				</h3>
+
+					<div id="emoji-container" class="cf">
+					<form>
+						<select id="quizTakerAge">
+							<option value="0-10">0-10</option>
+							<option value="10-20">10-20</option>
+							<option value="20-30">20-30</option>
+							<option value="30-40">30-40</option>
+							<option value="40-50">40-50</option>
+							<option value="50-60">50-60</option>
+							<option value="60-70">60-70</option>
+							<option value="70-80">70-80</option>
+							<option value="80+">80+</option>
+						</select>
+						<div class="{{selectedLanguage}}">
+							<button class="submit-quizTakerAge block w100 lang lang.en">Submit</button>
+							<button class="submit-quizTakerAge block w100 lang lang.fi">LLLähetä</button>
+							<button class="submit-quizTakerAge block w100 lang lang.sv">Skicka</button>
 						</div>
+
+					</form>
 					</div>
+				</div>
 			{{/if}}
 
 			{{#if equals quizStep 13 }}
-					<h3 class="question caps bold">My name is...</h3>
-                    <div class="vcenter abs w100">
-						<div id="emoji-container" class="cf">
-						<form>
-							<input id="quiz-taker-name" type="text" placeholder="Type here..." class="aligncenter block w100" maxlength="64" required>
-							<input type="submit" value="Submit" class="submit-quizTaker-name block w100">
-						</form>
+				<div class="vcenter abs w100">
+                    <h3 class="question caps bold {{selectedLanguage}}">
+    					<div class="lang lang.en">My name is...</div>
+    					<div class="lang lang.fi">Minun nimeni on...</div>
+    					<div class="lang lang.sv">Jag heter...</div>
+    				</h3>
+
+					<div id="emoji-container" class="cf">
+					<form>
+						<input id="quiz-taker-name" type="text" placeholder="Type here..." class="aligncenter block w100" maxlength="64" required>
+						<div class="{{selectedLanguage}}">
+							<button class="submit-quizTakerName block w100 lang lang.en">Submit</button>
+							<button class="submit-quizTakerName block w100 lang lang.fi">LLLähetä</button>
+							<button class="submit-quizTakerName block w100 lang lang.sv">Skicka</button>
 						</div>
+
+					</form>
 					</div>
+				</div>
 			{{/if}}
 
 			{{#if equals quizStep 14 }}
-				<h3 class="question caps bold abs w100">Today I'm feeling...
-					<div id="emoji-container" class="cf">
-					{{#each svgKeys}}
-						<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
-					{{/each}}
-					</div>
-				</h3>
+				<div id="emoji-container" class="cf">
+                    <h3 class="question caps bold {{selectedLanguage}}">
+    					<div class="lang lang.en">Today I'm feeling...</div>
+    					<div class="lang lang.fi">Voin tänään...</div>
+    					<div class="lang lang.sv">I dag känner jag mig...</div>
+    				</h3>
+
+    				{{#each svgKeys}}
+    					<img src="/img/emoji/{{this}}.svg" class="emoji" data-emoji_id="{{this}}">
+    				{{/each}}
+				</div>
 			{{/if}}
 
 			{{#if equals quizStep 15 }}
-				<h3 class="question caps bold">Please send me a link to my results</h3>
 				<div class="vcenter abs w100">
-					<div id="emoji-container" class="cf small-inputs">
-					<form>
-						<input id="quiz-taker-email" type="email" placeholder="Email here..." class="aligncenter block w100" required>
-						<input id="quiz-taker-twitter" type="text" placeholder="@twitter here..." class="aligncenter block w100">
-						<input id="quiz-taker-updateme" type="checkbox" value="updateme_true"><label for="quiz-taker-updateme">Keep me updated on Guggenheim Helsinki</label>
+                    <h3 class="question caps bold {{selectedLanguage}}">
+    					<div class="lang lang.en">Please send me a link to my results by...</div>
+    					<div class="lang lang.fi">Lähettäkää linkki tuloksiini...</div>
+    					<div class="lang lang.sv">Skicka mig länken till mina resultat per...</div>
+    				</h3>
 
-						<input type="submit" value="Submit" class="submit-quizTaker-info block w100">
-						<button class="skip-quizTaker-info block w100">Skip</button>
+					<div id="emoji-container" class="cf small-inputs">
+					<form novalidate>
+						<input id="quiz-taker-email" type="email" placeholder="Email here..." class="aligncenter block w100" required>
+                        <div class="clearfix">
+    						<input id="quiz-taker-updateme" type="checkbox" value="updateme_true">
+    						<div class="{{selectedLanguage}}">
+    							<label for="quiz-taker-updateme" class="lang lang.en">Keep me updated on Guggenheim Helsinki by email</label>
+    							<label for="quiz-taker-updateme" class="lang lang.fi">Haluan vastaanottaa Guggenheim Helsinki -museota koskevia tiedotteita</label>
+    							<label for="quiz-taker-updateme" class="lang lang.sv">Skicka mig aktuell information om Guggenheim Helsingfors per e-post</label>
+    						</div>
+                        </div>
+						<div class="language {{selectedLanguage}}">
+							<button class="submit-quizTaker-info block w100 lang lang.en">Submit</button>
+							<button class="submit-quizTaker-info block w100 lang lang.fi">LLLähetä</button>
+							<button class="submit-quizTaker-info block w100 lang lang.sv">Skicka</button>
+						</div>
+
+						<button class="skip-quizTaker-info block w100 {{selectedLanguage}}">
+							<span class="lang lang.en">Skip</span>
+							<span class="lang lang.sv">Hoppa över</span>
+							<span class="lang lang.fi">Ohita</span>
+						</button>
 					</form>
 					</div>
 				</div>
 			{{/if}}
 
 			{{#if equals quizStep 16 }}
-				<h3 class="question caps bold">
-					THANKS FOR PLAYING! <br />
-					VISIT THE SCREEN TO SEE WHERE YOU LANDED ON THE MAP. <br /> <br />
-					YOU CAN SHARE <br />
-					YOUR RESULTS WITH THIS URL:<br /><br />
-					<div class="bitlyurl"></div>
+					<div class="lang lang.fi">Lähettäkää linkki tuloksiini...</div>
+					<div class="lang lang.sv">Skicka mig länken till mina resultat per...</div>
+				<h3 class="question caps bold {{selectedLanguage}}">
+					<div class="lang lang.en">
+						Thanks for playing! <br />
+						Visit the screen to your right to see where you landed on the map. <br />
+						You can share your results with this link: <br />
+						<div class="bitlyurl"></div>
+						<div style="display: none; ">Auto-restart in <span class="countdown"></span></div> <!-- countdown plugin requires a selector, so we need to make an invisible DOM element -->
+					</div>
+					<div class="lang lang.fi">
+						Kiitos osallistumisesta! <br />
+						Tarkista sijaintisi kartalla oikealla olevasta ruudusta.<br />
+						Voit lähettää tuloksesi tähän linkkiin:<br />
+						<div class="bitlyurl"></div>
+						<div style="display: none; ">Automaattinen käynnistys  <span class="countdown"></span></div> <!-- countdown plugin requires a selector, so we need to make an invisible DOM element -->
+					</div>
+					<div class="lang lang.sv">
+						Tack för att du spelade! <br />
+						Gå till skärmen till höger för att se var du hamnade på kartan.<br />
+						Du kan dela dina resultat med den här länken: <br />
+						<div class="bitlyurl"></div>
+						<div style="display: none; ">Startar automatiskt på nytt om <span class="countdown"></span></div> <!-- countdown plugin requires a selector, so we need to make an invisible DOM element -->
+					</div>
 				</h3>
-				<div style="display: none; ">AUTO-RESTART IN <span class="countdown"></span> SECS</div> <!-- countdown plugin requires a selector, so we need to make an invisible DOM element -->
 			{{/if}}
         </div>
 
@@ -205,7 +337,6 @@
 		{{#unless no_language_selected}}
 			<div class="restart corner corner-left corner-bottom">
 				<img class="alignleft" src="/img/restart.svg">
-				<!-- <button class="delete">Delete</button> -->
 			</div>
 		{{/unless}}
 
@@ -226,20 +357,32 @@
 	{{/if}}
 
 	{{#if equals quizStep 12}}  <!-- TO BE STYLED -->
-        <div class="step aligncenter">
-    		<h3>SELECT YOUR AGE!</h3>
+		<div class="step aligncenter">
+			<h3 class="{{selectedLanguage}}">
+				<div class="lang lang.en">My age is between...</div>
+				<div class="lang lang.fi">Ikäni on...</div>
+				<div class="lang lang.sv">Min ålder är mellan...</div>
+			</h3>
         </div>
 	{{/if}}
 
 	{{#if equals quizStep 13}}  <!-- TO BE STYLED -->
         <div class="step aligncenter">
-    		<h3>ENTER YOUR NAME!</h3>
+			<h3 class="{{selectedLanguage}}">
+				<div class="lang lang.en">My name is...</div>
+				<div class="lang lang.fi">Minun nimeni on...</div>
+				<div class="lang lang.sv">Jag heter...</div>
+			</h3>
         </div>
 	{{/if}}
 
 	{{#if equals quizStep 14}}  <!-- TO BE STYLED -->
         <div class="step aligncenter">
-    		<h3>CHOOSE YOUR AVATAR!</h3>
+			<h3 class="{{selectedLanguage}}">
+				<div class="lang lang.en">Today I'm feeling...</div>
+				<div class="lang lang.fi">Voin tänään...</div>
+				<div class="lang lang.sv">I dag känner jag mig...</div>
+			</h3>
         </div>
 	{{/if}}
 

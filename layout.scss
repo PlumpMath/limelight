@@ -1,0 +1,120 @@
+// ----- Breakpoints for responsive styles
+$break_large: 1200px;
+$break_medium: 1000px;
+$break_small: 800px;
+$break_small_very: 600px;
+$break_tiny: 480px;
+
+@mixin clearfix {
+    &:before,
+    &:after {
+        content: " "; /* 1 */
+        display: table; /* 2 */
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
+.clearfix { @include clearfix; }
+
+// Cribbed from Chris Coyier/CSS-Tricks: http://css-tricks.com/spacing-the-bottom-of-modules/
+@mixin normalize {
+    & > *:first-child,
+    & > *:first-child > *:first-child,
+    & > *:first-child > *:first-child > *:first-child {
+        margin-top: 0 !important;
+    }
+    & > *:last-child,
+    & > *:last-child > *:last-child,
+    & > *:last-child > *:last-child > *:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+.normalize { @include normalize; }
+
+.container {
+    display: flex;
+    &.stack {
+        flex-direction: column;
+    }
+
+    &.maintain {
+        flex-wrap: nowrap;
+    }
+
+    @media screen and (max-width: $break_small) {
+        flex-wrap: wrap;
+    }
+}
+
+$columns: 12;
+$gutter: 20px;
+@mixin column($num) {
+    flex: 0 1 calc((#{$num * 100% / $columns} - #{ ( $num * ( $columns - 1 ) * $gutter - $columns * ( $num - 1 ) * $gutter ) / $columns }));
+
+    @media screen and (max-width: $break_small) {
+        flex: 0 1 100%;
+        margin-right: 0;
+    }
+}
+
+@mixin column-small($num) {
+    @media screen and (max-width: $break_small) {
+        flex: 0 1 calc((#{$num * 100% / $columns} - #{ ( $num * ( $columns - 1 ) * 0.333 * $gutter - $columns * ( $num - 1 ) * 0.333 * $gutter ) / $columns })) !important;
+        margin-right: 0.333 * $gutter !important;
+
+        &:last-child {
+            margin-right: 0 !important;
+        }
+    }
+}
+
+.column,
+.columns {
+    margin-right: $gutter;
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    // for floating media only
+    &.alignright,
+    &.alignleft {
+        img {
+            width: 100%;
+        }
+    }
+}
+
+.one.column {
+    @include column(1);
+}
+
+.columns {
+    &.two { @include column(2); }
+    &.three { @include column(3); }
+    &.four { @include column(4); }
+    &.five { @include column(5); }
+    &.six { @include column(6); }
+    &.seven { @include column(7); }
+    &.eight { @include column(8); }
+    &.nine { @include column(9); }
+    &.ten { @include column(10); }
+    &.eleven { @include column(11); }
+    &.twelve { @include column(12); }
+}
+
+.one-s { @include column-small(1); }
+.two-s { @include column-small(2); }
+.three-s { @include column-small(3); }
+.four-s { @include column-small(4); }
+.five-s { @include column-small(5); }
+.six-s { @include column-small(6); }
+.seven-s { @include column-small(7); }
+.eight-s { @include column-small(8); }
+.nine-s { @include column-small(9); }
+.ten-s { @include column-small(10); }
+.eleven-s { @include column-small(11); }
+.twelve-s { @include column-small(12); }

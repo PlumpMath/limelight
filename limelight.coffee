@@ -22,7 +22,10 @@ if Meteor.isClient
 		Session.set("emoji_id", undefined)
 		Session.set("selected_language", undefined)
 		Session.set("quizStartTime", undefined)
-		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
+		Session.set("img-1-caption", undefined)
+		Session.set("img-2-caption", undefined)
+
+		Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData"), Session.get("selected_language")
 
 	# given min and max bounds, map a number n
 	# onto 0 --> 100
@@ -75,8 +78,36 @@ if Meteor.isClient
 			i += 1
 		return keys
 
-	showModal = (which) ->
-		$('#modal-' + which).fadeIn()
+	showModal = (which, cb) ->
+		# fade in the modal and execute a callback on it
+		# (for example to inject content)
+		modal = $('#modal-' + which)
+		modal.fadeIn()
+		if cb
+			cb(modal)
+
+	# wrapper specifically for the infobox
+	showModalInfobox = (point, _this) ->
+		showModal('infobox', ($modal) ->
+
+			# clear previous info
+			$modal.find('[data-fill]').html('')
+
+			attrs = point[0].attributes
+			for k, v of attrs
+				# now get the *real* key and value
+				key = v.name
+				value = v.value
+				if key && key.slice(0, 4) == 'data' && $modal.find('[' + key + ']')
+					$modal.find('[' + key + ']').html(value)
+					# parse date
+					if key.toLowerCase() == 'data-quiztime'
+						$modal.find('[' + key + ']').html(moment(value).format('MMM Do YYYY'))
+
+			# update FB and TW share links
+			$modal.find('.fb_icon a').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23' + _this._id)
+			$modal.find('.twitter_icon a').attr('href', 'https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2Fquiz%23' + _this._id)
+		)
 
 	scoreColorById = (id) ->
 		index = globals.submissionIdOrder.indexOf(id)
@@ -101,23 +132,27 @@ if Meteor.isClient
 			data = Session.get('currentApiData')
 		if(data?)
 
-			console.log data
 			if((Session.get("img-" + num + "-step") || '') != data.next_question[0].q_id)
 				Session.set("img-" + num + "-step", data.next_question[0].q_id)
 
 				if(projectionmobile == "projection")
 					imgurl = globals.conceptimgs_projection_img_dir
+					imgurl += data.next_question[0].q_id + "/"
+					if(num == 1)
+						imgurl += data.next_question[0].a1_id
+					else
+						imgurl += data.next_question[0].a2_id
+					imgurl += "-"
+					imgurl +=  _.random(1, globals.conceptimgs_img_count[data.next_question[0].q_id])
+					imgurl += ".png"
 				else
-					imgurl = globals.conceptimgs_mobile_img_dir
-
-				imgurl += data.next_question[0].q_id + "/"
-				if(num == 1)
-					imgurl += data.next_question[0].a1_id
-				else
-					imgurl += data.next_question[0].a2_id
-				imgurl += "-"
-				imgurl +=  _.random(1, globals.conceptimgs_img_count[data.next_question[0].q_id])
-				imgurl += ".png"
+					if(num == 1)
+						keydir = data.next_question[0].q_id + "/" + data.next_question[0].a1_id + "/"
+					else
+						keydir = data.next_question[0].q_id + "/" + data.next_question[0].a2_id + "/"
+					imgfile = _.sample(globals.conceptimgs_mobile_img_filenames[keydir])
+					imgurl = globals.conceptimgs_mobile_img_dir = "/img/conceptimgs-mobile/" + keydir + imgfile
+					Session.set("img-" + num + "-caption", imgfile.split(".")[0])
 
 				Session.set("img-" + num + "-img", imgurl)
 				return imgurl
@@ -142,6 +177,7 @@ if Meteor.isClient
 
 		"click .restart": (event) ->
 			$('.point').remove()
+			quizInit({ quizDevice: Session.get('quizDevice') })
 			Router.go('quiz', { quizDevice: this.quizDevice })
 
 		# show and hide the modal
@@ -151,6 +187,22 @@ if Meteor.isClient
 			target = $(event.target)
 			if target.attr('id') == event.currentTarget.id || target.closest('.close').length > 0
 				$(event.currentTarget).fadeOut()
+
+		"click .point": (event) ->
+
+			_this = this
+			point = $(event.target).closest('.point')
+
+			showModalInfobox(point, _this)
+
+			if !event.target.classList.contains('hoverLock')
+				$('.hoverLock').removeClass('hoverLock')
+				event.target.classList.add('hoverLock')
+				window.location = '#' + this._id
+			else
+				event.target.classList.remove('hoverLock')
+				window.location = '#'
+
 
 	makeRegexPattern = (quizDevice) ->
 		# make /pindrop/ipad* search for points from devices of ipad*
@@ -185,9 +237,9 @@ if Meteor.isClient
 					div.classList.add('building-icon')
 					# get how far left it is -- if too far to the right,
 					# the infobox shows up to the left instead of right
-					left = remap(guess.coord[0], -1.3, 1.6)
+					left = remap(guess.coord[0], globals.xCoordDomain[0], globals.xCoordDomain[1])
 					div.style.left = left + 'vw'
-					div.style.top = remap(guess.coord[1], -1.3, 1.4) + 'vh'
+					div.style.top = remap(guess.coord[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) + 'vh'
 					div.setAttribute('data-color', scoreColorById(guess.submission_id))
 					div.setAttribute('data-ghid', guess.submission_id)
 
@@ -197,7 +249,7 @@ if Meteor.isClient
 						infobox.style.left = '-100%'
 
 					buildingImg = document.createElement('img')
-					buildingImg.src = '/img/buildings/' + guess.submission_id + '.jpg'
+					buildingImg.src = '/img/buildings/' + guess.submission_id + '.png'
 
 					name = document.createElement('p')
 					name.innerHTML = globals.buildingNames[index]
@@ -217,32 +269,51 @@ if Meteor.isClient
 					deactivate = () ->
 						$(this).closest('.building-icon').removeClass('active').prependTo('body')
 
+					div.appendChild(svg)
+
 					for shape in buildingShapes
 						shape.attrs.fill = scoreColorById(guess.submission_id)
 						shape = makeSVGelement(svg, shape)
 
 						shape.addEventListener('mouseover', activate)
 						shape.addEventListener('mouseout', deactivate)
-
-					div.appendChild(svg)
-
-					$(div).on "click", () ->
-						window.open(globals.finalistBaseUrl + $(this).data("ghid"), "_blank")
+						shape.addEventListener('click', () ->
+							window.open(
+								globals.finalistBaseUrl + $(this).closest('.building-icon').data('ghid'),
+								'_blank'
+							)
+						)
 
 					document.body.insertBefore(div, document.body.firstChild)
 
-
-	highlightRecentPins = ->
-		pattern = makeRegexPattern(this.quizDevice)
-		recentPins =  Points.find(pattern, {sort:{quizTime: -1}, limit: 2}).map (point, index) ->
-			point.rank = index
-			return point
-
-		## HIGHLIGHT THESE PINS, in decreasing order
-		for pin in recentPins
-			console.log pin
-
 	Template.pindrop.rendered = ->
+
+		$('a.popup').click( (e) ->
+			e.preventDefault();
+			window.open(this.href, 'targetWindow',
+				'toolbar=no,
+				location=no,
+				status=no,
+				menubar=no,
+				scrollbars=yes,
+				resizable=yes,
+				width=600,
+				height=300');
+		)
+
+		checkBrandNew = () ->
+			$('.point').each(() ->
+				past = new Date(this.getAttribute('data-quiztime')).getTime()
+				now = new Date().getTime()
+
+				# if under 3 minutes old, it's brand new!
+				if (now - past) / (60 * 1000) <= 3
+					console.log('brand new')
+				else
+					this.classList.remove('brand-new')
+			)
+
+		setInterval(checkBrandNew, 10000)
 
 		if (!this._rendered)
 			this._rendered = true;
@@ -259,8 +330,6 @@ if Meteor.isClient
 			if e.keyCode == 27
 				$('[id^=modal]').fadeOut()
 		)
-
-		showModal('about')
 
 
 
@@ -302,7 +371,7 @@ if Meteor.isClient
 				Session.set("apiQuestionsDone", true)
 
 			# update quiz session for projection template
-			Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData")
+			Meteor.call "updateQuizSession", Session.get("quizDevice"), Session.get("quizStep"), Session.get("currentApiData"), Session.get("selected_language")
 
 			if(callback)
 				callback()
@@ -328,16 +397,6 @@ if Meteor.isClient
 		timeFormat: (time) ->
 			return moment(time).format('MMM Do YYYY')
 
-
-		pointClasses: (_id) ->
-			classes = ""
-			if(window.location.hash)
-				hash = window.location.hash.substring(1)
-				if(hash == _id)
-					classes += "hoverLock"
-			return classes
-
-
 		generateEmoji: (emoji_id, closestFinalist) ->
 
 			# create SVG element
@@ -356,17 +415,75 @@ if Meteor.isClient
 					shape.attrs.fill = color
 					makeSVGelement(svg, shape)
 
+			# should be ok to move points last in DOM order and leave them there
+			svg.setAttribute('onmouseover', "document.body.appendChild(this.parentNode)")
+
 			tmp = document.createElement("div")
 			tmp.appendChild(svg)
 
 			return tmp.innerHTML
 
+		pageCoord: (coords, axis) ->
+			pageFactor = 1 # x/100 of window width/height -- point will vary by up to
+						   # this much in both directions
+			factor = 2 * pageFactor * ( Math.random() - 0.5 )
+			
+			return remap(
+				coords[0],
+				globals[axis + 'CoordDomain'][0],
+				globals[axis + 'CoordDomain'][1]
+			) + factor
+
 		Template.point.rendered = ->
+
+			id = this.data._id
+			point = this.firstNode
+			quizTime = this.data.quizTime
+
+			if ( window.location.hash )
+				hash = window.location.hash.substring(1)
+				if (id == hash)
+					point.classList.add('hoverLock')
+					document.body.appendChild(point)
+					showModalInfobox($(point), this)
+
+			past = new Date(quizTime).getTime()
+			now = new Date().getTime()
+
+			# if under 3 minutes old, it's brand new!
+			if (now - past) / (60 * 1000) <= 3
+				point.classList.add('brand-new')
+			else
+				point.classList.remove('brand-new')
+
+			# if over 1 hour old, scale up to 0.5, stay there
+			stopAt = 72 # number of hours at which to stop scaling down (will stay at 0.5)
+
+			if past + 60 * 60 * 1000 < now
+
+				hours = (now - past) / (60 * 60 * 1000)
+
+				scaleFactor = remap(hours, 1, stopAt)
+				scaleFactor = 1 - (scaleFactor / 200)
+				if scaleFactor < 0.4
+					scaleFactor = 0.4
+
+				[].slice.call(point.children).forEach((el) ->
+					if el.classList.contains('emoji')
+						el.style.transform = 'scale(' + scaleFactor + ')'
+				)
+
+			# if the user just came from the quiz, highlight theirs
+			if Session.get('pointid') && id == Session.get('pointid')
+				point.classList.add('current-user')
+
+
 			$('.point').each((i) ->
 				_this = this
+
 				if i < 10
 					this.classList.add('recent')
-					this.children[1].style.opacity = i / 10
+					this.children[1].style.opacity = ( 10 - i ) / 10
 				else
 					this.classList.remove('recent')
 
@@ -386,6 +503,8 @@ if Meteor.isClient
 				quizInit(this)
 			return Session.get("quizStep")
 
+		selectedLanguage: () ->
+			return Session.get('selected_language')
 
 		shouldShowQuestions: (step) ->
 			if(step <= 1)
@@ -419,18 +538,19 @@ if Meteor.isClient
 		svgKeys: () ->
 			return svgKeys()
 
+		imgCaption: (num) ->
+			return Session.get("img-" + num + "-caption")
+
+
 		no_emoji_id: () ->
 			return !(Session.get('emoji_id')?)
 
 		no_language_selected: () ->
 			return !(Session.get('selected_language')?)
 
+
 	endQuiz = () ->
-		coord = Session.get("currentApiData").coord
-		# rough x coords domain: -0.8 to 1.1,
-		# y: -0.8 to 0.9
-		x = remap(coord[0], -0.8, 1.1)
-		y = remap(coord[1], -0.8, 0.9)
+		coords = Session.get("currentApiData").coord
 
 		closestFinalist = _.max(Session.get("currentApiData").guesses, (chr) ->
 			return chr.score
@@ -438,13 +558,13 @@ if Meteor.isClient
 
 		endTime = new Date()
 
+		console.log Meteor.call "getClientIp"
 
-		pointid = Points.insert
-			pageX: x
-			pageY: y
+		pointid = Meteor.call "insertPoint",
+			coords: coords
 			emoji_id: Session.get('emoji_id')
 			quizHistory: Session.get("quizHistory")
-			quizDevice: Session.get('quizDevice')
+			quizDevice: ( Session.get('quizDevice') || 'default' )
 			quizTakerName: Session.get("quizTakerName")
 			quizTakerAge: Session.get("quizTakerAge")
 			quizTakerEmail: Session.get("quizTakerEmail")
@@ -454,15 +574,13 @@ if Meteor.isClient
 			quizDuration: (endTime.getTime() - Session.get("quizStartTime").getTime()) / 1000
 			closestFinalist: closestFinalist
 
-		console.log(Meteor.absoluteUrl("#" + pointid))
-		console.log globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid))
 		$.get globals.bitlyApiUrl + encodeURIComponent(Meteor.absoluteUrl("#" + pointid)), (data) ->
-			console.log(data)
 			$(".bitlyurl").html(data)
 
 		document.body.style.backgroundImage = ''
 		if(Session.get('quizDevice') == "default")
-			Router.go('pindrop')
+			console.log "yeah we're default"
+			Router.go('pindrop', {},  { hash: pointid })
 		else
 			countdownTimer(".countdown", () ->
 				quizInit({ quizDevice: Session.get('quizDevice') })
@@ -496,7 +614,13 @@ if Meteor.isClient
 			# disable button until re-enabled with new data
 			$('.step-choice button').prop('disabled', true);
 
+
+
 			$('.step').fadeOut(150, () ->
+				# clear the images until new ones come along
+				Session.set("img-2-img", undefined)
+				Session.set("img-1-img", undefined)
+
 				qH = Session.get("quizHistory")
 				qH.push Session.get("currentApiData").next_question[0].q_id + "." + button_value
 
@@ -517,10 +641,12 @@ if Meteor.isClient
 				quizInit()
 
 		"click .restart": (event) ->
-
 			renderQuizBG()
 			quizInit({ quizDevice: Session.get('quizDevice') })
 			Router.go('quiz', { quizDevice: Session.get('quizDevice') })
+
+		"click .logo": (event) ->
+			Router.go('pindrop')
 
 		"click .emoji": (event) ->
 			# the data-id is of the form '01' to '24',
@@ -535,7 +661,7 @@ if Meteor.isClient
 			)
 
 
-		"click .submit-quizTakerAge": (event) ->
+		"click button.submit-quizTakerAge": (event) ->
 			event.preventDefault()
 			renderQuizBG()
 			Session.set("quizTakerAge", $('#quizTakerAge').val())
@@ -546,7 +672,7 @@ if Meteor.isClient
 			)
 
 
-		"click .submit-quizTaker-name": (event) ->
+		"click .submit-quizTakerName": (event) ->
 			event.preventDefault()
 			renderQuizBG()
 			Session.set("quizTakerName", $('#quiz-taker-name').val())
@@ -641,32 +767,52 @@ if Meteor.isClient
 		s.parentNode.insertBefore(wf, s)
 
 
-if Meteor.isServer
-	Meteor.methods
-		updateQuizSession: (thisdevice, thisquizstep, thisapidata) ->
-			QuizSessions.update(
-				{ quizdevice: thisdevice },
-				{ $set: { quizStep: thisquizstep, currentApiData: thisapidata } },
-				{ upsert: true})
-			return thisdevice + ":" + thisquizstep
+# these functions both on client and server to take advantage of meteor's stub functionality
+Meteor.methods
+	insertPoint: (data) ->
+		pointid = Points.insert data
+		if Meteor.isClient
+			Session.set('pointid', pointid)
+		return pointid
 
+	updateQuizSession: (thisdevice, thisquizstep, thisapidata, thislanguage) ->
+		QuizSessions.update(
+			{ quizdevice: thisdevice },
+			{ $set: { quizStep: thisquizstep, currentApiData: thisapidata, selectedLanguage: thislanguage } },
+			{ upsert: true})
+		return thisdevice + ":" + thisquizstep
+
+
+if(Meteor.isServer)
+	Meteor.methods
 		removeAllPoints: ->
-			Points.remove({})
-			QuizSessions.remove({})
+				Points.remove({})
+				QuizSessions.remove({})
+
+		getClientIp: ->
+			return this.connection.clientAddress;
 
 		checkApi: (url) ->
-			this.unblock();
-			return Meteor.http.call("GET", url)
+				this.unblock();
+				return Meteor.http.call("GET", url)
+
+
 
 pindropOnBeforeAction = () ->
-	document.body.classList.add('pindrop')
+	$('body').addClass('pindrop')
 	theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
-	document.body.classList.add(theClass)
+	$('body').addClass(theClass)
 	# preload will get removed a few seconds after load --
 	# so pins loaded on page load are less dramatic than those added
 	# live from the quiz
-	document.body.classList.add('preload')
+	$('body').addClass('preload')
 	this.next()
+
+pindropOnStop = () ->
+	$('body').removeClass('pindrop')
+	theClass = 'pindrop-' + if this.params.quizDevice then 'ipad' else 'default'
+	$('body').removeClass(theClass)
+	$('body').removeClass('preload')
 
 Router.map ->
 
@@ -674,6 +820,7 @@ Router.map ->
 		path: '/pindrop/:quizDevice?',
 		layoutTemplate: 'pindrop'
 		onBeforeAction: pindropOnBeforeAction
+		onStop: pindropOnStop
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
 
@@ -681,6 +828,7 @@ Router.map ->
 		path: '/',
 		layoutTemplate: 'pindrop'
 		onBeforeAction: pindropOnBeforeAction
+		onStop: pindropOnStop
 
 	this.route 'quiz',
 		path: '/quiz/:quizDevice?' #question mark makes parameter optional
@@ -690,9 +838,14 @@ Router.map ->
 		data: ->
 			return { quizDevice : this.params.quizDevice || 'default' }
 		onBeforeAction: () ->
+			$('body').addClass('quiz')
 			theClass = 'quiz-' + if this.params.quizDevice && this.params.quizDevice != 'default' then 'ipad' else 'default'
-			document.body.classList.add(theClass)
+			$('body').addClass(theClass)
 			this.next()
+		onStop: () ->
+			$('body').removeClass('quiz')
+			theClass = 'quiz-' + if this.params.quizDevice && this.params.quizDevice != 'default' then 'ipad' else 'default'
+			$('body').removeClass(theClass)
 
 	this.route 'projection',
 		path: '/projection/:quizDevice'
@@ -700,7 +853,9 @@ Router.map ->
 		yieldTemplate:
 			'projection': {to: 'projection'}
 		onBeforeAction: () ->
-			document.body.classList.add('projection')
+			$('body').addClass('projection')
 			this.next()
+		onStop: () ->
+			$('body').removeClass('projection')
 		data: ->
 			return { quizDevice : this.params.quizDevice }
