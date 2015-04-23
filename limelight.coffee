@@ -246,7 +246,7 @@ if Meteor.isClient
 			pattern = makeRegexPattern(this.quizDevice)
 			numPoints = Points.find(pattern).count()
 			Session.set('numPoints', numPoints)
-			return Points.find(pattern, {sort:{quizTime: -1}})
+			return Points.find(pattern, {sort:{quizTime: 1}})
 
 		renderBuildingIcons: () ->
 			# fireice.fire/ used as dummy
