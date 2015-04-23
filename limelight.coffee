@@ -1,7 +1,5 @@
 Points = new Mongo.Collection("points")
 QuizSessions = new Mongo.Collection("quizsessions")
-@qs = QuizSessions
-@pts = Points
 
 if Meteor.isClient
 
