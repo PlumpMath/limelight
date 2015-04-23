@@ -793,7 +793,8 @@ if(Meteor.isServer)
 				QuizSessions.remove({})
 
 		getClientIp: ->
-			return this.connection.clientAddress;
+			return this.connection.clientAddress
+
 
 		checkApi: (url) ->
 				this.unblock();
