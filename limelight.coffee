@@ -451,12 +451,11 @@ if Meteor.isClient
 			pageFactor = 0.5 # x/100 of window width/height -- point will vary by up to
 						   # this much in both directions
 			factor = 2 * pageFactor * ( Math.random() - 0.5 )
-			
-			return remap(
-				coords[0],
-				globals[axis + 'CoordDomain'][0],
-				globals[axis + 'CoordDomain'][1]
-			) # + factor
+		
+			if(axis == 'x')
+				return remap(coords[0], globals.xCoordDomain[0], globals.xCoordDomain[1]) + factor
+			else 
+				return remap(coords[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) + factor
 
 		Template.point.rendered = ->
 
