@@ -501,7 +501,7 @@ if Meteor.isClient
 				point.classList.add('current-user')
 
 
-			$('.point').each((i) ->
+			$($('.point').get().reverse()).each((i) ->
 				_this = this
 
 				if i < 10
