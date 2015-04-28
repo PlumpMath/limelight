@@ -276,7 +276,7 @@ input[type="checkbox"] {
 }
 
 .about {
-	@include fontVW(4.167, 40, 20);
+	@include fontVW(4.167, 30, 15);
 	z-index: 200;
 	cursor: pointer;
 
