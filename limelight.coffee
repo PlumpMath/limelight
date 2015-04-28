@@ -120,7 +120,7 @@ if Meteor.isClient
 
 			# update FB and TW share links
 			$modal.find('.fb_icon a').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23' + _this._id)
-			$modal.find('.twitter_icon a').attr('href', 'https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2Fquiz%23' + _this._id)
+			$modal.find('.twitter_icon a').attr('href', 'https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2F%23' + _this._id)
 		)
 
 	scoreColorById = (id) ->
