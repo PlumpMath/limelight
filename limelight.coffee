@@ -99,31 +99,7 @@ if Meteor.isClient
 		modal.fadeIn()
 		if cb
 			cb(modal)
-
-	# wrapper specifically for the infobox
-	showModalInfobox = (point, _this) ->
-
-		showModal('infobox', ($modal) ->
-
-			# clear previous info
-			$modal.find('[data-fill]').html('')
-
-			attrs = point[0].attributes
-			for k, v of attrs
-				# now get the *real* key and value
-				key = v.name
-				value = v.value
-				if key && key.slice(0, 4) == 'data' && $modal.find('[' + key + ']')
-					$modal.find('[' + key + ']').html(value)
-					# parse date
-					if key.toLowerCase() == 'data-quiztime'
-						$modal.find('[' + key + ']').html(moment(value).format('MMM Do YYYY'))
-
-			# update FB and TW share links
-			$modal.find('.fb_icon a').attr('href', 'https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23' + _this._id)
-			$modal.find('.twitter_icon a').attr('href', 'https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2F%23' + _this._id)
-		)
-
+	
 	scoreColorById = (id) ->
 		index = globals.submissionIdOrder.indexOf(id)
 		color = globals.colors[index]
@@ -213,21 +189,40 @@ if Meteor.isClient
 			if target.attr('id') == event.currentTarget.id || target.closest('.close').length > 0
 				$(event.currentTarget).fadeOut()
 
-		"click .point": (event) ->
+		"click .pindrop": (event) ->
+			console.log "body clicked"
+			console.log event.target
 
+		"click .point": (event) ->
 			_this = this
 			point = $(event.target).closest('.point')
 
-			showModalInfobox(point, _this)
 			clickedPoint = $(event.target).closest('.point')
-			if !clickedPoint.hasClass('hoverLock')
-				$('.hoverLock').removeClass('hoverLock')
-				clickedPoint.addClass('hoverLock')
-				window.location = '#' + this._id
-			else
-				clickedPoint.removeClass('hoverLock')
-				window.location = '#'
 
+			console.log "pointClicked"
+			console.log $(event.target)
+			if($(event.target).closest('.popup').length == 0)
+				# we clicked on a point
+				if !clickedPoint.hasClass('hoverLock')
+					$('.hoverLock').removeClass('hoverLock')
+					clickedPoint.addClass('hoverLock')
+					window.location = '#' + this._id
+				else
+					clickedPoint.removeClass('hoverLock')
+					window.location = '#'
+
+		"click .popup": (event) ->
+			event.preventDefault();
+			window.open(this.href, 'targetWindow',
+				'toolbar=no,
+				location=no,
+				status=no,
+				menubar=no,
+				scrollbars=yes,
+				resizable=yes,
+				width=600,
+				height=300');
+		
 
 	makeRegexPattern = (quizDevice) ->
 		# make /pindrop/ipad* search for points from devices of ipad*
@@ -312,6 +307,14 @@ if Meteor.isClient
 					document.body.insertBefore(div, document.body.firstChild)
 
 	Template.pindrop.rendered = ->
+		$('body').click( (e) ->
+			e.preventDefault();
+			if($(e.target).prop('tagName') == "BODY")
+				# if we clicked on background
+				$(".hoverLock").removeClass('hoverLock')
+				window.location = '#'
+		)	
+
 
 		$('a.popup').click( (e) ->
 			e.preventDefault();
@@ -469,7 +472,6 @@ if Meteor.isClient
 				if (id == hash)
 					$(point).addClass('hoverLock')
 					document.body.appendChild(point)
-					showModalInfobox($(point), this)
 					console.log $(point)
 
 			past = new Date(quizTime).getTime()

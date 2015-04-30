@@ -104,12 +104,14 @@ input, button, textarea, select {
 
 	// commented out -- unable to type (for inputting name, etc.)
 	// on iPad
-    /* -webkit-touch-callout: none;
+    /*
+	-webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none; */
+    user-select: none; 
+	 */
 
 	.small-inputs & {
 		@include fontVW(3.2, 30, 15);
@@ -236,6 +238,14 @@ input[type="checkbox"] {
 
 .restart,
 .logo {
+
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; 
+
 	height: 8.75vw;
 	@media screen and (max-width: 875px) {
 		height: 100px; // a reasonable minimum
@@ -259,6 +269,7 @@ input[type="checkbox"] {
 	.pindrop-ipad & {
 		display: none;
 	}
+
 }
 
 .logo {
@@ -364,6 +375,11 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 		position: absolute;
 		padding: 0.5em;
 		width: 200px;
+
+		& .share .icon img {
+			height: 24px;
+			margin-bottom: 5px;
+		}
 	}
 
 	.quiz-taker-preview {

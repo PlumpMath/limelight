@@ -35,7 +35,24 @@
 	<div class="point loading" data-id="{{_id}}" style="left: {{pageCoord coords 'x'}}vw; top: {{pageCoord coords 'y'}}vh;" data-quizTime="{{ quizTime }}" data-quizTakerName="{{quizTakerName}}" data-quizTakerAge="{{quizTakerAge}}">
 		{{{generateEmoji emoji_id closestFinalist}}}
 		<span class="quiz-taker-preview">{{quizTakerName}}</span>
-        <p class="quiz-taker">{{quizTakerName}}<br>{{quizTakerAge}}<br>{{timeFormat quizTime}}</p>
+		<p class="quiz-taker">
+		{{quizTakerName}}<br>
+		{{quizTakerAge}}<br>
+		{{timeFormat quizTime}}<br>
+		<div class="share">
+			Share on 
+			<span class="fb_icon icon">
+				<a href="https://www.facebook.com/sharer/sharer.php?u=app.designguggenheimhelsinki.org%23{{_id}}" class="popup" target="_new">
+					<img src="/img/fb_icon_black.svg">
+				</a>
+			</span>
+			<span class="twitter_icon icon">
+				<a href="https://twitter.com/intent/tweet?text=Play%20the%20Guggenheim%20Helsinki%20Now%20Matchmaker%20Game%20and%20find%20the%20building%20for%20you!%20%23guggenheimhki%20app.designguggenheimhelsinki.org%2F%23{{_id}}&original_referer=Guggenheim_HKI" class="popup" target="_new">
+					<img src="/img/twitter_icon_black.svg">
+				</a>
+			</span>
+		</div>
+		</p>
 	</div>
 </template>
 
