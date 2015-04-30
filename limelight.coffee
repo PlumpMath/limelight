@@ -102,6 +102,7 @@ if Meteor.isClient
 
 	# wrapper specifically for the infobox
 	showModalInfobox = (point, _this) ->
+
 		showModal('infobox', ($modal) ->
 
 			# clear previous info
@@ -218,13 +219,13 @@ if Meteor.isClient
 			point = $(event.target).closest('.point')
 
 			showModalInfobox(point, _this)
-
-			if !event.target.classList.contains('hoverLock')
+			clickedPoint = $(event.target).closest('.point')
+			if !clickedPoint.hasClass('hoverLock')
 				$('.hoverLock').removeClass('hoverLock')
-				event.target.classList.add('hoverLock')
+				clickedPoint.addClass('hoverLock')
 				window.location = '#' + this._id
 			else
-				event.target.classList.remove('hoverLock')
+				clickedPoint.removeClass('hoverLock')
 				window.location = '#'
 
 
@@ -466,9 +467,10 @@ if Meteor.isClient
 			if ( window.location.hash )
 				hash = window.location.hash.substring(1)
 				if (id == hash)
-					point.classList.add('hoverLock')
+					$(point).addClass('hoverLock')
 					document.body.appendChild(point)
 					showModalInfobox($(point), this)
+					console.log $(point)
 
 			past = new Date(quizTime).getTime()
 			now = new Date().getTime()
