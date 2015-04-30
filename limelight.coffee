@@ -234,17 +234,22 @@ if Meteor.isClient
 
 	Template.pindrop.helpers
 		allPoints: () ->
-
+			console.log "calledallP"
 			$('body').css('background-image', 'none')
-
 			pattern = makeRegexPattern(this.quizDevice)
-			numPoints = Points.find(pattern).count()
-			Session.set('numPoints', numPoints)
 			return Points.find(pattern, {sort:{quizTime: 1}})
 
-		renderBuildingIcons: () ->
-			# fireice.fire/ used as dummy
+		mostRecentPoints: () ->
+			pattern = makeRegexPattern(this.quizDevice)
+			$(".recent").removeClass("recent")
+			for point, i in (Points.find(pattern, {sort:{quizTime: -1}, limit: 10}).fetch())
+				$("#" + point._id).addClass('recent')
+				$("#" + point._id).attr("opacity", ( 10 - i ) / 10)
+			return ""
 
+		renderBuildingIcons: () ->
+			console.log "calledBLDGRENDER"
+			# fireice.fire/ used as dummy
 			for bldg_id, coords of globals.buildingCoords
 
 				index = globals.submissionIdOrder.indexOf(bldg_id)
@@ -338,7 +343,7 @@ if Meteor.isClient
 					this.classList.remove('brand-new')
 			)
 
-		setInterval(checkBrandNew, 10000)
+		Meteor.setInterval(checkBrandNew, 10000)
 
 		if (!this._rendered)
 			this._rendered = true;
@@ -346,9 +351,9 @@ if Meteor.isClient
 
 		$('.bg-dummy').remove()
 
-		setTimeout(() ->
+		Meteor.setTimeout(() ->
 			document.body.classList.remove('preload')
-		, 3000)
+		, 10000)
 
 		# let 'ESC' close modal
 		$(document).on('keydown', (e) ->
@@ -406,7 +411,7 @@ if Meteor.isClient
 		t = new Date()
 		t.setSeconds(t.getSeconds() + globals.countdownSecs)
 
-		setTimeout(() ->
+		Meteor.setTimeout(() ->
 			$(selector).countdown t
 				.on('update.countdown', (event) ->
 					$(this).html(event.strftime('%S'))
@@ -417,8 +422,19 @@ if Meteor.isClient
 				)
 		, 1)
 
+	pseudoRandom = (seed) ->
+		x = Math.sin(seed + 1) * 10000;
+		return x - Math.floor(x)
 
 	Template.point.helpers
+
+		hoverClass: () ->
+			if ( window.location.hash )
+				hash = window.location.hash.substring(1)
+				if (this._id == hash)
+					return "hoverLock"
+			return ""
+
 		timeFormat: (time) ->
 			return moment(time).format('MMM Do YYYY')
 
@@ -451,71 +467,75 @@ if Meteor.isClient
 		pageCoord: (coords, axis) ->
 			pageFactor = 0.5 # x/100 of window width/height -- point will vary by up to
 						   # this much in both directions
-			factor = 2 * pageFactor * ( Math.random() - 0.5 )
+			#factor = 2 * pageFactor * ( Math.random() - 0.5 )
+			factor = 2 * pageFactor * ( pseudoRandom(coords[0] + coords[1]) - 0.5 )
 		
 			if(axis == 'x')
 				return remap(coords[0], globals.xCoordDomain[0], globals.xCoordDomain[1]) + factor
 			else 
 				return remap(coords[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) + factor
 
-		Template.point.rendered = ->
-
-			id = this.data._id
-			point = this.firstNode
-			quizTime = this.data.quizTime
-
-			if ( window.location.hash )
-				hash = window.location.hash.substring(1)
-				if (id == hash)
-					$(point).addClass('hoverLock')
-					document.body.appendChild(point)
-					console.log $(point)
-
-			past = new Date(quizTime).getTime()
-			now = new Date().getTime()
-
-			# if under 3 minutes old, it's brand new!
-			if (now - past) / (60 * 1000) <= 3
-				point.classList.add('brand-new')
-			else
-				point.classList.remove('brand-new')
-
-			# if over 1 hour old, scale up to 0.5, stay there
-			stopAt = 72 # number of hours at which to stop scaling down (will stay at 0.5)
-
-			if past + 60 * 60 * 1000 < now
-
-				hours = (now - past) / (60 * 60 * 1000)
-
-				scaleFactor = remap(hours, 1, stopAt)
-				scaleFactor = 1 - (scaleFactor / 200)
-				if scaleFactor < 0.4
-					scaleFactor = 0.4
-
-				[].slice.call(point.children).forEach((el) ->
-					if el.classList.contains('emoji')
-						el.style.transform = 'scale(' + scaleFactor + ')'
-				)
-
-			# if the user just came from the quiz, highlight theirs
-			if Session.get('pointid') && id == Session.get('pointid')
-				point.classList.add('current-user')
 
 
-			$($('.point').get().reverse()).each((i) ->
-				_this = this
 
-				if i < 10
-					this.classList.add('recent')
-					this.children[1].style.opacity = ( 10 - i ) / 10
-				else
-					this.classList.remove('recent')
+	Template.point.rendered = ->
+		if (!this._rendered)
+			this._rendered = true;
+			console.log "called pointrendered"
+		else
+			console.log "MORERENDER"
 
-				setTimeout(() ->
-					_this.classList.remove('loading')
-				, Math.random() * 500 + 100)
+		# if the user just came from the quiz, highlight theirs
+		if Session.get('pointid') && id == Session.get('pointid')
+			$(point).addClass('current-user')
+
+		id = this.data._id
+		point = this.firstNode
+		quizTime = this.data.quizTime
+
+		past = new Date(quizTime).getTime()
+		now = new Date().getTime()
+
+		# if under 3 minutes old, it's brand new!
+		if (now - past) / (60 * 1000) <= 3
+			point.classList.add('brand-new')
+		else
+			point.classList.remove('brand-new')
+
+		# if over 1 hour old, scale up to 0.5, stay there
+		stopAt = 72 # number of hours at which to stop scaling down (will stay at 0.5)
+
+		if past + 60 * 60 * 1000 < now
+
+			hours = (now - past) / (60 * 60 * 1000)
+
+			scaleFactor = remap(hours, 1, stopAt)
+			scaleFactor = 1 - (scaleFactor / 200)
+			if scaleFactor < 0.4
+				scaleFactor = 0.4
+
+			[].slice.call(point.children).forEach((el) ->
+				if el.classList.contains('emoji')
+					el.style.transform = 'scale(' + scaleFactor + ')'
 			)
 
+		'''
+		$($('.point').get().reverse()).each((i) ->
+			_this = this
+
+			if i < 10
+				this.classList.add('recent')
+				this.children[1].style.opacity = ( 10 - i ) / 10
+			else
+				this.classList.remove('recent')
+			console.log "adding and removing"
+		)
+		'''
+
+		that = this
+		Meteor.setTimeout(() ->
+			$("#" + that.data._id).removeClass('loading')
+		, Math.random() * 400 + 50)
 
 	Template.quiz.rendered = ->
 		renderQuizBG()
@@ -621,8 +641,8 @@ if Meteor.isClient
 
 		document.body.style.backgroundImage = ''
 		if((Session.get('quizDevice') || 'default') == "default")
-			console.log "yeah we're default"
-			Router.go('pindrop', {},  { hash: pointid })
+			Session.set("quizCompletionHash", pointid)
+			Router.go('pindrop', { hash: pointid })
 		else
 			countdownTimer(".countdown", () ->
 				quizInit({ quizDevice: Session.get('quizDevice') })
