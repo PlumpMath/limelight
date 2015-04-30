@@ -519,23 +519,10 @@ if Meteor.isClient
 					el.style.transform = 'scale(' + scaleFactor + ')'
 			)
 
-		'''
-		$($('.point').get().reverse()).each((i) ->
-			_this = this
-
-			if i < 10
-				this.classList.add('recent')
-				this.children[1].style.opacity = ( 10 - i ) / 10
-			else
-				this.classList.remove('recent')
-			console.log "adding and removing"
-		)
-		'''
-
 		that = this
 		Meteor.setTimeout(() ->
 			$("#" + that.data._id).removeClass('loading')
-		, Math.random() * 400 + 50)
+		, Math.random() * 300 + 100)
 
 	Template.quiz.rendered = ->
 		renderQuizBG()
