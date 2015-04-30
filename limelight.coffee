@@ -199,8 +199,6 @@ if Meteor.isClient
 
 			clickedPoint = $(event.target).closest('.point')
 
-			console.log "pointClicked"
-			console.log $(event.target)
 			if($(event.target).closest('.popup').length == 0)
 				# we clicked on a point
 				if !clickedPoint.hasClass('hoverLock')
