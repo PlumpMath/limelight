@@ -233,7 +233,7 @@ if Meteor.isClient
 
 
 	Template.pindrop.helpers
-		allpoints: () ->
+		allPoints: () ->
 
 			$('body').css('background-image', 'none')
 
@@ -244,65 +244,64 @@ if Meteor.isClient
 
 		renderBuildingIcons: () ->
 			# fireice.fire/ used as dummy
-			Meteor.call "checkApi", globals.apiBaseUrl + 'fireice.fire/', (err, results) ->
-				guesses = results.data.guesses
 
-				for guess in guesses
+			for bldg_id, coords of globals.buildingCoords
 
-					index = globals.submissionIdOrder.indexOf(guess.submission_id)
+				index = globals.submissionIdOrder.indexOf(bldg_id)
 
-					div = document.createElement('div')
-					div.classList.add('building-icon')
-					# get how far left it is -- if too far to the right,
-					# the infobox shows up to the left instead of right
-					left = remap(guess.coord[0], globals.xCoordDomain[0], globals.xCoordDomain[1])
-					div.style.left = left + 'vw'
-					div.style.top = remap(guess.coord[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) + 'vh'
-					div.setAttribute('data-color', scoreColorById(guess.submission_id))
-					div.setAttribute('data-ghid', guess.submission_id)
+				div = document.createElement('div')
+				div.classList.add('building-icon')
+				# get how far left it is -- if too far to the right,
+				# the infobox shows up to the left instead of right
+				left = remap(coords[0], globals.xCoordDomain[0], globals.xCoordDomain[1])
+				div.style.left = left + 'vw'
+				div.style.top = remap(coords[1], globals.yCoordDomain[0], globals.yCoordDomain[1]) + 'vh'
+				div.setAttribute('data-color', scoreColorById(bldg_id))
+				div.setAttribute('data-ghid', bldg_id)
 
-					infobox = document.createElement('div')
-					infobox.classList.add('infobox')
-					if window.innerWidth - left * window.innerWidth / 100 < 400
-						infobox.style.left = '-100%'
+				infobox = document.createElement('div')
+				infobox.classList.add('infobox')
+				if window.innerWidth - left * window.innerWidth / 100 < 400
+					infobox.style.left = '-100%'
 
-					buildingImg = document.createElement('img')
-					buildingImg.src = '/img/buildings/' + guess.submission_id + '.png'
+				buildingImg = document.createElement('img')
+				buildingImg.src = '/img/buildings/' + bldg_id + '.png'
 
-					name = document.createElement('p')
-					name.innerHTML = globals.buildingNames[index]
-					infobox.appendChild(buildingImg)
-					infobox.appendChild(name)
+				name = document.createElement('p')
+				name.innerHTML = globals.buildingNames[index]
+				infobox.appendChild(buildingImg)
+				infobox.appendChild(name)
 
-					div.appendChild(infobox)
+				div.appendChild(infobox)
 
-					svg = makeSVG(
-						viewBox: '0 0 200 200'
-					)
-					buildingShapes = globals.buildingIcons[index]
+				svg = makeSVG(
+					viewBox: '0 0 200 200'
+				)
+				buildingShapes = globals.buildingIcons[index]
 
-					activate = () ->
-						$(this).closest('.building-icon').addClass('active').appendTo('body')
+				activate = () ->
+					$(this).closest('.building-icon').addClass('active').appendTo('body')
 
-					deactivate = () ->
-						$(this).closest('.building-icon').removeClass('active').prependTo('body')
+				deactivate = () ->
+					$(this).closest('.building-icon').removeClass('active').prependTo('body')
 
-					div.appendChild(svg)
+				div.appendChild(svg)
 
-					for shape in buildingShapes
-						shape.attrs.fill = scoreColorById(guess.submission_id)
-						shape = makeSVGelement(svg, shape)
+				for shape in buildingShapes
+					shape.attrs.fill = scoreColorById(bldg_id)
+					shape = makeSVGelement(svg, shape)
 
-						shape.addEventListener('mouseover', activate)
-						shape.addEventListener('mouseout', deactivate)
-						shape.addEventListener('click', () ->
-							window.open(
-								globals.finalistBaseUrl + $(this).closest('.building-icon').data('ghid'),
-								'_blank'
-							)
+					shape.addEventListener('mouseover', activate)
+					shape.addEventListener('mouseout', deactivate)
+					shape.addEventListener('click', () ->
+						window.open(
+							globals.finalistBaseUrl + $(this).closest('.building-icon').data('ghid'),
+							'_blank'
 						)
+					)
 
-					document.body.insertBefore(div, document.body.firstChild)
+				document.body.insertBefore(div, document.body.firstChild)
+			return ""
 
 	Template.pindrop.rendered = ->
 		$('body').click( (e) ->
