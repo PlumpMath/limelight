@@ -329,6 +329,10 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
     -ms-user-select: none;
     user-select: none;
 
+	&:hover {
+		z-index: 10000;
+	}
+
 	&.loading {
 		opacity: 0;
 		transform: scale(4.5) translateY(-150px);
@@ -425,6 +429,7 @@ $clipPath: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90
 		~ .quiz-taker {
 			display: block;
 			opacity: 1 !important;
+			z-index: 10000;
 		}
 	}
 }
@@ -604,6 +609,13 @@ $building_icon_size: 14vw;
 	@media screen and (max-width: 560px) {
 		width: calc(20% - 10px);
 	}
+
+	&.emoji-GH-5631681770 * 	{ fill: #00BDD4;}
+	&.emoji-GH-121371443 * 		{ fill: #FBEB34; }
+	&.emoji-GH-04380895 * 		{ fill: #6EC829; }
+	&.emoji-GH-1128435973 * 	{ fill: #FAB0C9; }
+	&.emoji-GH-76091181 * 		{ fill: #FFAF3E; }
+	&.emoji-GH-5059206475 * 	{ fill: #925D9E; }
 }
 
 // Projection

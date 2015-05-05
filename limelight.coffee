@@ -438,6 +438,11 @@ if Meteor.isClient
 		timeFormat: (time) ->
 			return moment(time).format('MMM Do YYYY')
 
+		finalistColor: (closestFinalist) ->
+			finalistIndex = globals.submissionIdOrder.indexOf(closestFinalist)
+			color = globals.colors[finalistIndex]
+			return color
+
 		generateEmoji: (emoji_id, closestFinalist) ->
 
 			# create SVG element
@@ -481,7 +486,7 @@ if Meteor.isClient
 	Template.point.rendered = ->
 		if (!this._rendered)
 			this._rendered = true;
-			console.log "called pointrendered"
+			SVGInjector($('.svg-inject'))
 		else
 			console.log "MORERENDER"
 

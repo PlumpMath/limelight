@@ -33,7 +33,7 @@
 
 <template name="point">
 	<div class="point loading {{hoverClass}}" id="{{_id}}" data-id="{{_id}}" style="left: {{pageCoord coords 'x'}}vw; top: {{pageCoord coords 'y'}}vh;" data-quizTime="{{ quizTime }}" data-quizTakerName="{{quizTakerName}}" data-quizTakerAge="{{quizTakerAge}}">
-		{{{generateEmoji emoji_id closestFinalist}}}
+		<img class="emoji emoji-{{closestFinalist}} svg-inject" data-src="/img/emoji/{{emoji_id}}.svg" style="fill:{{finalistColor closestFinalist}};">
 		<span class="quiz-taker-preview">{{quizTakerName}}</span>
 		<p class="quiz-taker">
 		{{quizTakerName}}<br>
