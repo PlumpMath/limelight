@@ -3,6 +3,9 @@ QuizSessions = new Mongo.Collection("quizsessions")
 
 if Meteor.isClient
 
+	Meteor.subscribe("points")
+	Meteor.subscribe("quizsessions")
+
 	# Helper functions
 
 	l = (string) ->
@@ -484,9 +487,14 @@ if Meteor.isClient
 
 
 	Template.point.rendered = ->
+		id = this.data._id
+		point = this.firstNode
+		quizTime = this.data.quizTime
+
 		if (!this._rendered)
 			this._rendered = true;
-			SVGInjector($('.svg-inject'))
+		#	SVGInjector($(".svg-inject"))
+		#	$(".svg-inject").removeClass("svg-inject")
 		else
 			console.log "MORERENDER"
 
@@ -494,9 +502,6 @@ if Meteor.isClient
 		if Session.get('pointid') && id == Session.get('pointid')
 			$(point).addClass('current-user')
 
-		id = this.data._id
-		point = this.firstNode
-		quizTime = this.data.quizTime
 
 		past = new Date(quizTime).getTime()
 		now = new Date().getTime()
@@ -834,7 +839,13 @@ if(Meteor.isServer)
 				this.unblock();
 				return Meteor.http.call("GET", url)
 
+	Meteor.publish("points", ->
+		return Points.find()
+	)
 
+	Meteor.publish("quizsessions", ->
+		return QuizSessions.find()
+	)
 
 pindropOnBeforeAction = () ->
 	$('body').addClass('pindrop')
